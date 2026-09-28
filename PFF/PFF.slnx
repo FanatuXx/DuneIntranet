@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/02 Domain/">
+    <Project Path="PFF.Domain/PFF.Domain.csproj" />
+  </Folder>
+  <Folder Name="/03 API/">
+    <Project Path="PFF.Api/PFF.Api.csproj" Id="d4d051f9-9fcc-4a4f-866a-98d8ce2a8af7" />
+  </Folder>
+  <Folder Name="/99 Tools/">
+    <Project Path="Tools/PFF.Tools.csproj" />
+  </Folder>
+</Solution>

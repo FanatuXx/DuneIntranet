@@ -1,0 +1,31 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using PFF.Tools.Results;
+
+namespace PFF.Tools.CommandQuerySeparation
+{
+    public interface ICommandHandler<TCommand>
+        where TCommand : ICommandDefinition
+    {
+        Result Handle(TCommand command);
+    }
+
+    public interface ICommandAsyncHandler<TCommand>
+        where TCommand : ICommandDefinition
+    {
+        Task<Result> HandleAsync(TCommand command, CancellationToken cancellationToken);
+    }
+
+    public interface ICommandHandler<TCommand, TResult>
+        where TCommand : ICommandDefinition<TResult>
+    {
+        Result<TResult> Handle(TCommand command);
+    }
+
+    public interface ICommandAsyncHandler<TCommand, TResult>
+        where TCommand : ICommandDefinition<TResult>
+    {
+        Task<Result<TResult>> HandleAsync(TCommand command, CancellationToken cancellationToken);
+    }
+}

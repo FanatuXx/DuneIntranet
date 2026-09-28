@@ -1,0 +1,206 @@
+<h1>Nouvel usager :</h1>
+
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+  <h3>Informations obligatoires</h3>
+
+    <label for="alias">
+      Alias
+      <input type="text" name="alias" id="alias" formControlName="alias">
+    </label>
+    <br>
+
+    <label for="birthDate">
+      Date de naissance
+      <input type="date" name="birthDate" id="birthDate" formControlName="birthDate">
+    </label>
+    @if (birthDate.touched && birthDate.invalid) {
+      <p class="error">ATTENTION : la personne a moins de 18 ans ! La personne doit être réorientée vers un service spécialisé.</p>
+    }
+    <br>
+    <br>
+
+    <h3>Informations administratives :</h3>
+
+    <label for="ssin">
+      NISS
+      <input type="text" name="ssin" id="ssin" formControlName="ssin">
+    </label>
+    @if (ssin.touched && ssin.invalid) {
+      @if (ssin.hasError('minlength')) {
+        <p class="error">Le champ doit faire minimum 11 caractères</p>
+      } @else if (ssin.hasError('maxlength')) {
+        <p class="error">Le champ doit faire maximum 15 caractères</p>
+      }
+    }
+    <br>
+
+    <label for="idNumber">
+      Numéro ID
+      <input type="text" name="idNumber" id="idNumber" formControlName="idNumber">
+    </label>
+    @if (idNumber.touched && idNumber.invalid) {
+      @if (idNumber.hasError('minlength')) {
+        <p class="error">Le champ doit faire minimum 12 caractères</p>
+      } @else if (idNumber.hasError('maxlength')) {
+        <p class="error">Le champ doit faire maximum 14 caractères</p>
+      }
+    }
+    <br>
+
+    <label for="firstName">
+      Prénom
+      <input type="text" name="firstName" id="firstName" formControlName="firstName">
+    </label>
+    <br>
+
+    <label for="lastName">
+      Nom
+      <input type="text" name="lastName" id="lastName" formControlName="lastName">
+    </label>
+    <br>
+
+    <label for="gender">
+      Genre
+      <select id="gender" formControlName="gender">
+        <option value="">-- Sélectionnez un genre --</option>
+
+        @for (gender of genderOptions; track gender.value) {
+          <option [value]="gender.value">
+            {{ gender.label }}
+          </option>
+        }
+      </select>
+    </label>
+    <br>
+
+    <label for="phoneNumber">
+      Numéro de téléhphone
+      <input type="text" name="phoneNumber" id="phoneNumber" formControlName="phoneNumber">
+    </label>
+    <br>
+    <br>
+
+    <label for="isInsured">
+      En ordre de mutuelle ?
+      <input type="checkbox" name="isInsured" id="isInsured" formControlName="isInsured">
+    </label>
+    <br>
+
+    <label for="insurance">
+      Mutuelle
+      <input type="text" name="insurance" id="insurance" formControlName="insurance">
+    </label>
+    <br>
+    <br>
+
+    <label for="isWorking">
+      Travailleur ?
+      <input type="checkbox" name="isWorking" id="isWorking" formControlName="isWorking">
+    </label>
+    <br>
+
+    <label for="income">
+      Revenus mensuels 
+      <input type="number" name="income" id="income" formControlName="income">
+    </label>
+    <br>
+    <br>
+
+    <label for="isAtFedasil">
+      Fedasil ?
+      <input type="checkbox" name="isAtFedasil" id="isAtFedasil" formControlName="isAtFedasil">
+    </label>
+    <br>
+
+    <label for="status">
+      Statut de séjour
+      <select id="status" formControlName="status">
+        <option value="">-- Sélectionnez un statut --</option>
+
+        @for (status of statusOptions; track status.value) {
+          <option [value]="status.value">
+            {{ status.label }}
+          </option>
+        }
+      </select>
+    </label>
+    <br>
+    <br>
+
+    <h3>Informations médicales & consommation :</h3>
+
+    <label for="hasInsuranceCard">
+      Possède une carte médicale ?
+      <input type="checkbox" name="hasInsuranceCard" id="hasInsuranceCard" formControlName="hasInsuranceCard">
+    </label>
+    <br>
+
+    <label for="insuranceCardEndDate">
+      Expiration de la carte médicale 
+      <input type="date" name="insuranceCardEndDate" id="insuranceCardEndDate" formControlName="insuranceCardEndDate">
+    </label>
+    <br>
+
+    <label for="allergies">
+      Allergies
+      <input type="text" name="allergies" id="allergies" formControlName="allergies">
+    </label>
+    <br>
+    <br>
+
+    <label for="drugType">
+      Produit consommé
+      <select id="drugType" formControlName="drugType">
+        <option value="">-- Sélectionnez le produit --</option>
+
+        @for (drug of drugOptions; track drug.value) {
+          <option [value]="drug.value">
+            {{drug.label}}
+          </option>
+        }
+      </select>
+    </label>
+    <br>
+
+    <label for="consumptionFrequency">
+      Fréquence de consommation
+      <select id="consumptionFrequency" formControlName="consumptionFrequency">
+        <option value="">-- Sélectionnez la fréquence --</option>
+
+        @for (frequency of consumptionFrequencyOptions; track frequency.value) {
+          <option [value]="frequency.value">
+            {{frequency.label}}
+          </option>
+        }
+      </select>
+    </label>
+    <br>
+    <br>
+
+    <button type="submit">Créer l'usager</button>
+
+</form>
+
+
+
+
+      <!-- ssin: ['', [Validators.minLength(11), Validators.maxLength(15)]],
+      idNumber: ['', [Validators.minLength(12), Validators.maxLength(14)]],
+      firstName: [''],
+      lastName: [''],
+      alias: [''],
+      gender: [''],
+      birthDate: ['', legalAgeValidator],
+      phoneNumber: ['', [Validators.minLength(9), Validators.maxLength(16)]],
+      allergies: [''],
+      isInsured: [''],
+      insurance: ['', [Validators.minLength(2), Validators.maxLength(50)]],
+      hasInsuranceCard: [''],
+      insuranceCardEndDate: [''],
+      isAtFedasil: [''],
+      income: ['', [Validators.min(0)]],
+      status: [''],
+      isWorking: [''],
+      drugType: [''],
+      consumptionFrequency: [''] -->

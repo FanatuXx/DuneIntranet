@@ -1,0 +1,33 @@
+header {
+    display: flex;
+    background-color: #1f2937;
+    color: rgb(255, 255, 255);
+    align-items: center; /*Permet de centrer les éléments de la bannière au centre (par rapport au haut et au bas) */
+    justify-content: space-between; /*Permet de séparer le logo (tout à gauche) des éléments de la liste (tout à droite) */
+    padding: 15px 30px; /*Permet de définir l'écart par rapport aux bords haut/bas et gauche/droite de la page*/
+    color: white;
+}
+
+.logo {
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+nav ul {
+    display: flex;
+    gap: 30px; /*Permet de définir l'espace entre les éléments*/
+    list-style: none; /*Permet d'enlever les puces par défaut des éléments d'une liste */
+    margin: 0;
+    padding: 0;
+}
+
+nav a {
+    color: white;
+    text-decoration: none; /*Permet d'enlever le surlignage par défaut du a*/
+    font-size: 1rem;
+    transition: color 0.3s; /*Permet de définir un interval de temps pendant lequel l'élément passera de la couleur A à la couleur B (hovering) */
+}
+
+nav a:hover { /*Permet de changer le style en passant le curseur sur l'élément*/
+    color: #60a5fa;
+}

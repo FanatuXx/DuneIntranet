@@ -1,0 +1,22 @@
+<h1>Liste des usagers :</h1>
+
+@if (loading()) {
+  <p>Chargement...</p>
+} @else if (error()) {
+  <p class="error">Erreur: {{ error() }}</p>
+} @else {
+  <div class="users">
+    @for (patient of patients(); track $index) {
+      <div class="user">
+          <div class="user-id">ID : {{ patient.id }}</div>
+          <div class="user-firstname">Prénom : {{ patient.firstName }}</div>
+          <div class="user-alias">Surnom : <a [routerLink]="['/patients', patient.id]">{{ patient.alias }}</a></div>
+          <div class="user-lastname">Nom : {{ patient.lastName }}</div>
+          <div class="user-birthdate">Date : {{ convertDate(patient.birthDate) }}</div>
+      </div>
+      <br>
+    } @empty {
+      <p>Aucun usager.</p>
+    }
+  </div>
+}

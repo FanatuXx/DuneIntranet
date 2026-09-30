@@ -1,1 +1,40 @@
-<p>patient-details works!</p>
+<h1>Fiche de {{patient()?.alias}}({{id()}}):</h1>
+
+<!-- @if (loading()) {
+  <p>Chargement...</p>
+} @else if (error()) {
+  <p class="error">Erreur: {{ error() }}</p>
+} @else { -->
+    <h3>Indentification & informations administratives</h3>
+    <br>
+      <div class="user">
+          <div class="user-id">ID : {{ patient()?.id }}</div>
+          <div class="user-ssin">NISS : {{ patient()?.ssin }}</div>
+          <div class="user-idNumber">Numéro ID : {{ patient()?.idNumber }}</div>
+          <div class="user-firstname">Prénom : {{ patient()?.firstName }}</div>
+          <div class="user-alias">Surnom : {{ patient()?.alias }} </div>
+          <div class="user-lastname">Nom : {{ patient()?.lastName }}</div>
+          <div class="user-birthdate">Date de naissance : {{ convertDate(patient()?.birthDate!) }}</div>
+          <div class="user-gender">Genre : {{ patient()?.gender }}</div>
+          <div class="user-phoneNumber">Téléphone : {{ patient()?.phoneNumber }}</div>
+          <div class="user-allergies">Allergies : {{ patient()?.allergies }}</div>
+          <div class="user-isInsured">Est assuré ? {{ patient()?.isInsured ? 'Oui' : 'Non'}}</div>
+          @if (patient()?.isInsured) {
+            <div class="user-insurance">Assurance : {{ patient()?.insurance }}</div>
+          }
+          <div class="user-hasInsuranceCard">A une carte médicale ? {{ patient()?.hasInsuranceCard ? 'Oui' : 'Non' }}</div>
+          @if (patient()?.hasInsuranceCard) {
+            <div class="user-insuranceCardEndDate">Expiration : {{ convertDate(patient()?.birthDate!) }}</div>
+          }
+          <div class="user-isAtFedasil">Fedasil ? {{ patient()?.isAtFedasil ? 'Oui' : 'Non'}}</div>
+          <div class="user-income">Revenu : {{ patient()?.income }}</div>
+
+          <div class="user-status">Statut de séjour : {{  getResidenceStatusLabel(patient()?.status!) }}</div>
+          <div class="user-isWorking">A un travail : {{ patient()?.isWorking ? 'Oui' : 'Non'}}</div>
+          <div class="user-drugType">Produit consommé : {{ patient()?.drugType}}</div>
+          <div class="user-consumptionFrequency">Fréquence de consommation : {{ patient()?.consumptionFrequency}}</div>
+          <div class="user-registrationDate">Date d'inscription : {{ convertDate(patient()?.registrationDate!)}}</div>
+          <div class="user-lastVisit">Dernière visite : {{ convertDate(patient()?.lastVisit!)}}</div>
+      </div>
+      <br>
+    <!-- } -->

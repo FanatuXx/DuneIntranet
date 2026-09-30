@@ -25,6 +25,16 @@ namespace PFF.Domain.Services
             return Result<IEnumerable<Patient>>.Success(_dbContext.Patients.AsEnumerable());
         }
 
+        public Result<Patient> Handle(GetPatientDetailsQuery query)
+        {
+            Patient? patient = _dbContext.Patients.Find(query.Id);
+
+            if (patient is null)
+                return PatientErrors.PatientNotFound;
+
+            return Result<Patient>.Success(patient);
+        }
+
         public Result Handle(CreatePatientCommand command)
         {
             try

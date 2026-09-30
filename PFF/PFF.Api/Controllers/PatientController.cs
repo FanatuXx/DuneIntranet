@@ -2,6 +2,7 @@
 using PFF.Api.Dtos;
 using PFF.Api.Infrastructure;
 using PFF.Domain.Commands;
+using PFF.Domain.Model.Entities;
 using PFF.Domain.Queries;
 using PFF.Domain.Repositories;
 using PFF.Tools.Results;
@@ -26,6 +27,12 @@ namespace PFF.Api.Controllers
         public IActionResult Get()
         {
             return this.FromResult(_patientRepository.Handle(new GetPatientsQuery()));
+        }
+
+        [HttpGet("{id}")]
+        public IActionResult Get(int id)
+        {
+            return this.FromResult(_patientRepository.Handle(new GetPatientDetailsQuery(id)));
         }
 
         [HttpPost]

@@ -8,9 +8,10 @@ using System.Text;
 
 namespace PFF.Domain.Repositories
 {
-    public interface IPatientRepository : 
+    public interface IPatientRepository :
         ICommandHandler<CreatePatientCommand>,
-        IQueryHandler<GetPatientsQuery, IEnumerable<Patient>>
+        IQueryHandler<GetPatientsQuery, IEnumerable<Patient>>,
+        IQueryHandler<GetPatientDetailsQuery, Patient>
     {
     }
 }

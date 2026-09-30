@@ -3,10 +3,10 @@ import { PatientsService } from '../../../core/services/patients.service';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { legalAgeValidator } from '../../../shared/validators/legal-age.validator';
-import { Gender } from '../../../shared/enum/gender.enum';
-import { DrugType } from '../../../shared/enum/drug-type.enum';
-import { ConsumptionFrequency } from '../../../shared/enum/consumption-frequency.enum';
-import { ResidenceStatus } from '../../../shared/enum/residence-status.enum';
+import { Gender } from '../../../shared/enums/gender.enum';
+import { DrugType } from '../../../shared/enums/drug-type.enum';
+import { ConsumptionFrequency } from '../../../shared/enums/consumption-frequency.enum';
+import { ResidenceStatus } from '../../../shared/enums/residence-status.enum';
 
 @Component({
   selector: 'app-patient-creation',

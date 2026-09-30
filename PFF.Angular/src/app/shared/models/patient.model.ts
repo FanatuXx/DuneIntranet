@@ -10,7 +10,7 @@ export interface Patient {
     firstName: string | null,
     lastName: string | null, 
     alias: string | null,
-    gender: Gender | null,
+    gender: keyof typeof Gender | null,
     birthDate: Date,
     phoneNumber: string | null,
     allergies: string | null,
@@ -22,8 +22,8 @@ export interface Patient {
     income: number | null,
     status: keyof typeof ResidenceStatus | null,
     isWorking: boolean | null,
-    drugType: DrugType | null,
-    consumptionFrequency: ConsumptionFrequency | null
+    drugType: keyof typeof DrugType | null,
+    consumptionFrequency: keyof typeof ConsumptionFrequency | null
     registrationDate: Date,
     lastVisit: Date
     patientAddressId: number | null
@@ -35,7 +35,7 @@ export interface CreatePatientRequest {
     firstName: string | null,
     lastName: string | null, 
     alias: string | null,
-    gender: Gender | null,
+    gender: keyof typeof Gender | null,
     birthDate: Date,
     phoneNumber: string | null,
     allergies: string | null,
@@ -45,10 +45,10 @@ export interface CreatePatientRequest {
     insuranceCardEndDate: Date | null,
     isAtFedasil: boolean | null,
     income: number | null,
-    status: ResidenceStatus | null,
+    status: keyof typeof ResidenceStatus | null,
     isWorking: boolean | null,
-    drugType: DrugType | null,
-    consumptionFrequency: ConsumptionFrequency | null
+    drugType: keyof typeof DrugType | null,
+    consumptionFrequency: keyof typeof ConsumptionFrequency | null
 }
 
 

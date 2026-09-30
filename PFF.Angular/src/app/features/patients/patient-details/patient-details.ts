@@ -4,9 +4,10 @@ import { PatientsService } from '../../../core/services/patients.service';
 import { Patient } from '../../../shared/models/patient.model';
 import { DatePipe } from '@angular/common';
 import { ResidenceStatus } from '../../../shared/enums/residence-status.enum';
+import { ResidenceLabelPipe } from '../../../shared/pipes/residence-label-pipe';
 
 @Component({
-  imports: [],
+  imports: [ResidenceLabelPipe, ],
   selector: 'app-patient-details',
   styleUrl: './patient-details.css',
   templateUrl: './patient-details.html',
@@ -45,9 +46,5 @@ export class PatientDetails implements OnInit {
 
   convertDate(date: Date) {
     return this.datepipe.transform(date, 'dd/MM/yyyy');
-  }
-
-  getResidenceStatusLabel(status: keyof typeof ResidenceStatus): string {
-    return ResidenceStatus[status];
   }
 }

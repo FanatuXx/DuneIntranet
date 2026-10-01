@@ -1,0 +1,40 @@
+services:
+  app-dev:
+    image: dune-angular:dev
+    build:
+      context: .
+      target: build
+      dockerfile: dockerfile
+    ports:
+      - "4200:4200"
+    volumes:
+      - ./src:/app/src
+      - ./public:/app/public
+    develop:
+      watch:
+        - action: sync
+          path: ./src
+          target: /app/src
+        - action: sync
+          path: ./public
+          target: /app/public
+        - action: rebuild
+          path: package.json
+    command: npm start
+    environment:
+      - NODE_ENV=development
+
+  app-prod:
+    image: dune-angular:prod
+    build:
+      context: .
+      dockerfile: dockerfile
+    ports:
+      - "80:80"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/index.html"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 5s

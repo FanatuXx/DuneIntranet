@@ -14,7 +14,7 @@ namespace PFF.Domain.Model.Entities
         public string? FirstName { get; set; } 
         public string? LastName { get; set; } 
         public string? Alias { get; set; }
-        public GenderEnum? Gender { get; set; }
+        public string? Gender { get; set; }
         public DateTime BirthDate { get; set; }
         public string? PhoneNumber { get; set; }
         public string? Allergies { get; set; }
@@ -26,8 +26,8 @@ namespace PFF.Domain.Model.Entities
         public int? Income { get; set; }
         public string? Status { get; set; }
         public bool? IsWorking { get; set; } = false;
-        public DrugTypeEnum? DrugType { get; set; }
-        public ConsumptionFrequencyEnum? ConsumptionFrequency { get; set; }
+        public string? DrugType { get; set; }
+        public string? ConsumptionFrequency { get; set; }
         public DateTime RegistrationDate { get; set; }
         public DateTime LastVisit { get; set; }
         public int? PatientAddressId { get; set; }

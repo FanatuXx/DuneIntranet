@@ -11,7 +11,7 @@ namespace PFF.Api.Dtos
         public string? FirstName { get; set; }
         public string? LastName { get; set; } 
         public string? Alias { get; set; } 
-        public GenderEnum? Gender { get; set; }
+        public string? Gender { get; set; }
         [Required]
         public DateTime BirthDate { get; set; }
         public string? PhoneNumber { get; set; }
@@ -24,7 +24,7 @@ namespace PFF.Api.Dtos
         public int? Income { get; set; } 
         public string? Status { get; set; } 
         public bool? IsWorking { get; set; } 
-        public DrugTypeEnum? DrugType { get; set; } 
-        public ConsumptionFrequencyEnum? ConsumptionFrequency { get; set; } 
+        public string? DrugType { get; set; } 
+        public string? ConsumptionFrequency { get; set; } 
     }
 }

@@ -7,13 +7,11 @@ import { ResidenceStatus } from '../enums/residence-status.enum';
 })
 
 export class ResidenceLabelPipe implements PipeTransform {
-  transform(
-    status: keyof typeof ResidenceStatus | null | undefined
-  ): string {
-    if (!status) {
-      return '';
-    }
+  transform(status: keyof typeof ResidenceStatus | null | undefined): string {
+      if (!status) {
+        return '';
+      }
 
-    return ResidenceStatus[status];
-  }
+      return ResidenceStatus[status];
+    }
 }

@@ -13,7 +13,7 @@ namespace PFF.Domain.Commands
         string? FirstName, 
         string? LastName, 
         string? Alias, 
-        GenderEnum? Gender, 
+        string? Gender, 
         DateTime BirthDate,
         string? PhoneNumber,
         string? Allergies, 
@@ -25,8 +25,8 @@ namespace PFF.Domain.Commands
         int? Income,
         string? Status,
         bool? IsWorking,
-        DrugTypeEnum? DrugType,
-        ConsumptionFrequencyEnum? ConsumptionFrequency,
+        string? DrugType,
+        string? ConsumptionFrequency,
         DateTime RegistrationDate,
         DateTime LastVisit) : ICommandDefinition
     {

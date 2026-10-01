@@ -14,7 +14,7 @@
           <div class="user-alias">Surnom : {{ patient()?.alias }} </div>
           <div class="user-lastname">Nom : {{ patient()?.lastName }}</div>
           <div class="user-birthdate">Date de naissance : {{ convertDate(patient()?.birthDate!) }}</div>
-          <div class="user-gender">Genre : {{ patient()?.gender }}</div>
+          <div class="user-gender">Genre : {{ patient()?.gender | GenderLabelPipe }}</div>
           <div class="user-phoneNumber">Téléphone : {{ patient()?.phoneNumber }}</div>
           <div class="user-isInsured">Est assuré ? {{ patient()?.isInsured ? 'Oui' : 'Non'}}</div>
           @if (patient()?.isInsured) {
@@ -38,8 +38,8 @@
             <div class="user-insuranceCardEndDate">Expiration : {{ convertDate(patient()?.birthDate!) }}</div>
           }
 
-          <div class="user-drugType">Produit consommé : {{ patient()?.drugType}}</div>
-          <div class="user-consumptionFrequency">Fréquence de consommation : {{ patient()?.consumptionFrequency}}</div>
+          <div class="user-drugType">Produit consommé : {{ patient()?.drugType | DrugLabelPipe }}</div>
+          <div class="user-consumptionFrequency">Fréquence de consommation : {{ patient()?.consumptionFrequency | ConsumptionLabelPipe }}</div>
 
       </div>
     }

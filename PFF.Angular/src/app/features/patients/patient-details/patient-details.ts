@@ -5,9 +5,15 @@ import { Patient } from '../../../shared/models/patient.model';
 import { DatePipe } from '@angular/common';
 import { ResidenceStatus } from '../../../shared/enums/residence-status.enum';
 import { ResidenceLabelPipe } from '../../../shared/pipes/residence-label-pipe';
+import { GenderLabelPipe } from '../../../shared/pipes/gender-label-pipe';
+import { ConsumptionLabelPipe } from '../../../shared/pipes/consumption-label-pipe';
+import { DrugLabelPipe } from '../../../shared/pipes/drug-label-pipe';
+import { Gender } from '../../../shared/enums/gender.enum';
+import { DrugType } from '../../../shared/enums/drug-type.enum';
+import { ConsumptionFrequency } from '../../../shared/enums/consumption-frequency.enum';
 
 @Component({
-  imports: [ResidenceLabelPipe, ],
+  imports: [ResidenceLabelPipe, GenderLabelPipe, ConsumptionLabelPipe, DrugLabelPipe ],
   selector: 'app-patient-details',
   styleUrl: './patient-details.css',
   templateUrl: './patient-details.html',
@@ -25,6 +31,9 @@ export class PatientDetails implements OnInit {
   readonly error = signal<string | null>(null);
 
   ResidenceStatus = ResidenceStatus;
+  Gender = Gender;
+  DrugType = DrugType;
+  ConsumptionFrequency = ConsumptionFrequency;
 
   ngOnInit(): void {
     console.log('this.activatedRoute :>> ', this.activatedRoute);

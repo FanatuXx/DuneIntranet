@@ -1,5 +1,4 @@
-﻿using PFF.Domain.Model.Enum;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace PFF.Api.Dtos

@@ -1,5 +1,4 @@
 ﻿using PFF.Domain.Model.Entities;
-using PFF.Domain.Model.Enum;
 using PFF.Tools.CommandQuerySeparation;
 using System;
 using System.Collections.Generic;

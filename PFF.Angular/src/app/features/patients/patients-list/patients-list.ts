@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, Signal, signal } from '@angular/core';
 import { PatientsService } from '../../../core/services/patients.service';
 import { RouterLink } from '@angular/router';
 import { Patient } from '../../../shared/models/patient.model';
@@ -19,6 +19,10 @@ export class PatientsList implements OnInit {
   readonly patients = signal<Patient[]>([]);
   readonly error = signal<string | null>(null);
   readonly loading = signal<boolean>(true);
+
+  orderedPatients = computed(() => {
+    return this.patients().sort((a, b) => a.alias!.localeCompare(b.alias!))
+  });
 
   ngOnInit(): void {
     this.patientsService.getAll().subscribe({

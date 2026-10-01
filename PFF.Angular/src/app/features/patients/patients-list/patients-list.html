@@ -6,7 +6,7 @@
   <p class="error">Erreur: {{ error() }}</p>
 } @else {
   <div class="users">
-    @for (patient of patients(); track $index) {
+    @for (patient of orderedPatients(); track $index) {
       <div class="user">
           <div class="user-id">ID : {{ patient.id }}</div>
           <div class="user-firstname">Prénom : {{ patient.firstName }}</div>

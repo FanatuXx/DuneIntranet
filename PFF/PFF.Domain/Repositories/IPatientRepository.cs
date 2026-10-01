@@ -10,6 +10,7 @@ namespace PFF.Domain.Repositories
 {
     public interface IPatientRepository :
         ICommandHandler<CreatePatientCommand>,
+        ICommandHandler<UpdatePatientCommand>,
         IQueryHandler<GetPatientsQuery, IEnumerable<Patient>>,
         IQueryHandler<GetPatientDetailsQuery, Patient>
     {

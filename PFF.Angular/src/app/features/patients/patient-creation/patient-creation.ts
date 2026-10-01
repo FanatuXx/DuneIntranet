@@ -171,7 +171,7 @@ export class PatientCreation implements OnInit {
 
 
     this.patientsService.create(this.form.getRawValue()).subscribe({
-      next: () => this.router.navigate(["dashboard"]),
+      next: () => this.router.navigate(["patients"]),
       error: (err) => console.log("Erreur: ", err)
     })
   }

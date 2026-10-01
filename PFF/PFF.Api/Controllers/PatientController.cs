@@ -8,6 +8,7 @@ using PFF.Domain.Repositories;
 using PFF.Tools.Results;
 using System.Net.NetworkInformation;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace PFF.Api.Controllers
@@ -68,5 +69,32 @@ namespace PFF.Api.Controllers
             return Created($"https://localhost:7050/api/patient", null);
         }
 
+        [HttpPatch]
+        [HttpPut]
+        public IActionResult Post([FromBody] UpdatePatientDto dto)
+        {
+            return this.FromResult(_patientRepository.Handle(new UpdatePatientCommand(
+                dto.Id,
+                dto.SSIN,
+                dto.IdNumber,
+                dto.FirstName,
+                dto.LastName,
+                dto.Alias,
+                dto.Gender,
+                dto.BirthDate,
+                dto.PhoneNumber,
+                dto.Allergies,
+                dto.IsInsured,
+                dto.Insurance,
+                dto.HasInsuranceCard,
+                dto.InsuranceCardEndDate,
+                dto.IsAtFedasil,
+                dto.Income,
+                dto.Status,
+                dto.IsWorking,
+                dto.DrugType,
+                dto.ConsumptionFrequency
+                )));
+        }
     }
 }

@@ -1,5 +1,5 @@
 services:
-  app-dev:
+  dune-angular-dev:
     image: dune-angular:dev
     build:
       context: .
@@ -24,17 +24,17 @@ services:
     environment:
       - NODE_ENV=development
 
-  app-prod:
-    image: dune-angular:prod
-    build:
-      context: .
-      dockerfile: dockerfile
-    ports:
-      - "80:80"
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/index.html"]
-      interval: 30s
-      timeout: 3s
-      retries: 3
-      start_period: 5s
+  # dune-angular-prod:
+  #   image: dune-angular:prod
+  #   build:
+  #     context: .
+  #     dockerfile: dockerfile
+  #   ports:
+  #     - "80:80"
+  #   restart: unless-stopped
+  #   healthcheck:
+  #     test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/index.html"]
+  #     interval: 30s
+  #     timeout: 3s
+  #     retries: 3
+  #     start_period: 5s

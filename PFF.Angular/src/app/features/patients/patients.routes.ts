@@ -15,12 +15,20 @@ export const routes: Routes = [
     {
         path: 'list',
         loadComponent: () => import("./patients-list/patients-list")
-            .then(f => f.PatientsList)
+            .then(f => f.PatientsList),
+        title: "Dune Intranet | Liste des usagers"
     },
     {
         path: ':id',
         loadComponent: () => import("./patient-details/patient-details")
-            .then(f => f.PatientDetails)
+            .then(f => f.PatientDetails),
+        title: "Dune Intranet | Détails usagers"
+    },
+    {
+        path: ':id/edit',
+        loadComponent: () => import("./patient-update/patient-update")
+            .then(f => f.PatientUpdate),
+        title: "Dune Intranet | Détails usagers"
     },
 
 

@@ -4,7 +4,6 @@ namespace PFF.Api.Dtos
 {
     public class UpdatePatientDto
     {
-        public int Id { get; set; }
         public string? SSIN { get; set; }
         public string? IdNumber { get; set; }
         public string? FirstName { get; set; }

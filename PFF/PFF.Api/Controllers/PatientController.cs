@@ -69,12 +69,12 @@ namespace PFF.Api.Controllers
             return Created($"https://localhost:7050/api/patient", null);
         }
 
-        [HttpPatch]
-        [HttpPut]
-        public IActionResult Post([FromBody] UpdatePatientDto dto)
+        [HttpPatch("{id}")]
+        [HttpPut("{id}")]
+        public IActionResult Update(int id, [FromBody] UpdatePatientDto dto)
         {
             return this.FromResult(_patientRepository.Handle(new UpdatePatientCommand(
-                dto.Id,
+                id, //est récupérée depuis l'URL
                 dto.SSIN,
                 dto.IdNumber,
                 dto.FirstName,

@@ -1,5 +1,5 @@
 import { Component, inject, input, OnInit, signal } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink, RouterModule } from '@angular/router';
 import { PatientsService } from '../../../core/services/patients.service';
 import { Patient } from '../../../shared/models/patient.model';
 import { DatePipe } from '@angular/common';
@@ -13,7 +13,7 @@ import { DrugType } from '../../../shared/enums/drug-type.enum';
 import { ConsumptionFrequency } from '../../../shared/enums/consumption-frequency.enum';
 
 @Component({
-  imports: [ResidenceLabelPipe, GenderLabelPipe, ConsumptionLabelPipe, DrugLabelPipe ],
+  imports: [ResidenceLabelPipe, GenderLabelPipe, ConsumptionLabelPipe, DrugLabelPipe, RouterLink, RouterModule],
   selector: 'app-patient-details',
   styleUrl: './patient-details.css',
   templateUrl: './patient-details.html',

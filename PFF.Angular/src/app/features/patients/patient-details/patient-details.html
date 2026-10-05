@@ -1,4 +1,4 @@
-<h1>Fiche de {{patient()?.alias}}({{id()}}):</h1>
+<h1>Fiche de {{patient()?.alias}} ({{id()}}):</h1>
 
 @if (loading()) {
   <p>Chargement...</p>
@@ -40,6 +40,7 @@
 
           <div class="user-drugType">Produit consommé : {{ patient()?.drugType | DrugLabelPipe }}</div>
           <div class="user-consumptionFrequency">Fréquence de consommation : {{ patient()?.consumptionFrequency | ConsumptionLabelPipe }}</div>
-
       </div>
+      <br>
+    <button><a [routerLink]="['/patients', patient()!.id, 'edit']"> Modifier </a></button>
     }

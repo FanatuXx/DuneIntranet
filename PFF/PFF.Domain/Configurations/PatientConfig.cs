@@ -39,6 +39,7 @@ namespace PFF.Domain.Configurations
                 .HasColumnName("Nom");
 
             builder.Property(patient => patient.Alias)
+                .IsRequired()
                 .HasColumnType("NVARCHAR(50)")
                 .HasColumnName("Surnom");
 

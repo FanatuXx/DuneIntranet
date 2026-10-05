@@ -5,6 +5,7 @@ using PFF.Domain.Commands;
 using PFF.Domain.Model.Entities;
 using PFF.Domain.Queries;
 using PFF.Domain.Repositories;
+using PFF.Tools.CommandQuerySeparation;
 using PFF.Tools.Results;
 using System.Net.NetworkInformation;
 using System.Reflection;
@@ -95,6 +96,12 @@ namespace PFF.Api.Controllers
                 dto.DrugType,
                 dto.ConsumptionFrequency
                 )));
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult Delete (int id)
+        {
+            return this.FromResult(_patientRepository.Handle(new DeletePatientCommand(id)));
         }
     }
 }

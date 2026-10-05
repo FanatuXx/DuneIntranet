@@ -139,5 +139,17 @@ namespace PFF.Domain.Services
             _dbContext.SaveChanges();
             return Result.Success();
         }
+
+        public Result Handle(DeletePatientCommand command)
+        {
+            Patient? patient = _dbContext.Patients.Find(command.Id);
+
+            if (patient is null)
+                return PatientErrors.PatientNotFound;
+
+            _dbContext.Remove(patient);
+            _dbContext.SaveChanges();
+            return Result.Success();
+        }
     }
 }

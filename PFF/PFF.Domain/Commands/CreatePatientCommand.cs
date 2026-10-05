@@ -11,7 +11,7 @@ namespace PFF.Domain.Commands
         string? IdNumber, 
         string? FirstName, 
         string? LastName, 
-        string? Alias, 
+        string Alias, 
         string? Gender, 
         DateTime BirthDate,
         string? PhoneNumber,

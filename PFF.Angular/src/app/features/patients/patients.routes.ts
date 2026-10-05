@@ -30,6 +30,11 @@ export const routes: Routes = [
             .then(f => f.PatientUpdate),
         title: "Dune Intranet | Détails usagers"
     },
+    {
+        path: ':id/delete',
+        loadComponent: () => import("./patient-delete/patient-delete")
+            .then(f => f.PatientDelete)
+    },
 
 
 ]

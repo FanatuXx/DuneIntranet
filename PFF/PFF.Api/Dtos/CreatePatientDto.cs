@@ -8,8 +8,9 @@ namespace PFF.Api.Dtos
         public string? SSIN { get; set; }
         public string? IdNumber { get; set; }
         public string? FirstName { get; set; }
-        public string? LastName { get; set; } 
-        public string? Alias { get; set; } 
+        public string? LastName { get; set; }
+        [Required]
+        public string Alias { get; set; } = default!;
         public string? Gender { get; set; }
         [Required]
         public DateTime BirthDate { get; set; }

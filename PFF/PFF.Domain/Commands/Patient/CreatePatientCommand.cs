@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace PFF.Domain.Commands
+namespace PFF.Domain.Commands.Patient
 {
     public record CreatePatientCommand(
         string? SSIN, 

@@ -33,6 +33,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 builder.Services.AddScoped<IPathologyRepository, PathologyService>();
 builder.Services.AddScoped<IPatientRepository, PatientService>();
+builder.Services.AddScoped<IPatientAddressRepository, PatientAddressService>();
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();

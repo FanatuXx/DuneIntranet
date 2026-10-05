@@ -1,4 +1,4 @@
-﻿using PFF.Domain.Commands;
+﻿using PFF.Domain.Commands.Pathology;
 using PFF.Domain.Model.Entities;
 using PFF.Domain.Queries;
 using PFF.Tools.CommandQuerySeparation;

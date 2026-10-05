@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using PFF.Domain.Commands;
+using PFF.Domain.Commands.Patient;
 using PFF.Domain.Errors;
 using PFF.Domain.Model.Entities;
 using PFF.Domain.Queries;

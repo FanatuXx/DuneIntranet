@@ -1,16 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PFF.Api.Dtos;
 using PFF.Api.Infrastructure;
-using PFF.Domain.Commands;
-using PFF.Domain.Model.Entities;
+using PFF.Domain.Commands.Patient;
 using PFF.Domain.Queries;
 using PFF.Domain.Repositories;
-using PFF.Tools.CommandQuerySeparation;
 using PFF.Tools.Results;
-using System.Net.NetworkInformation;
-using System.Reflection;
-using System.Text.RegularExpressions;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace PFF.Api.Controllers
 {

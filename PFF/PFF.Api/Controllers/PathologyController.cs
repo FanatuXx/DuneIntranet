@@ -1,11 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PFF.Domain.Repositories;
 using PFF.Api.Infrastructure;
-using PFF.Domain.Model.Entities;
 using PFF.Domain.Queries;
 using PFF.Api.Dtos;
 using PFF.Tools.Results;
-using PFF.Domain.Commands;
+using PFF.Domain.Commands.Pathology;
 
 namespace PFF.Api.Controllers
 {

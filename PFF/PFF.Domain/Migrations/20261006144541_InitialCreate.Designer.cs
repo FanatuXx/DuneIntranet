@@ -12,8 +12,8 @@ using PFF.Domain;
 namespace PFF.Domain.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260910120911_V3.3")]
-    partial class V33
+    [Migration("20261006144541_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -208,6 +208,7 @@ namespace PFF.Domain.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Alias")
+                        .IsRequired()
                         .HasColumnType("NVARCHAR(50)")
                         .HasColumnName("Surnom");
 
@@ -254,10 +255,6 @@ namespace PFF.Domain.Migrations
                     b.Property<DateTime?>("InsuranceCardEndDate")
                         .HasColumnType("DATETIME")
                         .HasColumnName("ExpirationCarteMédicale");
-
-                    b.Property<DateTime?>("InsuranceEndDate")
-                        .HasColumnType("DATETIME")
-                        .HasColumnName("ExpirationMutuelle");
 
                     b.Property<bool?>("IsAtFedasil")
                         .HasColumnType("BIT")
@@ -327,22 +324,18 @@ namespace PFF.Domain.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Country")
-                        .IsRequired()
                         .HasColumnType("NVARCHAR(128)")
                         .HasColumnName("Pays");
 
                     b.Property<string>("Number")
-                        .IsRequired()
                         .HasColumnType("NVARCHAR(10)")
                         .HasColumnName("Numéro");
 
                     b.Property<string>("Street")
-                        .IsRequired()
                         .HasColumnType("NVARCHAR(256)")
                         .HasColumnName("Rue");
 
                     b.Property<string>("Town")
-                        .IsRequired()
                         .HasColumnType("NVARCHAR(128)")
                         .HasColumnName("Ville");
 
@@ -352,7 +345,10 @@ namespace PFF.Domain.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("AddressePatient", (string)null);
+                    b.ToTable("AdressePatient", null, t =>
+                        {
+                            t.HasCheckConstraint("CK_Adresse_CodePostal", "CodePostal BETWEEN 1000 AND 9999");
+                        });
                 });
 
             modelBuilder.Entity("PFF.Domain.Model.Entities.Prescription", b =>

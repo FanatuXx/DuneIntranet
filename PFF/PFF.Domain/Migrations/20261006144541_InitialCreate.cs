@@ -6,26 +6,27 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace PFF.Domain.Migrations
 {
     /// <inheritdoc />
-    public partial class V22 : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "AddressePatient",
+                name: "AdressePatient",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Rue = table.Column<string>(type: "NVARCHAR(256)", nullable: false),
-                    Numéro = table.Column<string>(type: "NVARCHAR(10)", nullable: false),
+                    Rue = table.Column<string>(type: "NVARCHAR(256)", nullable: true),
+                    Numéro = table.Column<string>(type: "NVARCHAR(10)", nullable: true),
                     CodePostal = table.Column<int>(type: "INT", nullable: false),
-                    Ville = table.Column<string>(type: "NVARCHAR(128)", nullable: false),
-                    Pays = table.Column<string>(type: "NVARCHAR(128)", nullable: false)
+                    Ville = table.Column<string>(type: "NVARCHAR(128)", nullable: true),
+                    Pays = table.Column<string>(type: "NVARCHAR(128)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AddressePatient", x => x.Id);
+                    table.PrimaryKey("PK_AdressePatient", x => x.Id);
+                    table.CheckConstraint("CK_Adresse_CodePostal", "CodePostal BETWEEN 1000 AND 9999");
                 });
 
             migrationBuilder.CreateTable(
@@ -94,38 +95,35 @@ namespace PFF.Domain.Migrations
                     NuméroID = table.Column<string>(type: "NVARCHAR(50)", nullable: true),
                     Prénom = table.Column<string>(type: "NVARCHAR(50)", nullable: true),
                     Nom = table.Column<string>(type: "NVARCHAR(50)", nullable: true),
-                    Surnom = table.Column<string>(type: "NVARCHAR(50)", nullable: true),
+                    Surnom = table.Column<string>(type: "NVARCHAR(50)", nullable: false),
                     Genre = table.Column<string>(type: "NVARCHAR(50)", nullable: true),
                     DateNaissance = table.Column<DateTime>(type: "DATETIME", nullable: false),
                     NuméroTéléphone = table.Column<string>(type: "NVARCHAR(50)", nullable: true),
                     Allergies = table.Column<string>(type: "NVARCHAR(256)", nullable: true),
-                    Assuré = table.Column<bool>(type: "BIT", nullable: false),
+                    Assuré = table.Column<bool>(type: "BIT", nullable: true),
                     Mutuelle = table.Column<string>(type: "NVARCHAR(128)", nullable: true),
-                    ExpirationMutuelle = table.Column<DateTime>(type: "DATETIME", nullable: true),
-                    CarteMédicale = table.Column<bool>(type: "BIT", nullable: false),
+                    CarteMédicale = table.Column<bool>(type: "BIT", nullable: true),
                     ExpirationCarteMédicale = table.Column<DateTime>(type: "DATETIME", nullable: true),
-                    Fedasil = table.Column<bool>(type: "BIT", nullable: false),
-                    Revenus = table.Column<int>(type: "INT", nullable: false),
+                    Fedasil = table.Column<bool>(type: "BIT", nullable: true),
+                    Revenus = table.Column<int>(type: "INT", nullable: true),
                     Statut = table.Column<string>(type: "NVARCHAR(128)", nullable: true),
-                    Travail = table.Column<bool>(type: "BIT", nullable: false),
-                    ProduitConsommé = table.Column<string>(type: "NVARCHAR(50)", nullable: false),
-                    FréquenceConsommation = table.Column<string>(type: "NVARCHAR(128)", nullable: false),
+                    Travail = table.Column<bool>(type: "BIT", nullable: true),
+                    ProduitConsommé = table.Column<string>(type: "NVARCHAR(50)", nullable: true),
+                    FréquenceConsommation = table.Column<string>(type: "NVARCHAR(128)", nullable: true),
                     DateInscription = table.Column<DateTime>(type: "DATETIME", nullable: false, defaultValueSql: "GETDATE()"),
                     DateDernièreVisite = table.Column<DateTime>(type: "DATETIME", nullable: false, defaultValueSql: "GETDATE()"),
-                    PatientAddressId = table.Column<int>(type: "int", nullable: false)
+                    PatientAddressId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Patient", x => x.Id);
                     table.CheckConstraint("CK_Patient_DernièreVisite", "DateDernièreVisite >= DateInscription AND DateDernièreVisite <= GETDATE()");
                     table.CheckConstraint("CK_Patient_Identification", "LEN(TRIM(Prénom)) > 0 OR LEN(TRIM(Nom)) > 0 OR LEN(TRIM(Surnom)) > 0");
-                    table.CheckConstraint("CK_Patient_Mutuelle", "LEN(TRIM(Mutuelle)) > 0 ");
                     table.ForeignKey(
-                        name: "FK_Patient_AddressePatient_PatientAddressId",
+                        name: "FK_Patient_AdressePatient_PatientAddressId",
                         column: x => x.PatientAddressId,
-                        principalTable: "AddressePatient",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalTable: "AdressePatient",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -464,7 +462,7 @@ namespace PFF.Domain.Migrations
                 name: "Patient");
 
             migrationBuilder.DropTable(
-                name: "AddressePatient");
+                name: "AdressePatient");
         }
     }
 }

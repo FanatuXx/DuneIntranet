@@ -4,11 +4,11 @@ namespace PFF.Api.Dtos
 {
     public class CreatePatientAddressDto
     {
-        public string? Street { get; set; } = default;
-        public int? Number { get; set; }
+        public string? Street { get; set; }
+        public string? Number { get; set; }
         [Required]
-        public int ZipCode { get; set; }
-        public string? Town { get; set; } = default;
-        public string? Country { get; set; } = default;
+        public int ZipCode { get; set; } = default!;
+        public string? Town { get; set; } 
+        public string? Country { get; set; } 
     }
 }

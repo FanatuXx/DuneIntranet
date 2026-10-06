@@ -14,32 +14,36 @@ namespace PFF.Domain.Configurations
             builder.HasKey(pAddress => pAddress.Id);
 
 
-            builder.ToTable("AddressePatient", t =>
+            builder.ToTable("AdressePatient", t =>
             {
-                
+                t.HasCheckConstraint("CK_Adresse_CodePostal", "CodePostal BETWEEN 1000 AND 9999");
             });
 
 
             builder.Property(pAddress => pAddress.Street)
                 .HasColumnType("NVARCHAR(256)")
-                .HasColumnName("Rue");
+                .HasColumnName("Rue")
+                .IsRequired(false);
 
             builder.Property(pAddress => pAddress.Number)
                 .HasColumnType("NVARCHAR(10)")
-                .HasColumnName("Numéro");
+                .HasColumnName("Numéro")
+                .IsRequired(false);
 
             builder.Property(pAddress => pAddress.ZipCode)
-                .IsRequired()
                 .HasColumnType("INT")
-                .HasColumnName("CodePostal");
+                .HasColumnName("CodePostal")
+                .IsRequired();
 
             builder.Property(pAddress => pAddress.Town)
                 .HasColumnType("NVARCHAR(128)")
-                .HasColumnName("Ville");
+                .HasColumnName("Ville")
+                .IsRequired(false);
 
             builder.Property(pAddress => pAddress.Country)
                 .HasColumnType("NVARCHAR(128)")
-                .HasColumnName("Pays");
+                .HasColumnName("Pays")
+                .IsRequired(false);
 
 
             builder.HasMany(pAddress => pAddress.Patients)

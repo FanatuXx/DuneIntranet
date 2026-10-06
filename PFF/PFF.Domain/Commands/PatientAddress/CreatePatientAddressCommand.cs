@@ -8,7 +8,7 @@ namespace PFF.Domain.Commands.PatientAddress
     public record CreatePatientAddressCommand(
         int PatientId,
         string? Street,
-        int? Number,
+        string? Number,
         int ZipCode,
         string? Town,
         string? Country) : ICommandDefinition

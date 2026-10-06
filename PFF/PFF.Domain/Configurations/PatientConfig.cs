@@ -18,7 +18,6 @@ namespace PFF.Domain.Configurations
             {
                 t.HasCheckConstraint("CK_Patient_Identification", "LEN(TRIM(Prénom)) > 0 OR LEN(TRIM(Nom)) > 0 OR LEN(TRIM(Surnom)) > 0");
                 t.HasCheckConstraint("CK_Patient_DernièreVisite", "DateDernièreVisite >= DateInscription AND DateDernièreVisite <= GETDATE()");
-                //t.HasCheckConstraint("CK_Patient_Mutuelle", "Mutuelle IS NULL OR LEN(TRIM(Mutuelle)) > 0 ");
             });
 
 

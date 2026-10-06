@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PFF.Domain;
 
@@ -11,9 +12,11 @@ using PFF.Domain;
 namespace PFF.Domain.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20261006140356_6-10")]
+    partial class _610
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -342,10 +345,7 @@ namespace PFF.Domain.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("AdressePatient", null, t =>
-                        {
-                            t.HasCheckConstraint("CK_Adresse_CodePostal", "CodePostal BETWEEN 1000 AND 9999");
-                        });
+                    b.ToTable("AddressePatient", (string)null);
                 });
 
             modelBuilder.Entity("PFF.Domain.Model.Entities.Prescription", b =>

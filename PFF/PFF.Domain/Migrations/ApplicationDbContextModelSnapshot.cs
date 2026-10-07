@@ -336,15 +336,16 @@ namespace PFF.Domain.Migrations
                         .HasColumnType("NVARCHAR(128)")
                         .HasColumnName("Ville");
 
-                    b.Property<int>("ZipCode")
-                        .HasColumnType("INT")
+                    b.Property<string>("ZipCode")
+                        .IsRequired()
+                        .HasColumnType("NVARCHAR(5)")
                         .HasColumnName("CodePostal");
 
                     b.HasKey("Id");
 
                     b.ToTable("AdressePatient", null, t =>
                         {
-                            t.HasCheckConstraint("CK_Adresse_CodePostal", "CodePostal BETWEEN 1000 AND 9999");
+                            t.HasCheckConstraint("CK_Adresse_CodePostal", "CodePostal NOT LIKE '%[^0-9]%'");
                         });
                 });
 

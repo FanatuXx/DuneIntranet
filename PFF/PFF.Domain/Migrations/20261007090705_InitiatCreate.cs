@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace PFF.Domain.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class InitiatCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -19,14 +19,14 @@ namespace PFF.Domain.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Rue = table.Column<string>(type: "NVARCHAR(256)", nullable: true),
                     Numéro = table.Column<string>(type: "NVARCHAR(10)", nullable: true),
-                    CodePostal = table.Column<int>(type: "INT", nullable: false),
+                    CodePostal = table.Column<string>(type: "NVARCHAR(5)", nullable: false),
                     Ville = table.Column<string>(type: "NVARCHAR(128)", nullable: true),
                     Pays = table.Column<string>(type: "NVARCHAR(128)", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AdressePatient", x => x.Id);
-                    table.CheckConstraint("CK_Adresse_CodePostal", "CodePostal BETWEEN 1000 AND 9999");
+                    table.CheckConstraint("CK_Adresse_CodePostal", "CodePostal NOT LIKE '%[^0-9]%'");
                 });
 
             migrationBuilder.CreateTable(

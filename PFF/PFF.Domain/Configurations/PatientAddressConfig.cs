@@ -16,7 +16,7 @@ namespace PFF.Domain.Configurations
 
             builder.ToTable("AdressePatient", t =>
             {
-                t.HasCheckConstraint("CK_Adresse_CodePostal", "CodePostal BETWEEN 1000 AND 9999");
+                t.HasCheckConstraint("CK_Adresse_CodePostal", "CodePostal NOT LIKE '%[^0-9]%'");
             });
 
 
@@ -31,7 +31,7 @@ namespace PFF.Domain.Configurations
                 .IsRequired(false);
 
             builder.Property(pAddress => pAddress.ZipCode)
-                .HasColumnType("INT")
+                .HasColumnType("NVARCHAR(5)")
                 .HasColumnName("CodePostal")
                 .IsRequired();
 

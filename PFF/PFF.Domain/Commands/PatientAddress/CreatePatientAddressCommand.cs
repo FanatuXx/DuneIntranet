@@ -9,7 +9,7 @@ namespace PFF.Domain.Commands.PatientAddress
         int PatientId,
         string? Street,
         string? Number,
-        int ZipCode,
+        string ZipCode,
         string? Town,
         string? Country) : ICommandDefinition
     {

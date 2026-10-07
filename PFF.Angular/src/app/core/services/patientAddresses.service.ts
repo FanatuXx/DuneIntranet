@@ -29,5 +29,4 @@ export class PatientAddressesService {
     delete(id: number): Observable<PatientAddress> {
         return this.http.delete<PatientAddress>(`${this.baseUrl}/${id}`);
     }
-
 }

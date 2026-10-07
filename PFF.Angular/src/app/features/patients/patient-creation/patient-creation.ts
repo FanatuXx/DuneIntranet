@@ -47,13 +47,13 @@ export class PatientCreation implements OnInit {
     this.form = this.formBuilder.group({
       ssin: ['', [Validators.minLength(11), Validators.maxLength(15)]],
       idNumber: ['', [Validators.minLength(12), Validators.maxLength(14)]],
-      firstName: [''],
-      lastName: [''],
-      alias: [''],
+      firstName: ['', Validators.minLength(1), Validators.maxLength(50)],
+      lastName: ['', Validators.minLength(1), Validators.maxLength(50)],
+      alias: ['', Validators.minLength(1), Validators.maxLength(50), Validators.required],
       gender: [''],
-      birthDate: ['', legalAgeValidator()],
+      birthDate: ['', legalAgeValidator(), Validators.required],
       phoneNumber: ['', [Validators.minLength(9), Validators.maxLength(16)]],
-      allergies: [''],
+      allergies: ['', Validators.minLength(1), Validators.maxLength(256)],
       isInsured: [''],
       insurance: ['', [Validators.minLength(2), Validators.maxLength(50)]],
       hasInsuranceCard: [''],
@@ -63,9 +63,9 @@ export class PatientCreation implements OnInit {
       status: [''],
       isWorking: [''],
       drugType: [''],
-      consumptionFrequency: ['']
+      consumptionFrequency: [''],
     });
-  };
+  }
 
   get ssin() {
     return this.form.controls['ssin'];
@@ -140,18 +140,13 @@ export class PatientCreation implements OnInit {
     return this.form.controls['drugType'];
   }
 
-  get consumptionFrequency() {
-    return this.form.controls['consumptionFrequency'];
-  }
-
-
 
   onSubmit() {
     if (this.form.invalid) {
       return;
     }
 
-    //Convert empty field into null 
+    //Convert empty field into null
     Object.keys(this.form.controls).forEach(key => {
       const control = this.form.get(key);
       if (control && (control.value === '' || (typeof control.value === 'string' && control.value.trim() === ''))) {

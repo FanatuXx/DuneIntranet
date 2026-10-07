@@ -9,7 +9,7 @@ using System.Text;
 namespace PFF.Domain.Repositories
 {
     public interface IPatientRepository :
-        ICommandHandler<CreatePatientCommand>,
+        ICommandAsyncHandler<CreatePatientCommand>,
         ICommandHandler<UpdatePatientCommand>,
         ICommandHandler<DeletePatientCommand>,
         IQueryHandler<GetPatientsQuery, IEnumerable<Patient>>,

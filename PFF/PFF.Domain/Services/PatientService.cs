@@ -75,6 +75,103 @@ namespace PFF.Domain.Services
             }
         }
 
+        public async Task<Result> HandleAsync(CreatePatientCommand command, CancellationToken cancellationToken)
+        {
+            try
+            {
+                Patient patient = new Patient()
+                {
+                    SSIN = command.SSIN,
+                    IdNumber = command.IdNumber,
+                    FirstName = command.FirstName,
+                    LastName = command.LastName,
+                    Alias = command.Alias,
+                    Gender = command.Gender,
+                    BirthDate = command.BirthDate,
+                    PhoneNumber = command.PhoneNumber,
+                    Allergies = command.Allergies,
+                    IsInsured = command.IsInsured,
+                    Insurance = command.Insurance,
+                    HasInsuranceCard = command.HasInsuranceCard,
+                    InsuranceCardEndDate = command.InsuranceCardEndDate,
+                    IsAtFedasil = command.IsAtFedasil,
+                    Income = command.Income,
+                    Status = command.Status,
+                    IsWorking = command.IsWorking,
+                    DrugType = command.DrugType,
+                    ConsumptionFrequency = command.ConsumptionFrequency,
+                    RegistrationDate = DateTime.Now,
+                    LastVisit = DateTime.Now,
+                    PatientAddress = new PatientAddress()
+                    {
+                        Street = command.Street,
+                        Number = command.Number,
+                        ZipCode = command.ZipCode,
+                        Town = command.Town,
+                        Country = command.Country
+                    }
+                };
+
+                await _dbContext.AddAsync(patient);
+                await _dbContext.SaveChangesAsync();
+                return Result.Success();
+            }
+
+            catch (Exception ex)
+            {
+                return PatientErrors.PatientException;
+            }
+        }
+
+        //public async Task<Result> HandleAsync(CreatePatientWithAddressCommand command)
+        //{
+        //    try
+        //    {
+        //        Patient patient = new Patient()
+        //        {
+        //            SSIN = command.SSIN,
+        //            IdNumber = command.IdNumber,
+        //            FirstName = command.FirstName,
+        //            LastName = command.LastName,
+        //            Alias = command.Alias,
+        //            Gender = command.Gender,
+        //            BirthDate = command.BirthDate,
+        //            PhoneNumber = command.PhoneNumber,
+        //            Allergies = command.Allergies,
+        //            IsInsured = command.IsInsured,
+        //            Insurance = command.Insurance,
+        //            HasInsuranceCard = command.HasInsuranceCard,
+        //            InsuranceCardEndDate = command.InsuranceCardEndDate,
+        //            IsAtFedasil = command.IsAtFedasil,
+        //            Income = command.Income,
+        //            Status = command.Status,
+        //            IsWorking = command.IsWorking,
+        //            DrugType = command.DrugType,
+        //            ConsumptionFrequency = command.ConsumptionFrequency,
+        //            RegistrationDate = DateTime.Now,
+        //            LastVisit = DateTime.Now,
+        //        };
+
+        //        patient.PatientAddress = new PatientAddress()
+        //        {
+        //            Street = command.Street,
+        //            Number = command.Number,
+        //            ZipCode = command.ZipCode,
+        //            Town = command.Town,
+        //            Country = command.Country,
+        //        };
+
+        //        _dbContext.Add(patient);
+        //        await _dbContext.SaveChangesAsync();
+        //        return Result.Success();
+        //    }
+
+        //    catch (Exception ex)
+        //    {
+        //        return PatientErrors.PatientException;
+        //    }
+        //}
+
         public Result Handle(UpdatePatientCommand command)
         {
             Patient? patient = _dbContext.Patients.Find(command.Id);

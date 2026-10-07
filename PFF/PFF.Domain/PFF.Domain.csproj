@@ -26,4 +26,8 @@
     <ProjectReference Include="..\Tools\PFF.Tools.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Commands\PatientAddress\" />
+  </ItemGroup>
+
 </Project>

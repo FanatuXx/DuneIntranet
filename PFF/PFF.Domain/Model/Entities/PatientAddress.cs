@@ -12,6 +12,7 @@ namespace PFF.Domain.Model.Entities
         public string ZipCode { get; set; }
         public string? Town { get; set; } 
         public string? Country { get; set; }
+
         public virtual IList<Patient> Patients { get; set; } = new List<Patient>();
     }
 }

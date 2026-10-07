@@ -32,9 +32,9 @@ namespace PFF.Api.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody] CreatePatientDto dto)
+        public async Task<IActionResult> Post([FromBody] CreatePatientDto dto)
         {
-            Result result = _patientRepository.Handle(new CreatePatientCommand(
+            Result result = await _patientRepository.HandleAsync(new CreatePatientCommand(
                 dto.SSIN, 
                 dto.IdNumber,
                 dto.FirstName,
@@ -55,8 +55,13 @@ namespace PFF.Api.Controllers
                 dto.DrugType,
                 dto.ConsumptionFrequency,
                 DateTime.Now,
-                DateTime.Now
-                ));
+                DateTime.Now,
+                dto.PatientAddress.Street,
+                dto.PatientAddress.Number,
+                dto.PatientAddress.ZipCode,
+                dto.PatientAddress.Town,
+                dto.PatientAddress.Country
+                ), CancellationToken.None);
 
             if (result.IsFailure)
                 return BadRequest(result.Error);
@@ -93,7 +98,7 @@ namespace PFF.Api.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete (int id)
+        public IActionResult Delete(int id)
         {
             return this.FromResult(_patientRepository.Handle(new DeletePatientCommand(id)));
         }

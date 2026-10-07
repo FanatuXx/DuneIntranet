@@ -22,11 +22,11 @@ namespace PFF.Domain.Configurations
 
 
             builder.Property(patient => patient.SSIN)
-                .HasColumnType("NVARCHAR(50)")
+                .HasColumnType("NVARCHAR(15)")
                 .HasColumnName("NISS");
 
             builder.Property(patient => patient.IdNumber)
-                .HasColumnType("NVARCHAR(50)")
+                .HasColumnType("NVARCHAR(14)")
                 .HasColumnName("NuméroID");
 
             builder.Property(patient => patient.FirstName)

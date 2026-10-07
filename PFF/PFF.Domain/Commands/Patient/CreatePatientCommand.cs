@@ -1,22 +1,18 @@
-﻿using PFF.Domain.Model.Entities;
-using PFF.Tools.CommandQuerySeparation;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using PFF.Tools.CommandQuerySeparation;
 
 namespace PFF.Domain.Commands.Patient
 {
     public record CreatePatientCommand(
-        string? SSIN, 
-        string? IdNumber, 
-        string? FirstName, 
-        string? LastName, 
-        string Alias, 
-        string? Gender, 
+        string? SSIN,
+        string? IdNumber,
+        string? FirstName,
+        string? LastName,
+        string Alias,
+        string? Gender,
         DateTime BirthDate,
         string? PhoneNumber,
-        string? Allergies, 
-        bool? IsInsured, 
+        string? Allergies,
+        bool? IsInsured,
         string? Insurance,
         bool? HasInsuranceCard,
         DateTime? InsuranceCardEndDate,
@@ -27,7 +23,12 @@ namespace PFF.Domain.Commands.Patient
         string? DrugType,
         string? ConsumptionFrequency,
         DateTime RegistrationDate,
-        DateTime LastVisit) : ICommandDefinition
+        DateTime LastVisit,
+        string? Street,
+        string? Number,
+        string ZipCode,
+        string? Town,
+        string? Country) : ICommandDefinition
     {
     }
 }

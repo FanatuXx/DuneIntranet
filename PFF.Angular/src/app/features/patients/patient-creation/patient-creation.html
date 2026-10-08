@@ -18,6 +18,14 @@
       <p class="error">ATTENTION : la personne a moins de 18 ans ! La personne doit être réorientée vers un service spécialisé.</p>
     }
     <br>
+
+    <div formGroupName="patientAddress">
+      <label for="zipCode">
+        Code postal
+        <input type="text" name="zipCode" id="zipCode" formControlName="zipCode">
+      </label>
+    </div>
+    <br>
     <br>
 
     <h3>Informations administratives :</h3>
@@ -127,6 +135,34 @@
     </label>
     <br>
     <br>
+
+    <div formGroupName="patientAddress">
+      <h3>Lieu de vie ou de résidence</h3>
+
+      <label for="street">
+        Rue
+        <input type="text" name="street" id="street" formControlName="street">
+      </label>
+      <br>
+
+      <label for="number">
+        Numéro
+        <input type="text" name="number" id="number" formControlName="number">
+      </label>
+      <br>
+
+      <label for="town">
+        Ville
+        <input type="text" name="town" id="town" formControlName="town">
+      </label>
+      <br>
+
+      <label for="country">
+        Pays
+        <input type="text" name="country" id="country" formControlName="country">
+      </label>
+      <br>
+    </div>
 
     <h3>Informations médicales & consommation :</h3>
 

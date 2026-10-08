@@ -42,6 +42,7 @@ export class PatientCreation implements OnInit {
   }));
 
   form!: FormGroup;
+  formAddress!: FormGroup;
 
   ngOnInit(): void {
     this.form = this.formBuilder.group({
@@ -64,6 +65,13 @@ export class PatientCreation implements OnInit {
       isWorking: [''],
       drugType: [''],
       consumptionFrequency: [''],
+      patientAddress: this.formBuilder.group({ //Permet de créer un form imbriqué dans mon form principal
+        street: ['', [Validators.minLength(1), Validators.maxLength(256)]],
+        number: ['', [Validators.minLength(1), Validators.maxLength(10)]],
+        zipCode: ['', [Validators.minLength(1), Validators.maxLength(5)]],
+        town: ['', [Validators.minLength(1), Validators.maxLength(128)]],
+        country: ['', [Validators.minLength(1), Validators.maxLength(128)]]
+      })
     });
   }
 
@@ -119,7 +127,6 @@ export class PatientCreation implements OnInit {
     return this.form.controls['insuranceCardEndDate'];
   }
   
-  
   get isAtFedasil() {
     return this.form.controls['isAtFedasil'];
   }
@@ -136,10 +143,25 @@ export class PatientCreation implements OnInit {
     return this.form.controls['isWorking'];
   }
   
-  get drugType() {
-    return this.form.controls['drugType'];
+  get street() {
+    return this.form.controls['street'];
   }
 
+  get number() {
+    return this.form.controls['number'];
+  }
+
+  get zipCode() {
+    return this.form.controls['zipCode'];
+  }
+
+  get town() {
+    return this.form.controls['town'];
+  }
+
+  get country() {
+    return this.form.controls['country'];
+  }
 
   onSubmit() {
     if (this.form.invalid) {

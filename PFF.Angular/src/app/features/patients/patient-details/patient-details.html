@@ -29,6 +29,15 @@
           <div class="user-lastVisit">Dernière visite : {{ convertDate(patient()?.lastVisit!)}}</div>
       </div>
 
+    <h3>Lieu de vie ou de résidence</h3>
+      <div class="user">
+        <div class="user-street">Rue : {{patient()?.street}}</div>
+        <div class="user-number">Numéro : {{patient()?.number}}</div>
+        <div class="user-zipCode">Code postal : {{patient()?.zipCode}}</div>
+        <div class="user-town">Ville : {{patient()?.town}}</div>
+        <div class="user-country">Pays : {{patient()?.country}}</div>
+      </div>
+
     <h3>Indentification & informations administratives</h3>
       <div class="user">
           <div class="user-allergies">Allergies : {{ patient()?.allergies }}</div>

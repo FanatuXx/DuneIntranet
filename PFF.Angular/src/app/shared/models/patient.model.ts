@@ -27,6 +27,11 @@ export interface Patient {
     registrationDate: Date,
     lastVisit: Date
     patientAddressId: number | null
+    street: string | null,
+    number: string | null,
+    zipCode: string,
+    town: string | null,
+    country: string | null
 }
 
 export interface CreatePatientRequest {
@@ -49,7 +54,6 @@ export interface CreatePatientRequest {
     isWorking: boolean | null,
     drugType: keyof typeof DrugType | null,
     consumptionFrequency: keyof typeof ConsumptionFrequency | null
-    // createPatientRequest: CreatePatientRequest
     street: string | null,
     number: string | null,
     zipCode: string,

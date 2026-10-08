@@ -25,7 +25,13 @@ namespace PFF.Domain.Commands.Patient
         string? Status,
         bool? IsWorking,
         string? DrugType,
-        string? ConsumptionFrequency) : ICommandDefinition
+        string? ConsumptionFrequency,
+        string? Street,
+        string? Number,
+        string? ZipCode,
+        string? Town,
+        string? Country) : ICommandDefinition
+
     {
     }
 }

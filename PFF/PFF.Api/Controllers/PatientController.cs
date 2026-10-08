@@ -93,7 +93,12 @@ namespace PFF.Api.Controllers
                 dto.Status,
                 dto.IsWorking,
                 dto.DrugType,
-                dto.ConsumptionFrequency
+                dto.ConsumptionFrequency,
+                dto.PatientAddress.Street,
+                dto.PatientAddress.Number,
+                dto.PatientAddress.ZipCode,
+                dto.PatientAddress.Town,
+                dto.PatientAddress.Country
                 )));
         }
 

@@ -23,5 +23,6 @@ namespace PFF.Api.Dtos
         public bool? IsWorking { get; set; }
         public string? DrugType { get; set; }
         public string? ConsumptionFrequency { get; set; }
+        public UpdatePatientAddressDto PatientAddress { get; set; } = new();
     }
 }

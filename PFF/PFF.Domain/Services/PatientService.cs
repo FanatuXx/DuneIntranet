@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using PFF.Domain.Commands.Patient;
 using PFF.Domain.Errors;
 using PFF.Domain.Model.Entities;
@@ -34,45 +35,6 @@ namespace PFF.Domain.Services
                 return PatientErrors.PatientNotFound;
 
             return Result<Patient>.Success(patient);
-        }
-
-        public Result Handle(CreatePatientCommand command)
-        {
-            try
-            {
-                Patient patient = new Patient()
-                {
-                    SSIN = command.SSIN,
-                    IdNumber = command.IdNumber,
-                    FirstName = command.FirstName,
-                    LastName = command.LastName,
-                    Alias = command.Alias,
-                    Gender = command.Gender,
-                    BirthDate = command.BirthDate,
-                    PhoneNumber = command.PhoneNumber,
-                    Allergies = command.Allergies,
-                    IsInsured = command.IsInsured,
-                    Insurance = command.Insurance,
-                    HasInsuranceCard = command.HasInsuranceCard,
-                    InsuranceCardEndDate = command.InsuranceCardEndDate,
-                    IsAtFedasil = command.IsAtFedasil,
-                    Income = command.Income,
-                    Status = command.Status,
-                    IsWorking = command.IsWorking,
-                    DrugType = command.DrugType,
-                    ConsumptionFrequency = command.ConsumptionFrequency,
-                    RegistrationDate = DateTime.Now,
-                    LastVisit = DateTime.Now
-                };
-                _dbContext.Add(patient);
-                _dbContext.SaveChanges();
-                return Result.Success();
-            }
-
-            catch (Exception ex)
-            {
-                return PatientErrors.PatientException;
-            }
         }
 
         public async Task<Result> HandleAsync(CreatePatientCommand command, CancellationToken cancellationToken)
@@ -123,58 +85,12 @@ namespace PFF.Domain.Services
             }
         }
 
-        //public async Task<Result> HandleAsync(CreatePatientWithAddressCommand command)
-        //{
-        //    try
-        //    {
-        //        Patient patient = new Patient()
-        //        {
-        //            SSIN = command.SSIN,
-        //            IdNumber = command.IdNumber,
-        //            FirstName = command.FirstName,
-        //            LastName = command.LastName,
-        //            Alias = command.Alias,
-        //            Gender = command.Gender,
-        //            BirthDate = command.BirthDate,
-        //            PhoneNumber = command.PhoneNumber,
-        //            Allergies = command.Allergies,
-        //            IsInsured = command.IsInsured,
-        //            Insurance = command.Insurance,
-        //            HasInsuranceCard = command.HasInsuranceCard,
-        //            InsuranceCardEndDate = command.InsuranceCardEndDate,
-        //            IsAtFedasil = command.IsAtFedasil,
-        //            Income = command.Income,
-        //            Status = command.Status,
-        //            IsWorking = command.IsWorking,
-        //            DrugType = command.DrugType,
-        //            ConsumptionFrequency = command.ConsumptionFrequency,
-        //            RegistrationDate = DateTime.Now,
-        //            LastVisit = DateTime.Now,
-        //        };
-
-        //        patient.PatientAddress = new PatientAddress()
-        //        {
-        //            Street = command.Street,
-        //            Number = command.Number,
-        //            ZipCode = command.ZipCode,
-        //            Town = command.Town,
-        //            Country = command.Country,
-        //        };
-
-        //        _dbContext.Add(patient);
-        //        await _dbContext.SaveChangesAsync();
-        //        return Result.Success();
-        //    }
-
-        //    catch (Exception ex)
-        //    {
-        //        return PatientErrors.PatientException;
-        //    }
-        //}
 
         public Result Handle(UpdatePatientCommand command)
         {
-            Patient? patient = _dbContext.Patients.Find(command.Id);
+            Patient? patient = _dbContext.Patients 
+                .Include(p => p.PatientAddress)
+                .SingleOrDefault(p => p.Id == command.Id); //Remplacement du _dbContext.Patient.Find(command.Id) car cette fonction ne permet pas de charger des données liées (ici le PatientAddress), elle permet juste de trouver le Patient avec sa clé primaire 
 
             if (patient is null)
                 return PatientErrors.PatientNotFound;
@@ -232,6 +148,22 @@ namespace PFF.Domain.Services
 
             if (command.ConsumptionFrequency is not null)
                 patient.ConsumptionFrequency = command.ConsumptionFrequency;
+
+            if (!string.IsNullOrWhiteSpace(command.Street))
+                patient.PatientAddress.Street = command.Street;
+
+            if (!string.IsNullOrWhiteSpace(command.Number))
+                patient.PatientAddress.Number = command.Number;
+
+            if (!string.IsNullOrWhiteSpace(command.ZipCode))
+                patient.PatientAddress.ZipCode = command.ZipCode;
+
+            if (!string.IsNullOrWhiteSpace(command.Town))
+                patient.PatientAddress.Town = command.Town;
+
+            if (!string.IsNullOrWhiteSpace(command.Country))
+                patient.PatientAddress.Country = command.Country;
+
 
             _dbContext.SaveChanges();
             return Result.Success();

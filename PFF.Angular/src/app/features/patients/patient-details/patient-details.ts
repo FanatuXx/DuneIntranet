@@ -11,6 +11,7 @@ import { DrugLabelPipe } from '../../../shared/pipes/drug-label-pipe';
 import { Gender } from '../../../shared/enums/gender.enum';
 import { DrugType } from '../../../shared/enums/drug-type.enum';
 import { ConsumptionFrequency } from '../../../shared/enums/consumption-frequency.enum';
+import { PatientAddress } from '../../../shared/models/patientAddress.model';
 
 @Component({
   imports: [ResidenceLabelPipe, GenderLabelPipe, ConsumptionLabelPipe, DrugLabelPipe, RouterLink, RouterModule],
@@ -27,6 +28,7 @@ export class PatientDetails implements OnInit {
   readonly id = input.required<number>();
 
   readonly patient = signal<Patient | null>(null);
+  // readonly address = signal<PatientAddress | null>(null);
   readonly loading = signal<boolean>(true);
   readonly error = signal<string | null>(null);
 

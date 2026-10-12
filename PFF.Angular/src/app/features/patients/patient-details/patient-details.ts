@@ -28,7 +28,6 @@ export class PatientDetails implements OnInit {
   readonly id = input.required<number>();
 
   readonly patient = signal<Patient | null>(null);
-  // readonly address = signal<PatientAddress | null>(null);
   readonly loading = signal<boolean>(true);
   readonly error = signal<string | null>(null);
 

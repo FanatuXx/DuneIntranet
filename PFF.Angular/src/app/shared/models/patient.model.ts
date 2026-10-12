@@ -2,6 +2,7 @@ import { ConsumptionFrequency } from "../enums/consumption-frequency.enum";
 import { DrugType } from "../enums/drug-type.enum";
 import { Gender } from "../enums/gender.enum";
 import { ResidenceStatus } from "../enums/residence-status.enum";
+import { PatientAddress } from "./patientAddress.model";
 
 export interface Patient {
     id: number,
@@ -23,15 +24,10 @@ export interface Patient {
     status: keyof typeof ResidenceStatus | null,
     isWorking: boolean | null,
     drugType: keyof typeof DrugType | null,
-    consumptionFrequency: keyof typeof ConsumptionFrequency | null
+    consumptionFrequency: keyof typeof ConsumptionFrequency | null,
     registrationDate: Date,
-    lastVisit: Date
-    patientAddressId: number | null
-    street: string | null,
-    number: string | null,
-    zipCode: string,
-    town: string | null,
-    country: string | null
+    lastVisit: Date,
+    patientAddress: PatientAddress
 }
 
 export interface CreatePatientRequest {
@@ -53,7 +49,7 @@ export interface CreatePatientRequest {
     status: keyof typeof ResidenceStatus | null,
     isWorking: boolean | null,
     drugType: keyof typeof DrugType | null,
-    consumptionFrequency: keyof typeof ConsumptionFrequency | null
+    consumptionFrequency: keyof typeof ConsumptionFrequency | null,
     street: string | null,
     number: string | null,
     zipCode: string,

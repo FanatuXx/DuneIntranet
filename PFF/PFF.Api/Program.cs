@@ -1,5 +1,6 @@
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using PFF.Domain;
 using PFF.Domain.Repositories;
 using PFF.Domain.Services;
@@ -16,11 +17,14 @@ IConfiguration configuration = builder.Configuration;
 // Add services to the container.
 
 builder.Services.AddControllers()
-    .AddNewtonsoftJson();
-    //.AddJsonOptions(options =>
-    //{
-    //    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-    //});
+    .AddNewtonsoftJson(options =>
+    {
+        options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+    });
+//.AddJsonOptions(options =>
+//{
+//    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+//});
 
 builder.Services.AddCors(c => c.AddPolicy(policyName, o =>
 {

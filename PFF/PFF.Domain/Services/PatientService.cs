@@ -10,6 +10,8 @@ using PFF.Tools.Results;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace PFF.Domain.Services
 {
@@ -29,7 +31,9 @@ namespace PFF.Domain.Services
 
         public Result<Patient> Handle(GetPatientDetailsQuery query)
         {
-            Patient? patient = _dbContext.Patients.Find(query.Id);
+            Patient? patient = _dbContext.Patients 
+                .Include(p => p.PatientAddress)
+                .FirstOrDefault(p => p.Id == query.Id);
 
             if (patient is null)
                 return PatientErrors.PatientNotFound;
@@ -76,21 +80,21 @@ namespace PFF.Domain.Services
 
                 await _dbContext.AddAsync(patient);
                 await _dbContext.SaveChangesAsync();
-                return Result.Success();
-            }
+            return Result.Success();
+        }
 
             catch (Exception ex)
             {
                 return PatientErrors.PatientException;
-            }
-        }
+    }
+}
 
 
         public Result Handle(UpdatePatientCommand command)
         {
-            Patient? patient = _dbContext.Patients 
+            Patient? patient = _dbContext.Patients
                 .Include(p => p.PatientAddress)
-                .SingleOrDefault(p => p.Id == command.Id); //Remplacement du _dbContext.Patient.Find(command.Id) car cette fonction ne permet pas de charger des données liées (ici le PatientAddress), elle permet juste de trouver le Patient avec sa clé primaire 
+                .SingleOrDefault(p => p.Id == command.Id); //Remplacement du _dbContext.Patient.Find(command.Id) car cette fonction ne permet pas de charger des données liées (ici le PatientAddress), elle permet juste de trouver le Patient avec sa clé primaire
 
             if (patient is null)
                 return PatientErrors.PatientNotFound;

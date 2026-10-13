@@ -1,12 +1,14 @@
-using Microsoft.Data.SqlClient;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using PFF.Domain;
+using PFF.Domain.Model.Entities;
 using PFF.Domain.Repositories;
 using PFF.Domain.Services;
 using Scalar.AspNetCore;
-using System.Data.Common;
-using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 string policyName = "CorsicanPoliceDepartment";
 
@@ -14,17 +16,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 IConfiguration configuration = builder.Configuration;
 
-// Add services to the container.
-
 builder.Services.AddControllers()
     .AddNewtonsoftJson(options =>
     {
         options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
     });
-//.AddJsonOptions(options =>
-//{
-//    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-//});
 
 builder.Services.AddCors(c => c.AddPolicy(policyName, o =>
 {
@@ -39,12 +35,26 @@ builder.Services.AddScoped<IPathologyRepository, PathologyService>();
 builder.Services.AddScoped<IPatientRepository, PatientService>();
 builder.Services.AddScoped<IPatientAddressRepository, PatientAddressService>();
 
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = "https://localhost:7050",
+            ValidAudience = "https://localhost:7050",
+            ClockSkew = TimeSpan.FromMinutes(1),
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("your_secret_key"))
+        };
+    });
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();

@@ -7,6 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Commands\PatientAddress\**" />
+    <EmbeddedResource Remove="Commands\PatientAddress\**" />
+    <None Remove="Commands\PatientAddress\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.12" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="10.0.12" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.12" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.12" />
@@ -23,11 +30,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\PFF.Shared\PFF.Shared.csproj" />
     <ProjectReference Include="..\Tools\PFF.Tools.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Commands\PatientAddress\" />
   </ItemGroup>
 
 </Project>

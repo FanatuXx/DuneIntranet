@@ -5,6 +5,9 @@
   <Folder Name="/03 API/">
     <Project Path="PFF.Api/PFF.Api.csproj" Id="d4d051f9-9fcc-4a4f-866a-98d8ce2a8af7" />
   </Folder>
+  <Folder Name="/04 Shared/">
+    <Project Path="PFF.Shared/PFF.Shared.csproj" Id="995abda6-664a-4e5b-bd81-524c4ec7f364" />
+  </Folder>
   <Folder Name="/99 Tools/">
     <Project Path="Tools/PFF.Tools.csproj" />
   </Folder>

@@ -3,8 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using PFF.Api.Dtos;
 using PFF.Api.Infrastructure;
 using PFF.Domain.Model.Entities;
-using PFF.Domain.Repositories;
-using PFF.Shared.Dtos;
 
 namespace PFF.Api.Controllers
 {

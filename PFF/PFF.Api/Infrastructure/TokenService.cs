@@ -19,16 +19,15 @@ namespace PFF.Api.Infrastructure
             List<Claim> claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Sid, user.Id.ToString()),
-                new Claim(ClaimTypes.Name, $"{user.Prenom} {user.Nom}"),
-                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.Name, $"{user.Username}"),
                 new Claim(ClaimTypes.Role, user.Role)
             };
 
             JwtSecurityToken Token = new JwtSecurityToken(
-                issuer: "https://localhost:7079",
-                audience: "https://localhost:7079",
+                issuer: "https://localhost:7050",
+                audience: "https://localhost:7050",
                 claims: claims,
-                expires: DateTime.UtcNow.AddMinutes(1),
+                expires: DateTime.UtcNow.AddSeconds(30),
                 signingCredentials: new SigningCredentials(symmetricKey, SecurityAlgorithms.HmacSha256)
              );
 

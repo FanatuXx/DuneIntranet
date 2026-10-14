@@ -1,20 +1,15 @@
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using PFF.Domain;
-using PFF.Domain.Model.Entities;
 using PFF.Domain.Repositories;
 using PFF.Domain.Services;
 using Scalar.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using PFF.Tools.Security;
 
-string policyName = "CorsicanPoliceDepartment";
 
 var builder = WebApplication.CreateBuilder(args);
-
-IConfiguration configuration = builder.Configuration;
 
 builder.Services.AddControllers()
     .AddNewtonsoftJson(options =>
@@ -22,11 +17,14 @@ builder.Services.AddControllers()
         options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
     });
 
-builder.Services.AddCors(c => c.AddPolicy(policyName, o =>
+builder.Services.AddCustomSecurity(options =>
 {
-    o.WithOrigins("https://localhost:4200").AllowAnyMethod().AllowAnyHeader();
-    o.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader();
-}));
+    options.PolicyName = "PreventDeletePolicy";
+    options.UseCors = true;
+    options.AddOrigins("http://localhost:4200", "http://127.0.0.1:4200");
+    options.SetMethods(HttpVerbs.GET | HttpVerbs.POST | HttpVerbs.PATCH | HttpVerbs.PATCH);
+    //options.AddHeaders("id");
+});
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("Dune")));
@@ -53,6 +51,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -61,7 +60,7 @@ if (app.Environment.IsDevelopment())
     app.MapScalarApiReference();
 }
 
-app.UseCors(policyName);
+app.UseCustomSecurity();
 
 app.UseHttpsRedirection();
 app.UseAuthorization();

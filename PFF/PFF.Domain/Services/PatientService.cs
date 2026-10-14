@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.Extensions.DependencyInjection;
 using PFF.Domain.Commands.Patient;
 using PFF.Domain.Errors;
 using PFF.Domain.Model.Entities;
@@ -23,6 +24,8 @@ namespace PFF.Domain.Services
         {
             _dbContext = dbContext;
         }
+
+        public bool Activated { get; set; }
 
         public Result<IEnumerable<Patient>> Handle(GetPatientsQuery query)
         {
@@ -80,14 +83,14 @@ namespace PFF.Domain.Services
 
                 await _dbContext.AddAsync(patient);
                 await _dbContext.SaveChangesAsync();
-            return Result.Success();
-        }
+                return Result.Success();
+            }
 
             catch (Exception ex)
             {
                 return PatientErrors.PatientException;
-    }
-}
+            }
+        }
 
 
         public Result Handle(UpdatePatientCommand command)

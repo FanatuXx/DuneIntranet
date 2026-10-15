@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using PFF.Domain.Repositories;
-using PFF.Api.Infrastructure;
-using PFF.Domain.Queries;
 using PFF.Api.Dtos;
-using PFF.Tools.Results;
+using PFF.Api.Infrastructure;
 using PFF.Domain.Commands.Pathology;
+using PFF.Domain.Commands.Patient;
+using PFF.Domain.Queries;
+using PFF.Domain.Repositories;
+using PFF.Tools.Results;
 
 namespace PFF.Api.Controllers
 {
@@ -20,20 +21,44 @@ namespace PFF.Api.Controllers
         }
 
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> GetAll()
         {
-            return this.FromResult(_pathologyRepository.Handle(new GetPathologiesQuery()));
+            var result = await _pathologyRepository.HandleAsync(new GetPathologiesQuery());
+            return this.FromResult(result);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetDetails(int id)
+        {
+            var result = await _pathologyRepository.HandleAsync(new GetPathologyDetailsQuery(id));
+            return this.FromResult(result);
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody] CreatePathologyDto dto)
+        public async Task <IActionResult> Create([FromBody] CreatePathologyDto dto)
         {
-            Result result = _pathologyRepository.Handle(new CreatePathologyCommand(dto.Name));
+            Result result = await _pathologyRepository.HandleAsync(new CreatePathologyCommand(dto.Name), CancellationToken.None);
 
             if (result.IsFailure)
                 return BadRequest(result.Error);
 
             return Created($"https://localhost:7050/api/pathology", null);
+        }
+
+        [HttpPatch("{id}")]
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(int id, [FromBody] UpdatePathologyDto dto)
+        {
+            Result result = await _pathologyRepository.HandleAsync(new UpdateChronicTreatmentCommand(id, dto.Name), CancellationToken.None);
+            return this.FromResult(result);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task <IActionResult> Delete(int id)
+        {
+            Result result = await _pathologyRepository.HandleAsync(new DeleteChronicTreatmentCommand(id), CancellationToken.None);
+            return this.FromResult(result);
+
         }
 
     }

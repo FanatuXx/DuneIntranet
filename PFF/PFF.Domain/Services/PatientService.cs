@@ -4,15 +4,9 @@ using Microsoft.Extensions.DependencyInjection;
 using PFF.Domain.Commands.Patient;
 using PFF.Domain.Errors;
 using PFF.Domain.Model.Entities;
-using PFF.Domain.Queries;
+using PFF.Domain.Queries.Patients;
 using PFF.Domain.Repositories;
-using PFF.Tools.CommandQuerySeparation;
 using PFF.Tools.Results;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace PFF.Domain.Services
 {
@@ -25,18 +19,18 @@ namespace PFF.Domain.Services
             _dbContext = dbContext;
         }
 
-        public bool Activated { get; set; }
 
-        public Result<IEnumerable<Patient>> Handle(GetPatientsQuery query)
+        public async Task<Result<IEnumerable<Patient>>> HandleAsync(GetPatientsQuery query)
         {
-            return Result<IEnumerable<Patient>>.Success(_dbContext.Patients.AsEnumerable());
+            List<Patient> patients = await _dbContext.Patients.ToListAsync();
+            return Result<IEnumerable<Patient>>.Success(patients);
         }
 
-        public Result<Patient> Handle(GetPatientDetailsQuery query)
+        public async Task<Result<Patient>> HandleAsync(GetPatientDetailsQuery query)
         {
-            Patient? patient = _dbContext.Patients 
+            Patient? patient = await _dbContext.Patients 
                 .Include(p => p.PatientAddress)
-                .FirstOrDefault(p => p.Id == query.Id);
+                .SingleOrDefaultAsync(p => p.Id == query.Id);
 
             if (patient is null)
                 return PatientErrors.PatientNotFound;
@@ -86,18 +80,18 @@ namespace PFF.Domain.Services
                 return Result.Success();
             }
 
-            catch (Exception ex)
+            catch (Exception)
             {
                 return PatientErrors.PatientException;
             }
         }
 
 
-        public Result Handle(UpdatePatientCommand command)
+        public async Task <Result> HandleAsync(UpdatePatientCommand command, CancellationToken token)
         {
-            Patient? patient = _dbContext.Patients
+            Patient? patient = await _dbContext.Patients
                 .Include(p => p.PatientAddress)
-                .SingleOrDefault(p => p.Id == command.Id); //Remplacement du _dbContext.Patient.Find(command.Id) car cette fonction ne permet pas de charger des données liées (ici le PatientAddress), elle permet juste de trouver le Patient avec sa clé primaire
+                .SingleOrDefaultAsync(p => p.Id == command.Id); //Remplacement du _dbContext.Patient.Find(command.Id) car cette fonction ne permet pas de charger des données liées (ici le PatientAddress), elle permet juste de trouver le Patient avec sa clé primaire
 
             if (patient is null)
                 return PatientErrors.PatientNotFound;
@@ -172,19 +166,19 @@ namespace PFF.Domain.Services
                 patient.PatientAddress.Country = command.Country;
 
 
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
             return Result.Success();
         }
 
-        public Result Handle(DeletePatientCommand command)
+        public async Task<Result> HandleAsync(DeletePatientCommand command, CancellationToken cancellationToken)
         {
-            Patient? patient = _dbContext.Patients.Find(command.Id);
+            Patient? patient = await _dbContext.Patients.FindAsync(command.Id);
 
             if (patient is null)
                 return PatientErrors.PatientNotFound;
 
             _dbContext.Remove(patient);
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
             return Result.Success();
         }
     }

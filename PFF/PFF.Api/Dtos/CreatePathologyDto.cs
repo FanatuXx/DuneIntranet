@@ -6,6 +6,6 @@ namespace PFF.Api.Dtos
     {
         [Required]
         [StringLength(128, MinimumLength = 1)]
-        public string Name { get; set; }
+        public string Name { get; set; } = default!;
     }
 }

@@ -1,16 +1,16 @@
 ﻿using PFF.Domain.Commands.Pathology;
 using PFF.Domain.Model.Entities;
-using PFF.Domain.Queries;
+using PFF.Domain.Queries.Pathologies;
 using PFF.Tools.CommandQuerySeparation;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace PFF.Domain.Repositories
 {
     public interface IPathologyRepository :
-        ICommandHandler<CreatePathologyCommand>,
-        IQueryHandler<GetPathologiesQuery, IEnumerable<Pathology>>
+        ICommandAsyncHandler<CreatePathologyCommand>,
+        ICommandAsyncHandler<UpdateChronicTreatmentCommand>,
+        ICommandAsyncHandler<DeleteChronicTreatmentCommand>,
+        IQueryAsyncHandler<GetPathologiesQuery, IEnumerable<Pathology>>,
+        IQueryAsyncHandler<GetPathologyDetailsQuery, Pathology>
     {
     }
 }

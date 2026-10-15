@@ -20,19 +20,21 @@ namespace PFF.Api.Controllers
         }
 
         [HttpGet]
-        public IActionResult Get()
+        public async Task <IActionResult> GetAll()
         {
-            return this.FromResult(_patientRepository.Handle(new GetPatientsQuery()));
+            var result = await _patientRepository.HandleAsync(new GetPatientsQuery());
+            return this.FromResult(result);
         }
 
         [HttpGet("{id}")]
-        public IActionResult Get(int id)
+        public async Task<IActionResult> GetDetails(int id)
         {
-            return this.FromResult(_patientRepository.Handle(new GetPatientDetailsQuery(id)));
+            var result = await _patientRepository.HandleAsync(new GetPatientDetailsQuery(id));
+            return this.FromResult(result);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] CreatePatientDto dto)
+        public async Task<IActionResult> Create([FromBody] CreatePatientDto dto)
         {
             Result result = await _patientRepository.HandleAsync(new CreatePatientCommand(
                 dto.SSIN, 
@@ -71,9 +73,9 @@ namespace PFF.Api.Controllers
 
         [HttpPatch("{id}")]
         [HttpPut("{id}")]
-        public IActionResult Update(int id, [FromBody] UpdatePatientDto dto)
+        public async Task<IActionResult> Update(int id, [FromBody] UpdatePatientDto dto)
         {
-            return this.FromResult(_patientRepository.Handle(new UpdatePatientCommand(
+            Result result = await _patientRepository.HandleAsync(new UpdatePatientCommand(
                 id, //est récupérée depuis l'URL
                 dto.SSIN,
                 dto.IdNumber,
@@ -98,14 +100,16 @@ namespace PFF.Api.Controllers
                 dto.PatientAddress.Number,
                 dto.PatientAddress.ZipCode,
                 dto.PatientAddress.Town,
-                dto.PatientAddress.Country
-                )));
+                dto.PatientAddress.Country), CancellationToken.None);
+
+            return this.FromResult(result);
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            return this.FromResult(_patientRepository.Handle(new DeletePatientCommand(id)));
+            Result result = await _patientRepository.HandleAsync(new DeletePatientCommand(id), CancellationToken.None);
+            return this.FromResult(result);
         }
     }
 }

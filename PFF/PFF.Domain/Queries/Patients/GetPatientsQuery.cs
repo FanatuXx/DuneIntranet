@@ -4,9 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace PFF.Domain.Queries
+namespace PFF.Domain.Queries.Patients
 {
-    public record GetPatientDetailsQuery(int Id) : IQueryDefinition<Patient>
+    public record GetPatientsQuery : IQueryDefinition<IEnumerable<Patient>>
     {
     }
 }

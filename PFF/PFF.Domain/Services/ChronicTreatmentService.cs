@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using PFF.Domain.Commands.ChronicTreatment;
+using PFF.Domain.Errors;
 using PFF.Domain.Model.Entities;
 using PFF.Domain.Queries.ChronicTreatments;
 using PFF.Domain.Repositories;
@@ -7,6 +9,7 @@ using PFF.Tools.Results;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace PFF.Domain.Services
 {
@@ -29,10 +32,79 @@ namespace PFF.Domain.Services
         public async Task<Result<ChronicTreatment>> HandleAsync(GetChronicTreatmentDetailsQuery query)
         {
             ChronicTreatment? treatment = await _dbContext.ChronicTreatments
-                .Include(ct => ct.Patient)
-                .Include(ct => ct.Pathology)
-                .Include(ct => ct.Medicines)
-                .SingleOrDefault(ct => ct.Id == query.Id);
+                .Include(t => t.Patient)
+                .Include(t => t.Pathology)
+                .Include(t => t.Medicines)
+                .SingleOrDefaultAsync(t => t.Id == query.Id);
+
+            if (treatment is null)
+                return ChronicTreatmentErrors.ChronicTreatmentNotFound;
+
+            return Result<ChronicTreatment>.Success(treatment);
+        }
+
+        public async Task<Result> HandleAsync(CreateChronicTreatmentCommand command, CancellationToken cancellationToken)
+        {
+            Patient? patient = await _dbContext.Patients.SingleOrDefaultAsync(p => p.Id == command.PatientId);
+
+            if (patient is null)
+                return PatientErrors.PatientNotFound;
+
+            Pathology? pathology = await _dbContext.Pathologies.SingleOrDefaultAsync(patho => patho.Id == command.PathologyId);
+
+            if (pathology is null)
+                return PathologyErrors.PathologyNotFound;
+
+            List<Medicine> medicines = await _dbContext.Medicines.AnyAsync(m => m.Id == command.MedicineIds.)
+
+            try
+            {
+                ChronicTreatment treatment = new ChronicTreatment()
+                {
+                    Dosage = command.Dosage,
+                    PatientId = command.PatientId,
+                    PathologyId = command.PathologyId,
+                    Patient = patient,
+                    Pathology = pathology
+                };
+
+                await _dbContext.AddAsync(treatment);
+                await _dbContext.SaveChangesAsync();
+                return Result.Success();
+
+            }
+            catch (Exception)
+            {
+
+                return ChronicTreatmentErrors.ChronicTreatmentException;
+            }
+        }
+
+        public async Task<Result> HandleAsync(UpdateChronicTreatmentCommand command, CancellationToken cancellationToken)
+        {
+            ChronicTreatment? treatment = await _dbContext.ChronicTreatments.SingleOrDefaultAsync(t => t.Id == command.Id);
+
+            if (treatment is null)
+                return ChronicTreatmentErrors.ChronicTreatmentNotFound;
+
+            if (!string.IsNullOrWhiteSpace(command.Dosage))
+                treatment.Dosage = command.Dosage;
+
+            if (command.PathologyId > 0)
+            {   
+                Pathology? newPathology = await _dbContext.Pathologies.SingleOrDefaultAsync(p => p.Id == command.PathologyId, CancellationToken.None);
+
+                if (newPathology is null)
+                    return PathologyErrors.PathologyNotFound;
+
+                treatment.PathologyId = command.PathologyId;
+                treatment.Pathology = newPathology;
+            }
+
+
+                
+
+                
         }
     }
 }

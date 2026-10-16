@@ -9,7 +9,8 @@ namespace PFF.Domain.Commands.ChronicTreatment
         int Id,
         string Dosage,
         int PathologyId,
-        int PatientId) : ICommandDefinition
+        int PatientId,
+        int[] MedicineIds) : ICommandDefinition
     {
     }
 }

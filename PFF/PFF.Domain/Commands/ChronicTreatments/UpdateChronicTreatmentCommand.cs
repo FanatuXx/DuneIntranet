@@ -7,10 +7,10 @@ namespace PFF.Domain.Commands.ChronicTreatment
 {
     public record UpdateChronicTreatmentCommand(
         int Id,
-        string Dosage,
-        int PathologyId,
-        int PatientId,
-        int[] MedicineIds) : ICommandDefinition
+        string? Dosage,
+        int? PatientId,
+        int? PathologyId,
+        List<int>? MedicineIds) : ICommandDefinition
     {
     }
 }

@@ -3,6 +3,7 @@ using PFF.Api.Dtos;
 using PFF.Api.Infrastructure;
 using PFF.Domain.Commands.Patient;
 using PFF.Domain.Queries;
+using PFF.Domain.Queries.Patients;
 using PFF.Domain.Repositories;
 using PFF.Tools.Results;
 
@@ -20,7 +21,7 @@ namespace PFF.Api.Controllers
         }
 
         [HttpGet]
-        public async Task <IActionResult> GetAll()
+        public async Task<IActionResult> GetAll()
         {
             var result = await _patientRepository.HandleAsync(new GetPatientsQuery());
             return this.FromResult(result);

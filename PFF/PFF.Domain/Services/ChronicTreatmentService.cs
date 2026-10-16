@@ -55,7 +55,12 @@ namespace PFF.Domain.Services
             if (pathology is null)
                 return PathologyErrors.PathologyNotFound;
 
-            List<Medicine> medicines = await _dbContext.Medicines.AnyAsync(m => m.Id == command.MedicineIds.)
+            List<Medicine> medicines = await _dbContext.Medicines
+                .Where(m => command.MedicineIds.Contains(m.Id))
+                .ToListAsync();
+
+            if (medicines.Count == 0)
+                return MedicineErrors.MedicineNotFound;
 
             try
             {
@@ -65,7 +70,8 @@ namespace PFF.Domain.Services
                     PatientId = command.PatientId,
                     PathologyId = command.PathologyId,
                     Patient = patient,
-                    Pathology = pathology
+                    Pathology = pathology,
+                    Medicines = medicines
                 };
 
                 await _dbContext.AddAsync(treatment);
@@ -92,7 +98,7 @@ namespace PFF.Domain.Services
 
             if (command.PathologyId > 0)
             {   
-                Pathology? newPathology = await _dbContext.Pathologies.SingleOrDefaultAsync(p => p.Id == command.PathologyId, CancellationToken.None);
+                Pathology? newPathology = await _dbContext.Pathologies.SingleOrDefaultAsync(patho => patho.Id == command.PathologyId, CancellationToken.None);
 
                 if (newPathology is null)
                     return PathologyErrors.PathologyNotFound;
@@ -101,10 +107,43 @@ namespace PFF.Domain.Services
                 treatment.Pathology = newPathology;
             }
 
+            if (command.PatientId > 0)
+            {
+                Patient? newPatient = await _dbContext.Patients.SingleOrDefaultAsync(p => p.Id == command.PatientId, CancellationToken.None);
 
-                
+                if (newPatient is null)
+                    return PatientErrors.PatientNotFound;
 
-                
+                treatment.PatientId = command.PatientId;
+                treatment.Patient = newPatient;
+            }
+
+            if (command.MedicineIds.Count() > 0)
+            {
+                List<Medicine> medicines = await _dbContext.Medicines
+                    .Where(m => command.MedicineIds.Contains(m.Id))
+                    .ToListAsync();
+
+                if (medicines.Count == 0)
+                    return MedicineErrors.MedicineNotFound;
+
+                treatment.Medicines = medicines;
+            }
+
+            await _dbContext.SaveChangesAsync();
+            return Result.Success();
+        }
+
+        public async Task<Result> HandleAsync(DeleteChronicTreatmentCommand command, CancellationToken cancellationToken)
+        {
+            ChronicTreatment? treatment = await _dbContext.ChronicTreatments.SingleOrDefaultAsync(t => t.Id == command.Id);
+
+            if (treatment is null)
+                return ChronicTreatmentErrors.ChronicTreatmentNotFound;
+
+            _dbContext.Remove(treatment);
+            await _dbContext.SaveChangesAsync();
+            return Result.Success();
         }
     }
 }

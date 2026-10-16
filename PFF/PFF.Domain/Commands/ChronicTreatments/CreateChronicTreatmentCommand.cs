@@ -8,7 +8,7 @@ namespace PFF.Domain.Commands.ChronicTreatment
 {
     public record CreateChronicTreatmentCommand(
         string Dosage,
-        int PathologyId,
         int PatientId,
-        int[] MedicineIds) : ICommandDefinition;
+        int PathologyId,
+        List<int> MedicineIds) : ICommandDefinition;
 }

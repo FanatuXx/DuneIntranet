@@ -103,7 +103,7 @@ namespace PFF.Domain.Services
                 if (newPathology is null)
                     return PathologyErrors.PathologyNotFound;
 
-                treatment.PathologyId = command.PathologyId;
+                treatment.PathologyId = (int)command.PathologyId;
                 treatment.Pathology = newPathology;
             }
 
@@ -114,11 +114,11 @@ namespace PFF.Domain.Services
                 if (newPatient is null)
                     return PatientErrors.PatientNotFound;
 
-                treatment.PatientId = command.PatientId;
+                treatment.PatientId = (int)command.PatientId;
                 treatment.Patient = newPatient;
             }
 
-            if (command.MedicineIds.Count() > 0)
+            if (command.MedicineIds?.Count() > 0)
             {
                 List<Medicine> medicines = await _dbContext.Medicines
                     .Where(m => command.MedicineIds.Contains(m.Id))

@@ -2,7 +2,6 @@
 using PFF.Api.Dtos;
 using PFF.Api.Infrastructure;
 using PFF.Domain.Commands.ChronicTreatment;
-using PFF.Domain.Model.Entities;
 using PFF.Domain.Queries.ChronicTreatments;
 using PFF.Domain.Repositories;
 using PFF.Tools.Results;
@@ -58,7 +57,16 @@ namespace PFF.Api.Controllers
                 dto.Dosage,
                 dto.PatientId,
                 dto.PathologyId,
-                dto.MedicineIds));
+                dto.MedicineIds), CancellationToken.None);
+
+            return this.FromResult(result);
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> Delete(int id)
+        {
+            Result result = await _chronicTreatmentRepository.HandleAsync(new DeleteChronicTreatmentCommand(id), CancellationToken.None);
+            return this.FromResult(result);
         }
     }
 }

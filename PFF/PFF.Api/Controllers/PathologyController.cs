@@ -2,8 +2,7 @@
 using PFF.Api.Dtos;
 using PFF.Api.Infrastructure;
 using PFF.Domain.Commands.Pathology;
-using PFF.Domain.Commands.Patient;
-using PFF.Domain.Queries;
+using PFF.Domain.Queries.Pathologies;
 using PFF.Domain.Repositories;
 using PFF.Tools.Results;
 

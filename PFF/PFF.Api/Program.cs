@@ -32,6 +32,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddScoped<IPathologyRepository, PathologyService>();
 builder.Services.AddScoped<IPatientRepository, PatientService>();
 builder.Services.AddScoped<IPatientAddressRepository, PatientAddressService>();
+builder.Services.AddScoped<IChronicTreatmentRepository, ChronicTreatmentService>();
+builder.Services.AddScoped<IMedicineRepository, MedicineService>();
 
 builder.Services.AddOpenApi();
 

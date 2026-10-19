@@ -19,7 +19,7 @@ namespace PFF.Domain.Services
 
         public async Task<Result<IEnumerable<Pathology>>> HandleAsync(GetPathologiesQuery query)
         {
-            var pathologies = await _dbContext.Pathologies.ToListAsync();
+            List<Pathology> pathologies = await _dbContext.Pathologies.ToListAsync();
             return Result<IEnumerable<Pathology>>.Success(pathologies);
         }
 
@@ -50,6 +50,7 @@ namespace PFF.Domain.Services
             catch (Exception)
             {
                 return PathologyErrors.PathologyException;
+
             }
         }
 

@@ -27,7 +27,7 @@ namespace PFF.Domain.Services
 
         public async Task<Result<Worker>> HandleAsync(GetWorkerDetailsQuery query)
         {
-            Worker? worker = await _dbContext.Workers.FindAsync(query.Id);
+            Worker? worker = await _dbContext.Workers.FindAsync(query.SSIN);
 
             if (worker is null)
                 return WorkerErrors.WorkerNotFound;
@@ -69,13 +69,37 @@ namespace PFF.Domain.Services
 
         public async Task<Result> HandleAsync(UpdateWorkerCommand command)
         {
-            Worker? worker = await _dbContext.Workers.FindAsync(command.Id);
+            Worker? worker = await _dbContext.Workers.FindAsync(command.SSIN);
 
             if (worker is null)
                 return WorkerErrors.WorkerNotFound;
 
-            if(!string.IsNullOrWhiteSpace(command.SSIN))
+            if (!string.IsNullOrWhiteSpace(command.FirstName))
+                worker.FirstName = command.FirstName;
 
+            if (!string.IsNullOrWhiteSpace(command.LastName))
+                worker.LastName = command.LastName;
+
+            if (command.Gender is not null)
+                worker.Gender = command.Gender;
+
+            if (command.BirthDate is not null)
+                worker.BirthDate = Convert.ToDateTime(command.BirthDate);
+
+            if (!string.IsNullOrWhiteSpace(command.Email))
+                worker.Email = command.Email;
+
+            if (!string.IsNullOrWhiteSpace(command.PhoneNumber))
+                worker.PhoneNumber = command.PhoneNumber;
+
+            if (!string.IsNullOrWhiteSpace(command.Occupation))
+                worker.Occupation = command.Occupation;
+
+            if (!string.IsNullOrWhiteSpace(command.Street))
+                worker.Street = command.Street;
+
+            if (!string.IsNullOrWhiteSpace(command.Number))
+                worker.Number = command.Number;
         }
     }
 }

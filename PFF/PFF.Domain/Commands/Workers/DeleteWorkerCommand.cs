@@ -5,7 +5,7 @@ using System.Text;
 
 namespace PFF.Domain.Commands.Workers
 {
-    public record DeleteWorkerCommand(int Id) : ICommandDefinition
+    public record DeleteWorkerCommand(int SSIN) : ICommandDefinition
     {
     }
 }

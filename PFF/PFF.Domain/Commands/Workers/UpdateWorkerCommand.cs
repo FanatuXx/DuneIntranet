@@ -6,8 +6,7 @@ using System.Text;
 namespace PFF.Domain.Commands.Workers
 {
     public record UpdateWorkerCommand(
-        int Id,
-        string? SSIN,
+        string SSIN,
         string? FirstName,
         string? LastName,
         string? Gender,

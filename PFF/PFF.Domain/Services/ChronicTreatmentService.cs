@@ -6,10 +6,6 @@ using PFF.Domain.Model.Entities;
 using PFF.Domain.Queries.ChronicTreatments;
 using PFF.Domain.Repositories;
 using PFF.Tools.Results;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace PFF.Domain.Services
 {

@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using PFF.Api.Dtos;
+using PFF.Api.Dtos.Create;
+using PFF.Api.Dtos.Update;
 using PFF.Api.Infrastructure;
-using PFF.Domain.Commands.Pathology;
+using PFF.Domain.Commands.Pathologies;
 using PFF.Domain.Queries.Pathologies;
 using PFF.Domain.Repositories;
 using PFF.Tools.Results;

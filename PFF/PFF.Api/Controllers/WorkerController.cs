@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using PFF.Api.Dtos;
+using PFF.Api.Dtos.Create;
+using PFF.Api.Dtos.Update;
 using PFF.Api.Infrastructure;
 using PFF.Domain.Commands.Workers;
 using PFF.Domain.Queries.Workers;

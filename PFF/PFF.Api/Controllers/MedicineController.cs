@@ -3,8 +3,9 @@ using PFF.Domain.Repositories;
 using PFF.Domain.Queries.Medicines;
 using PFF.Domain.Commands.Medicines;
 using PFF.Api.Infrastructure;
-using PFF.Api.Dtos;
 using PFF.Tools.Results;
+using PFF.Api.Dtos.Create;
+using PFF.Api.Dtos.Update;
 
 namespace PFF.Api.Controllers
 {

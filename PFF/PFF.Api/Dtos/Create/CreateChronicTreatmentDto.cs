@@ -1,6 +1,6 @@
 ﻿using PFF.Domain.Model.Entities;
 
-namespace PFF.Api.Dtos
+namespace PFF.Api.Dtos.Create
 {
     public class CreateChronicTreatmentDto
     {

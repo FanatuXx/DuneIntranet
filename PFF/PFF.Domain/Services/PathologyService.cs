@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using PFF.Domain.Commands.Pathology;
+using PFF.Domain.Commands.Pathologies;
 using PFF.Domain.Errors;
 using PFF.Domain.Model.Entities;
 using PFF.Domain.Queries.Pathologies;

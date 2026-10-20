@@ -112,7 +112,7 @@ namespace PFF.Domain.Services
                 patient.Gender = command.Gender;
 
             if (command.BirthDate is not null)
-                patient.BirthDate = Convert.ToDateTime(command.BirthDate);
+                patient.BirthDate = Convert.ToDateTime(command.BirthDate); //A devoir remplacer par command.BirthDate.Value ?
 
             if (command.Status is not null)
                 patient.Status = command.Status;

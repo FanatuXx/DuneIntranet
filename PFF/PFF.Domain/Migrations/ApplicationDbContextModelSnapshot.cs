@@ -17,7 +17,7 @@ namespace PFF.Domain.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.12")
+                .HasAnnotation("ProductVersion", "10.0.13")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -92,7 +92,6 @@ namespace PFF.Domain.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Assessment")
-                        .IsRequired()
                         .HasColumnType("NVARCHAR(256)")
                         .HasColumnName("Évaluation");
 
@@ -101,7 +100,6 @@ namespace PFF.Domain.Migrations
                         .HasColumnName("Date");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("NVARCHAR(256)")
                         .HasColumnName("Description");
 
@@ -111,23 +109,17 @@ namespace PFF.Domain.Migrations
                         .HasColumnName("Motif");
 
                     b.Property<string>("Objective")
-                        .IsRequired()
                         .HasColumnType("NVARCHAR(256)")
                         .HasColumnName("Objectif");
-
-                    b.Property<int>("PathologyId")
-                        .HasColumnType("int");
 
                     b.Property<int>("PatientId")
                         .HasColumnType("int");
 
                     b.Property<string>("Plan")
-                        .IsRequired()
                         .HasColumnType("NVARCHAR(256)")
                         .HasColumnName("Plan");
 
                     b.Property<string>("Subjective")
-                        .IsRequired()
                         .HasColumnType("NVARCHAR(256)")
                         .HasColumnName("Subjectif");
 

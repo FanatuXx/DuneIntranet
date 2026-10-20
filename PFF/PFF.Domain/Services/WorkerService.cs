@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi;
 using PFF.Domain.Commands.Workers;
 using PFF.Domain.Errors;
 using PFF.Domain.Model.Entities;
@@ -35,7 +36,7 @@ namespace PFF.Domain.Services
             return Result<Worker>.Success(worker);
         }
 
-        public async Task<Result> HandleAsync(CreateWorkerCommand command)
+        public async Task<Result> HandleAsync(CreateWorkerCommand command, CancellationToken cancellationToken)
         {
             try
             {
@@ -67,7 +68,7 @@ namespace PFF.Domain.Services
             }
         }
 
-        public async Task<Result> HandleAsync(UpdateWorkerCommand command)
+        public async Task<Result> HandleAsync(UpdateWorkerCommand command, CancellationToken cancellationToken)
         {
             Worker? worker = await _dbContext.Workers.FindAsync(command.SSIN);
 
@@ -100,6 +101,30 @@ namespace PFF.Domain.Services
 
             if (!string.IsNullOrWhiteSpace(command.Number))
                 worker.Number = command.Number;
+
+            if (command.ZipCode > 0)
+                worker.ZipCode = (int)command.ZipCode;
+
+            if (!string.IsNullOrWhiteSpace(command.Town))
+                worker.Town = command.Town;
+
+            if (!string.IsNullOrWhiteSpace(command.Country))
+                worker.Country = command.Country;
+
+            await _dbContext.SaveChangesAsync();
+            return Result.Success();
+        }
+
+        public async Task<Result> HandleAsync(DeleteWorkerCommand command, CancellationToken cancellationToken)
+        {
+            Worker? worker = await _dbContext.Workers.FindAsync(command.SSIN);
+
+            if (worker is null)
+                return WorkerErrors.WorkerNotFound;
+
+            _dbContext.Workers.Remove(worker);
+            await _dbContext.SaveChangesAsync();
+            return Result.Success();
         }
     }
 }

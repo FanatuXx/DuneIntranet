@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace PFF.Api.Dtos
+namespace PFF.Api.Dtos.Update
 {
     public class UpdateWorkerDto
     {

@@ -1,12 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace PFF.Api.Dtos
+namespace PFF.Api.Dtos.Update
 {
     public class UpdatePatientAddressDto
     {
         public string? Street { get; set; }
         public string? Number { get; set; }
-        public string? ZipCode { get; set; } = default!;
+        public string? ZipCode { get; set; }
         public string? Town { get; set; }
         public string? Country { get; set; }
     }

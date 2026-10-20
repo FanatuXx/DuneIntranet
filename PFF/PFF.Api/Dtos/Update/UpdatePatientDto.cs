@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace PFF.Api.Dtos
+namespace PFF.Api.Dtos.Update
 {
     public class UpdatePatientDto
     {
@@ -23,6 +23,6 @@ namespace PFF.Api.Dtos
         public bool? IsWorking { get; set; }
         public string? DrugType { get; set; }
         public string? ConsumptionFrequency { get; set; }
-        public UpdatePatientAddressDto PatientAddress { get; set; } = new();
+        public UpdatePatientAddressDto? PatientAddress { get; set; }
     }
 }

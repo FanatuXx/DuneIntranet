@@ -8,6 +8,8 @@ using PFF.Tools.Results;
 
 namespace PFF.Api.Controllers
 {
+    [ApiController]
+    [Route(("api/workers"))]
     public class WorkerController : ControllerBase
     {
         private readonly IWorkerRepository _workerRepository;

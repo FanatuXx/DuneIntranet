@@ -48,8 +48,8 @@ namespace PFF.Api.Controllers
             return Created($"https://localhost:7050/api/treatment", null);
         }
 
-        [HttpPatch]
-        [HttpPut]
+        [HttpPatch("{id}")]
+        [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] UpdateChronicTreatmentDto dto)
         {
             Result result = await _chronicTreatmentRepository.HandleAsync(new UpdateChronicTreatmentCommand(
@@ -62,7 +62,7 @@ namespace PFF.Api.Controllers
             return this.FromResult(result);
         }
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             Result result = await _chronicTreatmentRepository.HandleAsync(new DeleteChronicTreatmentCommand(id), CancellationToken.None);

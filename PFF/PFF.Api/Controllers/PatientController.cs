@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using PFF.Api.Dtos;
+using PFF.Api.Dtos.Create;
+using PFF.Api.Dtos.Update;
 using PFF.Api.Infrastructure;
 using PFF.Domain.Commands.Patient;
-using PFF.Domain.Queries;
 using PFF.Domain.Queries.Patients;
 using PFF.Domain.Repositories;
 using PFF.Tools.Results;
@@ -97,11 +97,11 @@ namespace PFF.Api.Controllers
                 dto.IsWorking,
                 dto.DrugType,
                 dto.ConsumptionFrequency,
-                dto.PatientAddress.Street,
-                dto.PatientAddress.Number,
-                dto.PatientAddress.ZipCode,
-                dto.PatientAddress.Town,
-                dto.PatientAddress.Country), CancellationToken.None);
+                dto.PatientAddress?.Street,
+                dto.PatientAddress?.Number,
+                dto.PatientAddress?.ZipCode,
+                dto.PatientAddress?.Town,
+                dto.PatientAddress?.Country), CancellationToken.None);
 
             return this.FromResult(result);
         }

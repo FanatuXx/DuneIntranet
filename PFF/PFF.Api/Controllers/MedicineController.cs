@@ -56,7 +56,7 @@ namespace PFF.Api.Controllers
             return this.FromResult(result);
         }
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             Result result = await _medicineRepository.HandleAsync(new DeleteMedicineCommand(id), CancellationToken.None);

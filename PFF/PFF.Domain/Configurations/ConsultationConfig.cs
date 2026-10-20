@@ -21,6 +21,7 @@ namespace PFF.Domain.Configurations
 
 
             builder.Property(c => c.Motive)
+                .IsRequired()
                 .HasColumnType("NVARCHAR(256)")
                 .HasColumnName("Motif");
 

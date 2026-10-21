@@ -70,7 +70,7 @@ namespace PFF.Domain.Services
 
         public async Task<Result> HandleAsync(UpdateWorkerCommand command, CancellationToken cancellationToken)
         {
-            Worker? worker = await _dbContext.Workers.FindAsync(command.SSIN);
+            Worker? worker = await _dbContext.Workers.FindAsync(command.Id);
 
             if (worker is null)
                 return WorkerErrors.WorkerNotFound;
@@ -102,8 +102,8 @@ namespace PFF.Domain.Services
             if (!string.IsNullOrWhiteSpace(command.Number))
                 worker.Number = command.Number;
 
-            if (command.ZipCode > 0)
-                worker.ZipCode = (int)command.ZipCode;
+            if (!string.IsNullOrWhiteSpace(command.ZipCode))
+                worker.ZipCode = command.ZipCode;
 
             if (!string.IsNullOrWhiteSpace(command.Town))
                 worker.Town = command.Town;
@@ -117,7 +117,7 @@ namespace PFF.Domain.Services
 
         public async Task<Result> HandleAsync(DeleteWorkerCommand command, CancellationToken cancellationToken)
         {
-            Worker? worker = await _dbContext.Workers.FindAsync(command.SSIN);
+            Worker? worker = await _dbContext.Workers.FindAsync(command.Id);
 
             if (worker is null)
                 return WorkerErrors.WorkerNotFound;

@@ -6,7 +6,7 @@ using System.Text;
 
 namespace PFF.Domain.Queries.Workers
 {
-    public record GetWorkerDetailsQuery(int SSIN) : IQueryDefinition<Worker>
+    public record GetWorkerDetailsQuery(string SSIN) : IQueryDefinition<Worker>
     {
     }
 }

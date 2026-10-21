@@ -12,7 +12,7 @@ namespace PFF.Domain.Model.Entities
         public string TakeFrequency { get; set; } = default!;
         public int  ConsultationId { get; set; }
         public int PatientId { get; set; }
-        public int WorkerSSIN { get; set; }
+        public int WorkerId { get; set; }
         public virtual IList<Medicine> Medicines { get; set; } = new List<Medicine>();
         public virtual Worker Worker { get; set; } = null!;
         public virtual Patient Patient { get; set; } = null!;

@@ -32,7 +32,7 @@ namespace PFF.Domain.Configurations
 
             builder.HasOne(pre => pre.Worker)
                 .WithMany(pra => pra.Prescriptions)
-                .HasForeignKey(pre => pre.WorkerSSIN)
+                .HasForeignKey(pre => pre.WorkerId)
                 .OnDelete(DeleteBehavior.NoAction);
 
             builder.HasOne(pre => pre.Consultation)

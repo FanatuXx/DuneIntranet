@@ -6,7 +6,8 @@ namespace PFF.Api.Dtos.Create
     public class CreateWorkerDto
     {
         [Required]
-        public int SSIN { get; set; }
+        [StringLength(15, MinimumLength = 1)]
+        public string SSIN { get; set; } = default!;
 
         [Required]
         [StringLength(50, MinimumLength = 1)]
@@ -43,8 +44,9 @@ namespace PFF.Api.Dtos.Create
         [StringLength(10, MinimumLength = 1)]
         public string Number { get; set; } = default!;
 
-        [Required] 
-        public int ZipCode { get; set; }
+        [Required]
+        [StringLength(5, MinimumLength = 1)]
+        public string ZipCode { get; set; } = default!;
 
         [Required]
         [StringLength(128, MinimumLength = 1)]

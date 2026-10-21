@@ -26,9 +26,9 @@ namespace PFF.Api.Controllers
             return this.FromResult(result);
         }
 
-        public async Task<IActionResult> GetDetails(int id)
+        public async Task<IActionResult> GetDetails(string ssin)
         {
-            var result = await _workerRepository.HandleAsync(new GetWorkerDetailsQuery(id));
+            var result = await _workerRepository.HandleAsync(new GetWorkerDetailsQuery(ssin));
             return this.FromResult(result);
         }
 
@@ -55,10 +55,11 @@ namespace PFF.Api.Controllers
             return Created($"https://localhost:7050/api/worker", null);
         }
 
-        public async Task<IActionResult> Update(int SSIN, [FromBody] UpdateWorkerDto dto)
+        public async Task<IActionResult> Update(int Id, [FromBody] UpdateWorkerDto dto)
         {
             Result result = await _workerRepository.HandleAsync(new UpdateWorkerCommand(
-                SSIN,
+                Id,
+                dto.SSIN,
                 dto.FirstName,
                 dto.LastName,
                 dto.Gender,
@@ -75,9 +76,9 @@ namespace PFF.Api.Controllers
             return this.FromResult(result);
         }
 
-        public async Task<IActionResult> Delete(int SSIN)
+        public async Task<IActionResult> Delete(int Id)
         {
-            Result result = await _workerRepository.HandleAsync(new DeleteWorkerCommand(SSIN), CancellationToken.None);
+            Result result = await _workerRepository.HandleAsync(new DeleteWorkerCommand(Id), CancellationToken.None);
             return this.FromResult(result);
         }
     }

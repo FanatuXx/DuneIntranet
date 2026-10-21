@@ -4,6 +4,9 @@ namespace PFF.Api.Dtos.Update
 {
     public class UpdateWorkerDto
     {
+        [StringLength(15, MinimumLength = 1)]
+        public string? SSIN {  get; set; }
+
         [StringLength(50, MinimumLength = 1)]
         public string? FirstName { get; set; }
 
@@ -30,7 +33,8 @@ namespace PFF.Api.Dtos.Update
         [StringLength(10, MinimumLength = 1)]
         public string? Number { get; set; }
 
-        public int? ZipCode { get; set; }
+        [StringLength(5, MinimumLength = 1)]
+        public string? ZipCode { get; set; }
 
         [StringLength(128, MinimumLength = 1)]
         public string? Town { get; set; }

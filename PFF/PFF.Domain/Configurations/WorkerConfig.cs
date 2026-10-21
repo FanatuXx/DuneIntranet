@@ -12,7 +12,7 @@ namespace PFF.Domain.Configurations
         public void Configure(EntityTypeBuilder<Worker> builder)
         {
 
-            builder.HasKey(w => w.SSIN);
+            builder.HasKey(w => w.Id);
 
 
             builder.ToTable("Travailleur", t =>
@@ -21,6 +21,11 @@ namespace PFF.Domain.Configurations
                 t.HasCheckConstraint("CK_Travailleur_Email", "Email LIKE '%_@__%.__%'");
             });
 
+
+            builder.Property(w => w.SSIN)
+                .IsRequired()
+                .HasColumnType("NVARCHAR(15)")
+                .HasColumnName("NISS");
 
             builder.Property(w => w.FirstName)
                 .IsRequired()
@@ -68,7 +73,7 @@ namespace PFF.Domain.Configurations
 
             builder.Property(w => w.ZipCode)
                 .IsRequired()
-                .HasColumnType("INT")
+                .HasColumnType("NVARCHAR(5)")
                 .HasColumnName("CodePostal");
 
             builder.Property(w => w.Town)
@@ -80,6 +85,10 @@ namespace PFF.Domain.Configurations
                 .IsRequired()
                 .HasColumnType("NVARCHAR(128)")
                 .HasColumnName("Pays");
+
+
+            builder.HasIndex(w => w.SSIN)
+                .IsUnique();
 
 
             builder.HasMany(w => w.Prescriptions)

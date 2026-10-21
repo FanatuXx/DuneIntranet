@@ -39,7 +39,7 @@ namespace PFF.Domain.Services
             return Result<Prescription>.Success(prescription);
         }
 
-        public async Task<Result> HandleAsync(CreatePrescriptionCommand command, CancellationToken cancellationToken) 
+        public async Task<Result> HandleAsync(CreatePrescriptionCommand command, CancellationToken cancellationToken)
         {
             try
             {
@@ -50,7 +50,7 @@ namespace PFF.Domain.Services
                     TakeFrequency = command.TakeFrequency,
                     ConsultationId = command.ConsultationId,
                     PatientId = command.PatientId,
-                    WorkerSSIN = command.WorkerSSIN,
+                    WorkerId = command.WorkerId,
                     Medicines = command.Medicines
                 };
 
@@ -78,22 +78,36 @@ namespace PFF.Domain.Services
             if (command.EndDate is not null)
                 prescription.EndDate = command.EndDate.Value;
 
+            if (!string.IsNullOrWhiteSpace(command.TakeFrequency))
+                prescription.TakeFrequency = command.TakeFrequency;
 
+            if (command.ConsultationId > 0)
+                prescription.ConsultationId = (int)command.ConsultationId;
 
+            if (command.PatientId > 0)
+                prescription.PatientId = (int)command.PatientId;
 
+            if (command.WorkerId > 0)
+                prescription.WorkerId = (int)command.WorkerId;
 
+            if (command.Medicines is not null && command.Medicines.Count > 0)
+                prescription.Medicines = command.Medicines;
 
+            await _dbContext.SaveChangesAsync();
+            return Result.Success();
+        }
+
+        public async Task<Result> HandleAsync(DeletePrescriptionCommand command, CancellationToken cancellationToken)
+        {
+            Prescription? prescription = await _dbContext.Prescriptions.FindAsync(command.Id);
+
+            if (prescription is null)
+                return PrescriptionErrors.PrescriptionNotFound;
+
+            _dbContext.Prescriptions.Remove(prescription);
+            await _dbContext.SaveChangesAsync();
+            return Result.Success();
         }
     }
+}
 
-            public int Id { get; set; }
-        public DateTime StartDate { get; set; }
-        public DateTime EndDate { get; set; }
-        public string TakeFrequency { get; set; } = default!;
-        public int ConsultationId { get; set; }
-        public int PatientId { get; set; }
-        public int WorkerSSIN { get; set; }
-        public virtual IList<Medicine> Medicines { get; set; } = new List<Medicine>();
-        public virtual Worker Worker { get; set; } = null!;
-        public virtual Patient Patient { get; set; } = null!;
-        public virtual Consultation Consultation { get; set; } = null!;

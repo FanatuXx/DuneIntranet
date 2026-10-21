@@ -1,41 +1,41 @@
-# Dune Intranet - API ASP.NET et Frontend Angular
+# Dune Intranet - ASP.NET API and Angular Frontend
 
 ## Introduction
 
-Ce projet est une application web composée d'un backend en ASP.NET et d'un frontend en Angular. Il a pour but d'être, à termes, utilisé par l'ASBL Dune* comme plateforme intranet afin de gérer les données de ses usagers et de toutes les actions entreprises avec ceux-ci.
+This project is a web application consisting of an ASP.NET backend and an Angular frontend. Ultimately, it is intended to be used by the non-profit organization Dune* as an intranet platform to manage data about its service users and all activities carried out with them.
 
-*Dune est une association bruxelloise travaillant dans le domaine de la reduction des risks, et proposing an psycho-médico-social accompaniment to any adult person included in its public target.
+*Dune is a Brussels-based organization working in the field of harm reduction and providing psycho-medico-social support to any adult who falls within its target audience.
 
 
 ## Architecture
 
 ### Backend (ASP.NET)
 
-- **Controllers** : Gèrent les requêtes HTTP.
-- **Dtos** : Data Transfer Objects pour les exchanges of data.
-- **Infrastructure** : Extensions and configurations.
-- **Model** : Entities and data models.
-- **Queries** : Requests to retrieve data.
-- **Repositories** : Interfaces to access data.
-- **Services** : Business logic.
+- **Controllers**: Handle HTTP requests.
+- **Dtos**: Data Transfer Objects used to exchange data.
+- **Infrastructure**: Extensions and configuration.
+- **Model**: Entities and data models.
+- **Queries**: Requests to retrieve data.
+- **Repositories**: Interfaces for accessing data.
+- **Services**: Business logic.
 
 ### Frontend (Angular)
 
-- **Components** : Reactive components.
-- **Services** : Services for API calls.
-- **Modules** : Angular modules for component organization.
-- **Layout** : Navigation bar components.
-- **Shared** : Shared components and services.
+- **Components**: Reactive components.
+- **Services**: Services for API calls.
+- **Modules**: Angular modules for organizing components.
+- **Layout**: Navigation bar components.
+- **Shared**: Shared components and services.
 
 ## API
 
 ### Endpoints
 
-- **GET /api/patients** : Retrieve the list of patients.
-- **POST /api/patients** : Create a new patient.
-- **GET /api/patients/{id}** : Retrieve the details of a patient.
-- **PUT /api/patients/{id}** : Update a patient.
-- **DELETE /api/patients/{id}** : Delete a patient.
+- **GET /api/patients**: Retrieve the list of patients.
+- **POST /api/patients**: Create a new patient.
+- **GET /api/patients/{id}**: Retrieve a patient's details.
+- **PUT /api/patients/{id}**: Update a patient.
+- **DELETE /api/patients/{id}**: Delete a patient.
 
 
 ## API Project Structure

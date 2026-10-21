@@ -49,8 +49,6 @@ namespace PFF.Domain.Services
             if (patient is null)
                 return PatientErrors.PatientNotFound;
 
-            List<Consultation> consultations = await _dbContext.Consultations.ToListAsync();
-
             try
             {
                 Consultation consultation = new Consultation()

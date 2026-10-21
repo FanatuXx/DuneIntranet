@@ -11,7 +11,7 @@ namespace PFF.Domain.Configurations
     {
         public void Configure(EntityTypeBuilder<VitalSign> builder)
         {
-            builder.HasKey(vsm => vsm.Id);
+            builder.HasKey(vs => vs.Id);
 
 
             builder.ToTable("ParamètresVitaux", t =>
@@ -23,6 +23,7 @@ namespace PFF.Domain.Configurations
 
 
             builder.Property(vs => vs.HeartRate)
+                .IsRequired()
                 .HasColumnType("INT")
                 .HasColumnName("FréquenceCardiaque");
 
@@ -35,6 +36,7 @@ namespace PFF.Domain.Configurations
                 .HasColumnName("Température");
 
             builder.Property(vs => vs.OxygenSaturation)
+                .IsRequired()
                 .HasColumnType("INT")
                 .HasColumnName("Saturation");
 

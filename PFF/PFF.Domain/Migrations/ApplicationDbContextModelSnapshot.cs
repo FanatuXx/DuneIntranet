@@ -42,12 +42,12 @@ namespace PFF.Domain.Migrations
                     b.Property<int>("ConsultationsId")
                         .HasColumnType("int");
 
-                    b.Property<int>("WorkersSSIN")
+                    b.Property<int>("WorkersId")
                         .HasColumnType("int");
 
-                    b.HasKey("ConsultationsId", "WorkersSSIN");
+                    b.HasKey("ConsultationsId", "WorkersId");
 
-                    b.HasIndex("WorkersSSIN");
+                    b.HasIndex("WorkersId");
 
                     b.ToTable("Consultations_Travailleurs_JoinTable");
                 });
@@ -368,7 +368,7 @@ namespace PFF.Domain.Migrations
                         .HasColumnType("NVARCHAR(128)")
                         .HasColumnName("FréquencePrise");
 
-                    b.Property<int>("WorkerSSIN")
+                    b.Property<int>("WorkerId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -377,7 +377,7 @@ namespace PFF.Domain.Migrations
 
                     b.HasIndex("PatientId");
 
-                    b.HasIndex("WorkerSSIN");
+                    b.HasIndex("WorkerId");
 
                     b.ToTable("Prescription", null, t =>
                         {
@@ -445,11 +445,11 @@ namespace PFF.Domain.Migrations
 
             modelBuilder.Entity("PFF.Domain.Model.Entities.Worker", b =>
                 {
-                    b.Property<int>("SSIN")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SSIN"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("BirthDate")
                         .HasColumnType("DATETIME")
@@ -495,6 +495,11 @@ namespace PFF.Domain.Migrations
                         .HasColumnType("NVARCHAR(50)")
                         .HasColumnName("NuméroTéléphone");
 
+                    b.Property<string>("SSIN")
+                        .IsRequired()
+                        .HasColumnType("NVARCHAR(15)")
+                        .HasColumnName("NISS");
+
                     b.Property<string>("Street")
                         .IsRequired()
                         .HasColumnType("NVARCHAR(256)")
@@ -505,11 +510,15 @@ namespace PFF.Domain.Migrations
                         .HasColumnType("NVARCHAR(128)")
                         .HasColumnName("Ville");
 
-                    b.Property<int>("ZipCode")
-                        .HasColumnType("INT")
+                    b.Property<string>("ZipCode")
+                        .IsRequired()
+                        .HasColumnType("NVARCHAR(5)")
                         .HasColumnName("CodePostal");
 
-                    b.HasKey("SSIN");
+                    b.HasKey("Id");
+
+                    b.HasIndex("SSIN")
+                        .IsUnique();
 
                     b.ToTable("Travailleur", null, t =>
                         {
@@ -574,7 +583,7 @@ namespace PFF.Domain.Migrations
 
                     b.HasOne("PFF.Domain.Model.Entities.Worker", null)
                         .WithMany()
-                        .HasForeignKey("WorkersSSIN")
+                        .HasForeignKey("WorkersId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -634,7 +643,7 @@ namespace PFF.Domain.Migrations
 
                     b.HasOne("PFF.Domain.Model.Entities.Worker", "Worker")
                         .WithMany("Prescriptions")
-                        .HasForeignKey("WorkerSSIN")
+                        .HasForeignKey("WorkerId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 

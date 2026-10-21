@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace PFF.Domain.Migrations
 {
     /// <inheritdoc />
-    public partial class InitiatCreate : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -63,8 +63,9 @@ namespace PFF.Domain.Migrations
                 name: "Travailleur",
                 columns: table => new
                 {
-                    SSIN = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    NISS = table.Column<string>(type: "NVARCHAR(15)", nullable: false),
                     Prénom = table.Column<string>(type: "NVARCHAR(50)", nullable: false),
                     Nom = table.Column<string>(type: "NVARCHAR(50)", nullable: false),
                     Genre = table.Column<string>(type: "NVARCHAR(30)", nullable: false),
@@ -74,13 +75,13 @@ namespace PFF.Domain.Migrations
                     Fonction = table.Column<string>(type: "NVARCHAR(128)", nullable: false),
                     Rue = table.Column<string>(type: "NVARCHAR(256)", nullable: false),
                     Numéro = table.Column<string>(type: "NVARCHAR(10)", nullable: false),
-                    CodePostal = table.Column<int>(type: "INT", nullable: false),
+                    CodePostal = table.Column<string>(type: "NVARCHAR(5)", nullable: false),
                     Ville = table.Column<string>(type: "NVARCHAR(128)", nullable: false),
                     Pays = table.Column<string>(type: "NVARCHAR(128)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Travailleur", x => x.SSIN);
+                    table.PrimaryKey("PK_Travailleur", x => x.Id);
                     table.CheckConstraint("CK_Travailleur_Email", "Email LIKE '%_@__%.__%'");
                     table.CheckConstraint("CK_Travailleur_Noms", "LEN(TRIM(Prénom)) > 0 AND LEN(TRIM(Nom)) > 0");
                 });
@@ -91,8 +92,8 @@ namespace PFF.Domain.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    NISS = table.Column<string>(type: "NVARCHAR(50)", nullable: true),
-                    NuméroID = table.Column<string>(type: "NVARCHAR(50)", nullable: true),
+                    NISS = table.Column<string>(type: "NVARCHAR(15)", nullable: true),
+                    NuméroID = table.Column<string>(type: "NVARCHAR(14)", nullable: true),
                     Prénom = table.Column<string>(type: "NVARCHAR(50)", nullable: true),
                     Nom = table.Column<string>(type: "NVARCHAR(50)", nullable: true),
                     Surnom = table.Column<string>(type: "NVARCHAR(50)", nullable: false),
@@ -133,13 +134,12 @@ namespace PFF.Domain.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Motif = table.Column<string>(type: "NVARCHAR(256)", nullable: false),
-                    Subjectif = table.Column<string>(type: "NVARCHAR(256)", nullable: false),
-                    Objectif = table.Column<string>(type: "NVARCHAR(256)", nullable: false),
-                    Évaluation = table.Column<string>(type: "NVARCHAR(256)", nullable: false),
-                    Plan = table.Column<string>(type: "NVARCHAR(256)", nullable: false),
-                    Description = table.Column<string>(type: "NVARCHAR(256)", nullable: false),
+                    Subjectif = table.Column<string>(type: "NVARCHAR(256)", nullable: true),
+                    Objectif = table.Column<string>(type: "NVARCHAR(256)", nullable: true),
+                    Évaluation = table.Column<string>(type: "NVARCHAR(256)", nullable: true),
+                    Plan = table.Column<string>(type: "NVARCHAR(256)", nullable: true),
+                    Description = table.Column<string>(type: "NVARCHAR(256)", nullable: true),
                     Date = table.Column<DateTime>(type: "DATETIME", nullable: false),
-                    PathologyId = table.Column<int>(type: "int", nullable: false),
                     PatientId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -211,11 +211,11 @@ namespace PFF.Domain.Migrations
                 columns: table => new
                 {
                     ConsultationsId = table.Column<int>(type: "int", nullable: false),
-                    WorkersSSIN = table.Column<int>(type: "int", nullable: false)
+                    WorkersId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Consultations_Travailleurs_JoinTable", x => new { x.ConsultationsId, x.WorkersSSIN });
+                    table.PrimaryKey("PK_Consultations_Travailleurs_JoinTable", x => new { x.ConsultationsId, x.WorkersId });
                     table.ForeignKey(
                         name: "FK_Consultations_Travailleurs_JoinTable_Consultation_ConsultationsId",
                         column: x => x.ConsultationsId,
@@ -223,10 +223,10 @@ namespace PFF.Domain.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Consultations_Travailleurs_JoinTable_Travailleur_WorkersSSIN",
-                        column: x => x.WorkersSSIN,
+                        name: "FK_Consultations_Travailleurs_JoinTable_Travailleur_WorkersId",
+                        column: x => x.WorkersId,
                         principalTable: "Travailleur",
-                        principalColumn: "SSIN",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -271,7 +271,7 @@ namespace PFF.Domain.Migrations
                     FréquencePrise = table.Column<string>(type: "NVARCHAR(128)", nullable: false),
                     ConsultationId = table.Column<int>(type: "int", nullable: false),
                     PatientId = table.Column<int>(type: "int", nullable: false),
-                    WorkerSSIN = table.Column<int>(type: "int", nullable: false)
+                    WorkerId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -288,10 +288,10 @@ namespace PFF.Domain.Migrations
                         principalTable: "Patient",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Prescription_Travailleur_WorkerSSIN",
-                        column: x => x.WorkerSSIN,
+                        name: "FK_Prescription_Travailleur_WorkerId",
+                        column: x => x.WorkerId,
                         principalTable: "Travailleur",
-                        principalColumn: "SSIN");
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -353,9 +353,9 @@ namespace PFF.Domain.Migrations
                 column: "PathologiesId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Consultations_Travailleurs_JoinTable_WorkersSSIN",
+                name: "IX_Consultations_Travailleurs_JoinTable_WorkersId",
                 table: "Consultations_Travailleurs_JoinTable",
-                column: "WorkersSSIN");
+                column: "WorkersId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Médicament_Nom",
@@ -397,14 +397,20 @@ namespace PFF.Domain.Migrations
                 column: "PatientId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Prescription_WorkerSSIN",
+                name: "IX_Prescription_WorkerId",
                 table: "Prescription",
-                column: "WorkerSSIN");
+                column: "WorkerId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Prescriptions_Médicaments_JoinTable_PrescriptionsId",
                 table: "Prescriptions_Médicaments_JoinTable",
                 column: "PrescriptionsId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Travailleur_NISS",
+                table: "Travailleur",
+                column: "NISS",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_TTChronique_PathologyId",

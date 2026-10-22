@@ -20,18 +20,21 @@ namespace PFF.Api.Controllers
             _workerRepository = workerRepository;
         }
 
+        [HttpGet]
         public async Task<IActionResult> GetAll()
         {
             var result = await _workerRepository.HandleAsync(new GetWorkersQuery());
             return this.FromResult(result);
         }
 
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetDetails(string ssin)
         {
             var result = await _workerRepository.HandleAsync(new GetWorkerDetailsQuery(ssin));
             return this.FromResult(result);
         }
 
+        [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateWorkerDto dto)
         {
             Result result = await _workerRepository.HandleAsync(new CreateWorkerCommand(
@@ -55,6 +58,8 @@ namespace PFF.Api.Controllers
             return Created($"https://localhost:7050/api/worker", null);
         }
 
+        [HttpPatch("{id}")]
+        [HttpPut("{id}")]
         public async Task<IActionResult> Update(int Id, [FromBody] UpdateWorkerDto dto)
         {
             Result result = await _workerRepository.HandleAsync(new UpdateWorkerCommand(
@@ -76,6 +81,7 @@ namespace PFF.Api.Controllers
             return this.FromResult(result);
         }
 
+        [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int Id)
         {
             Result result = await _workerRepository.HandleAsync(new DeleteWorkerCommand(Id), CancellationToken.None);

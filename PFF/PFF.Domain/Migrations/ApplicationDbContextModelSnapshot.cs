@@ -393,27 +393,30 @@ namespace PFF.Domain.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<double>("BMI")
+                    b.Property<double?>("BMI")
                         .HasColumnType("FLOAT")
                         .HasColumnName("IMC");
 
                     b.Property<string>("BloodPressure")
-                        .IsRequired()
                         .HasColumnType("NVARCHAR(50)")
                         .HasColumnName("PressionArtérielle");
 
-                    b.Property<double>("BloodSugar")
+                    b.Property<double?>("BloodSugar")
                         .HasColumnType("FLOAT")
                         .HasColumnName("Glycémie");
 
-                    b.Property<int>("ConsultationId")
+                    b.Property<int?>("ConsultationId")
                         .HasColumnType("int");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("DATETIME")
+                        .HasColumnName("Date");
 
                     b.Property<int>("HeartRate")
                         .HasColumnType("INT")
                         .HasColumnName("FréquenceCardiaque");
 
-                    b.Property<double>("Height")
+                    b.Property<double?>("Height")
                         .HasColumnType("FLOAT")
                         .HasColumnName("Taille");
 
@@ -421,11 +424,14 @@ namespace PFF.Domain.Migrations
                         .HasColumnType("INT")
                         .HasColumnName("Saturation");
 
-                    b.Property<decimal>("Temperature")
+                    b.Property<int>("PatientId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal?>("Temperature")
                         .HasColumnType("DECIMAL(3, 1)")
                         .HasColumnName("Température");
 
-                    b.Property<int>("Weight")
+                    b.Property<int?>("Weight")
                         .HasColumnType("INT")
                         .HasColumnName("Poids");
 
@@ -658,9 +664,7 @@ namespace PFF.Domain.Migrations
                 {
                     b.HasOne("PFF.Domain.Model.Entities.Consultation", "Consultation")
                         .WithMany("VitalSigns")
-                        .HasForeignKey("ConsultationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ConsultationId");
 
                     b.Navigation("Consultation");
                 });

@@ -34,6 +34,10 @@ builder.Services.AddScoped<IPatientRepository, PatientService>();
 builder.Services.AddScoped<IPatientAddressRepository, PatientAddressService>();
 builder.Services.AddScoped<IChronicTreatmentRepository, ChronicTreatmentService>();
 builder.Services.AddScoped<IMedicineRepository, MedicineService>();
+builder.Services.AddScoped<IConsultationRepository, ConsultationService>();
+builder.Services.AddScoped<IPrescriptionRepository, PrescriptionService>();
+builder.Services.AddScoped<IVitalSignRepository, VitalSignService>();
+builder.Services.AddScoped<IWorkerRepository, WorkerService>();
 
 builder.Services.AddOpenApi();
 

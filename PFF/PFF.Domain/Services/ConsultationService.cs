@@ -49,6 +49,27 @@ namespace PFF.Domain.Services
             if (patient is null)
                 return PatientErrors.PatientNotFound;
 
+            var workersIds = command.WorkersIds.Distinct().ToList();
+            var pathologiesIds = command.PathologiesIds.Distinct().ToList();
+
+            IList<Worker> workers = await _dbContext.Workers
+                .Where(w => command.WorkersIds.Contains(w.Id))
+                .ToListAsync(cancellationToken);
+
+            IList<Pathology> pathologies = await _dbContext.Pathologies
+                .Where(p => command.PathologiesIds.Contains(p.Id))
+                .ToListAsync();
+
+            if (workers.Count != workersIds.Distinct().Count()) //Disctinct() s'assure qu'on ne compte pas 2x le même Id dans la liste
+            {
+                return WorkerErrors.WorkerNotFound;
+            }
+
+            if (pathologies.Count != pathologiesIds.Distinct().Count())
+            {
+                return PathologyErrors.PathologyNotFound;
+            }
+
             try
             {
                 Consultation consultation = new Consultation()
@@ -59,14 +80,57 @@ namespace PFF.Domain.Services
                     Assessment = command.Assessment,
                     Plan = command.Plan,
                     Description = command.Description,
-                    Date = DateTime.Now,
-                    PatientId = command.PatientId,
-                    Patient = patient,
-                    Workers = command.Workers,
-                    Prescriptions = command.Prescriptions,
-                    VitalSigns = command.VitalSigns,
-                    Pathologies = command.Pathologies
+                    Date = command.Date,
+
+                    // PatientId = command.PatientId -> La ligne du dessous permet d'automatiquement renseigner le patient Id grâce à la FK & Entity Framework
+                    Patient = patient,             
+                    Workers = workers,
+                    Pathologies = pathologies
                 };
+
+                foreach (var vitalData in command.VitalSigns)
+                {
+                    consultation.VitalSigns!.Add(new VitalSign
+                    {
+                        HeartRate = vitalData.HeartRate,
+                        BloodPressure = vitalData.BloodPressure,
+                        Temperature = vitalData.Temperature,
+                        OxygenSaturation = vitalData.OxygenSaturation,
+                        Height = vitalData.Height,
+                        Weight = vitalData.Weight,
+                        BloodSugar = vitalData.BloodSugar,
+
+                        Consultation = consultation
+                    });
+                }
+
+                foreach (var prescriptionData in command.Prescriptions)
+                {
+                    var medicineIds = prescriptionData.MedicinesIds
+                        .Distinct()
+                        .ToList();
+
+                    var medicines = await _dbContext.Medicines
+                        .Where(m => medicineIds.Contains(m.Id))
+                        .ToListAsync(cancellationToken);
+
+                    if (medicines.Count != medicineIds.Count)
+                    {
+                        return MedicineErrors.MedicineNotFound;
+                    }
+
+                    var prescription = new Prescription
+                    {
+                        StartDate = prescriptionData.StartDate,
+                        EndDate = prescriptionData.EndDate,
+                        TakeFrequency = prescriptionData.TakeFrequency,
+
+                        Consultation = consultation,
+                        Medicines = medicines
+                    };
+
+                    consultation.Prescriptions!.Add(prescription);
+                }
 
                 await _dbContext.Consultations.AddAsync(consultation);
                 await _dbContext.SaveChangesAsync();
@@ -86,11 +150,6 @@ namespace PFF.Domain.Services
 
             if (consultation is null)
                 return ConsultationErrors.ConsultationNotFound;
-
-            Patient? patient = await _dbContext.Patients.FindAsync(command.PatientId);
-
-            if(patient is null)
-                return PatientErrors.PatientNotFound;
 
             if (!string.IsNullOrWhiteSpace(command.Motive))
                 consultation.Motive = command.Motive;
@@ -113,23 +172,56 @@ namespace PFF.Domain.Services
             if (command.Date is not null)
                 consultation.Date = Convert.ToDateTime(command.Date);
 
+
             if (command.PatientId > 0)
             {
-                consultation.PatientId = (int)command.PatientId;
+                Patient? patient = await _dbContext.Patients.FindAsync(command.PatientId);
+
+                if (patient is null)
+                    return PatientErrors.PatientNotFound;
+
                 consultation.Patient = patient;
             }
 
-            if (command.Workers is not null && command.Workers.Count > 0)
-                consultation.Workers = command.Workers;
 
-            if (command.Prescriptions is not null && command.Prescriptions.Count > 0)
-                consultation.Prescriptions = command.Prescriptions;
+            if (command.WorkersIds is not null && command.WorkersIds.Count > 0)
+            {
+                IList<Worker>? workers = await _dbContext.Workers
+                    .Where(w => command.WorkersIds.Contains(w.Id))
+                    .ToListAsync();
 
-            if (command.VitalSigns is not null && command.VitalSigns.Count > 0)
-                consultation.VitalSigns = command.VitalSigns;
+                if (workers.Count != command.WorkersIds?.Distinct().Count())
+                {
+                    return WorkerErrors.WorkerNotFound;
+                }
 
-            if (command.Pathologies is not null && command.Pathologies.Count > 0)
-                consultation.Pathologies = command.Pathologies;
+                consultation.Workers = workers;
+            }
+                
+
+            if (command.PathologiesIds is not null && command.PathologiesIds.Count > 0)
+            {
+                IList<Pathology>? pathologies = await _dbContext.Pathologies
+                    .Where(p => command.PathologiesIds.Contains(p.Id))
+                    .ToListAsync();
+
+                if (pathologies.Count != command.PathologiesIds.Distinct().Count())
+                {
+                    return PathologyErrors.PathologyNotFound;
+                }
+
+                consultation.Pathologies = pathologies;
+            }
+
+
+            //if (command.Prescriptions is not null && command.Prescriptions.Count > 0)
+            //    consultation.Prescriptions = command.Prescriptions;
+
+            //if (command.VitalSigns is not null && command.VitalSigns.Count > 0)
+            //    consultation.VitalSigns = command.VitalSigns;
+
+
+
 
             await _dbContext.SaveChangesAsync();
             return Result.Success();

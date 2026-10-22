@@ -28,9 +28,9 @@ namespace PFF.Api.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetDetails(string ssin)
+        public async Task<IActionResult> GetDetails(int id)
         {
-            var result = await _workerRepository.HandleAsync(new GetWorkerDetailsQuery(ssin));
+            var result = await _workerRepository.HandleAsync(new GetWorkerDetailsQuery(id));
             return this.FromResult(result);
         }
 

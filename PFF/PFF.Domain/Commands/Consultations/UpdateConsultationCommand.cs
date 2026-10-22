@@ -13,10 +13,8 @@ namespace PFF.Domain.Commands.Consultations
         string? Description,
         DateTime? Date,
         int? PatientId,
-        IList<Worker>? Workers,
-        IList<Pathology>? Pathologies,
-        IList<VitalSign>? VitalSigns,
-        IList<Prescription>? Prescriptions) : ICommandDefinition
+        IList<int>? WorkersIds,
+        IList<int>? PathologiesIds) : ICommandDefinition
     {
     }
 }

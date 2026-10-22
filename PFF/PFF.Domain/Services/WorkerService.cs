@@ -28,7 +28,7 @@ namespace PFF.Domain.Services
 
         public async Task<Result<Worker>> HandleAsync(GetWorkerDetailsQuery query)
         {
-            Worker? worker = await _dbContext.Workers.FindAsync(query.SSIN);
+            Worker? worker = await _dbContext.Workers.FindAsync(query.Id);
 
             if (worker is null)
                 return WorkerErrors.WorkerNotFound;
@@ -74,6 +74,9 @@ namespace PFF.Domain.Services
 
             if (worker is null)
                 return WorkerErrors.WorkerNotFound;
+
+            if (!string.IsNullOrWhiteSpace(command.SSIN))
+                worker.SSIN = command.SSIN;
 
             if (!string.IsNullOrWhiteSpace(command.FirstName))
                 worker.FirstName = command.FirstName;

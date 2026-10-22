@@ -1,4 +1,6 @@
-﻿using PFF.Domain.Model.Entities;
+﻿using PFF.Domain.Commands.Prescriptions;
+using PFF.Domain.Commands.VitalSigns;
+using PFF.Domain.Model.Entities;
 using PFF.Tools.CommandQuerySeparation;
 using System;
 using System.Collections.Generic;
@@ -15,10 +17,12 @@ namespace PFF.Domain.Commands.Consultations
         string? Description,
         DateTime Date,
         int PatientId,
-        IList<Worker> Workers,
-        IList<Pathology> Pathologies,
-        IList<VitalSign>? VitalSigns,
-        IList<Prescription>? Prescriptions) : ICommandDefinition
+
+        IList<int> WorkersIds,
+        IList<int> PathologiesIds,
+
+        IList<CreatePrescriptionData> Prescriptions,
+        IList<CreateVitalSignData> VitalSigns) : ICommandDefinition
     {
     }
 }

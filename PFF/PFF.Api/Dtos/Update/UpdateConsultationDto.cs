@@ -4,7 +4,6 @@ namespace PFF.Api.Dtos.Update
 {
     public class UpdateConsultationDto
     {
-        public int Id { get; set; }
         public string? Motive { get; set; }
         public string? Subjective { get; set; }
         public string? Objective { get; set; }

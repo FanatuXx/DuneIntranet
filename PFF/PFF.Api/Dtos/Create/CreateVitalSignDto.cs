@@ -14,13 +14,9 @@ namespace PFF.Api.Dtos.Create
 
         [Required]
         public int OxygenSaturation { get; set; }
+
         public int? Height { get; set; }
         public float? Weight { get; set; }
         public float? BloodSugar { get; set; }
-
-        [Required]
-        public DateTime Date { get; set; } = DateTime.Now;
-
-        public int ConsultationId { get; set; }
     }
 }

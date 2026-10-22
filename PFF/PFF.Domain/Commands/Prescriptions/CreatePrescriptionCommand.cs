@@ -13,7 +13,7 @@ namespace PFF.Domain.Commands.Prescriptions
         int ConsultationId,
         int PatientId,
         int WorkerId,
-        IList<Medicine> Medicines) : ICommandDefinition
+        IList<int> MedicinesIds) : ICommandDefinition
     {
     }
 }

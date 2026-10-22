@@ -16,15 +16,9 @@ namespace PFF.Api.Dtos.Create
         public string TakeFrequency { get; set; } = default!;
 
         [Required]
-        public int ConsultationId { get; set; }
+        public int PrescriberId { get; set; }
 
         [Required]
-        public int PatientId { get; set; }
-
-        [Required]
-        public int WorkerId { get; set; }
-
-        [Required]
-        public virtual IList<Medicine> Medicines { get; set; } = new List<Medicine>();
+        public virtual IList<int> MedicinesIds { get; set; } = new List<int>();
     }
 }

@@ -51,6 +51,7 @@ namespace PFF.Domain.Services
                     Height = command.Height,
                     Weight = command.Weight,
                     BloodSugar  = command.BloodSugar,
+                    Date = command.Date,
                     ConsultationId = command.ConsultationId,
                 };
 
@@ -94,6 +95,9 @@ namespace PFF.Domain.Services
 
             if (command.BloodSugar > 0)
                 vitalSign.BloodSugar = command.BloodSugar.Value;
+
+            if (command.Date is not null)
+                vitalSign.Date = command.Date.Value;
 
             if (command.ConsultationId > 0)
                 vitalSign.ConsultationId = command.ConsultationId.Value;

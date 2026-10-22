@@ -56,6 +56,11 @@ namespace PFF.Domain.Configurations
                 .HasColumnType("FLOAT")
                 .HasColumnName("Glycémie");
 
+            builder.Property(vs => vs.Date)
+                .IsRequired()
+                .HasColumnType("DATETIME")
+                .HasColumnName("Date");
+
 
             builder.HasOne(vs => vs.Consultation)
                 .WithMany(c => c.VitalSigns)

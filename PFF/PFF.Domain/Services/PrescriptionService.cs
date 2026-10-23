@@ -41,6 +41,15 @@ namespace PFF.Domain.Services
 
         public async Task<Result> HandleAsync(CreatePrescriptionCommand command, CancellationToken cancellationToken)
         {
+            IList<Medicine> medicines = await _dbContext.Medicines
+                .Where(m => command.MedicinesIds.Contains(m.Id))
+                .ToListAsync(cancellationToken);
+
+            if (medicines.Count != command.MedicinesIds.Count)
+            {
+                return MedicineErrors.MedicineNotFound;
+            }
+
             try
             {
                 Prescription prescription = new Prescription()
@@ -51,7 +60,7 @@ namespace PFF.Domain.Services
                     ConsultationId = command.ConsultationId,
                     PatientId = command.PatientId,
                     WorkerId = command.WorkerId,
-                    Medicines = command.Medicines
+                    Medicines = medicines
                 };
 
                 await _dbContext.Prescriptions.AddAsync(prescription);

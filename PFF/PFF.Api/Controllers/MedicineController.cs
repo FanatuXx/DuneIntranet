@@ -9,6 +9,8 @@ using PFF.Api.Dtos.Update;
 
 namespace PFF.Api.Controllers
 {
+    [ApiController]
+    [Route("api/medicines")]
     public class MedicineController : ControllerBase
     {
         private readonly IMedicineRepository _medicineRepository;

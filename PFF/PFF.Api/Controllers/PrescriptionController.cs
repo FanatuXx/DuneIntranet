@@ -38,41 +38,41 @@ namespace PFF.Api.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([FromBody] CreatePrescriptionDto dto)
-        {
-            Result result = await _prescriptionRepository.HandleAsync(new CreatePrescriptionCommand(
-                dto.StartDate,
-                dto.EndDate,
-                dto.TakeFrequency,
-                dto.ConsultationId,
-                dto.PatientId,
-                dto.WorkerId,
-                dto.Medicines), CancellationToken.None);
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Create([FromBody] CreatePrescriptionDto dto)
+        //{
+        //    Result result = await _prescriptionRepository.HandleAsync(new CreatePrescriptionCommand(
+        //        dto.StartDate,
+        //        dto.EndDate,
+        //        dto.TakeFrequency,
+        //        dto.ConsultationId,
+        //        dto.PatientId,
+        //        dto.WorkerId,
+        //        dto.Medicines), CancellationToken.None);
 
-            if (result.IsFailure)
-                return BadRequest(result.Error);
+        //    if (result.IsFailure)
+        //        return BadRequest(result.Error);
 
-            return Created($"https://localhost:7050/api/prescription", null);
-        }
+        //    return Created($"https://localhost:7050/api/prescription", null);
+        //}
 
-        [HttpPatch("{id}")]
-        [HttpPut("{id}")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Update(int id, [FromBody] UpdatePrescriptionDto dto)
-        {
-            Result result = await _prescriptionRepository.HandleAsync(new UpdatePrescriptionCommand(
-                id,
-                dto.StartDate,
-                dto.EndDate,
-                dto.TakeFrequency,
-                dto.ConsultationId,
-                dto.PatientId,
-                dto.WorkerId,
-                dto.Medicines), CancellationToken.None);
+        //[HttpPatch("{id}")]
+        //[HttpPut("{id}")]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Update(int id, [FromBody] UpdatePrescriptionDto dto)
+        //{
+        //    Result result = await _prescriptionRepository.HandleAsync(new UpdatePrescriptionCommand(
+        //        id,
+        //        dto.StartDate,
+        //        dto.EndDate,
+        //        dto.TakeFrequency,
+        //        dto.ConsultationId,
+        //        dto.PatientId,
+        //        dto.WorkerId,
+        //        dto.Medicines), CancellationToken.None);
 
-            return this.FromResult(result);
-        }
+        //    return this.FromResult(result);
+        //}
 
         [HttpDelete("{id}")]
         [ValidateAntiForgeryToken]

@@ -25,7 +25,7 @@ namespace PFF.Api.Dtos.Create
         public string? Description { get; set; }
 
         [Required]
-        public DateTime Date { get; set; } = DateTime.Now;
+        public DateTime Date { get; set; }
 
         [Required]
         public int PatientId { get; set; }

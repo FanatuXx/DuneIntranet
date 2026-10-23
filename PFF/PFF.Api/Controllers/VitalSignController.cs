@@ -34,44 +34,44 @@ namespace PFF.Api.Controllers
             return this.FromResult(result);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Create([FromBody] CreateVitalSignDto dto)
-        {
-            Result result = await _vitalSignRepository.HandleAsync(new CreateVitalSignCommand(
-                dto.HeartRate,
-                dto.BloodPressure,
-                dto.Temperature,
-                dto.OxygenSaturation,
-                dto.Height,
-                dto.Weight,
-                dto.BloodSugar,
-                dto.Date,
-                dto.ConsultationId), CancellationToken.None);
+        //[HttpPost]
+        //public async Task<IActionResult> Create([FromBody] CreateVitalSignDto dto)
+        //{
+        //    Result result = await _vitalSignRepository.HandleAsync(new CreateVitalSignCommand(
+        //        dto.HeartRate,
+        //        dto.BloodPressure,
+        //        dto.Temperature,
+        //        dto.OxygenSaturation,
+        //        dto.Height,
+        //        dto.Weight,
+        //        dto.BloodSugar,
+        //        dto.Date,
+        //        dto.ConsultationId), CancellationToken.None);
 
-            if (result.IsFailure)
-                return BadRequest(result.Error);
+        //    if (result.IsFailure)
+        //        return BadRequest(result.Error);
 
-            return Created($"https://localhost:7050/api/vitalsign", null);
-        }
+        //    return Created($"https://localhost:7050/api/vitalsign", null);
+        //}
 
-        [HttpPatch("{id}")]
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, [FromBody] UpdateVitalSignDto dto)
-        {
-            Result result = await _vitalSignRepository.HandleAsync(new UpdateVitalSignCommand(
-                id,
-                dto.HeartRate,
-                dto.BloodPressure,
-                dto.Temperature,
-                dto.OxygenSaturation,
-                dto.Height,
-                dto.Weight,
-                dto.BloodSugar,
-                dto.Date,
-                dto.ConsultationId), CancellationToken.None); 
+        //[HttpPatch("{id}")]
+        //[HttpPut("{id}")]
+        //public async Task<IActionResult> Update(int id, [FromBody] UpdateVitalSignDto dto)
+        //{
+        //    Result result = await _vitalSignRepository.HandleAsync(new UpdateVitalSignCommand(
+        //        id,
+        //        dto.HeartRate,
+        //        dto.BloodPressure,
+        //        dto.Temperature,
+        //        dto.OxygenSaturation,
+        //        dto.Height,
+        //        dto.Weight,
+        //        dto.BloodSugar,
+        //        dto.Date,
+        //        dto.ConsultationId), CancellationToken.None); 
             
-            return this.FromResult(result);
-        }
+        //    return this.FromResult(result);
+        //}
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)

@@ -3,6 +3,8 @@ using PFF.Api.Dtos.Create;
 using PFF.Api.Dtos.Update;
 using PFF.Api.Infrastructure;
 using PFF.Domain.Commands.Consultations;
+using PFF.Domain.Commands.Prescriptions;
+using PFF.Domain.Commands.VitalSigns;
 using PFF.Domain.Queries.Consultations;
 using PFF.Domain.Repositories;
 using PFF.Tools.Results;
@@ -46,10 +48,29 @@ namespace PFF.Api.Controllers
                 dto.Description,
                 dto.Date,
                 dto.PatientId,
-                dto.Workers,
-                dto.Pathologies,
-                dto.VitalSigns,
-                dto.Prescriptions), CancellationToken.None);
+                dto.WorkersIds,
+                dto.PathologiesIds,
+
+                (dto.Prescriptions ?? new List<CreatePrescriptionDto>())    //Si dto.Prescription est null, on crée une liste vide 
+                    .Select(p => new CreatePrescriptionData(                //On transforme les DTO reçus de l'API en objets de commande
+                        p.StartDate,
+                        p.EndDate,
+                        p.TakeFrequency,
+                        p.PrescriberId,
+                        p.MedicinesIds))
+                    .ToList(),                                              //puis on rassemble ces objets dans une liste compatible avec la commande métier.
+
+                (dto.VitalSigns ?? new List<CreateVitalSignDto>())
+                    .Select(vs => new CreateVitalSignData(
+                        vs.HeartRate,
+                        vs.BloodPressure,
+                        vs.Temperature,
+                        vs.OxygenSaturation,
+                        vs.Height,
+                        vs.Weight,
+                        vs.BloodSugar,
+                        dto.Date))
+                    .ToList()), CancellationToken.None);
 
             if (result.IsFailure)
                 return BadRequest(result.Error);
@@ -71,10 +92,52 @@ namespace PFF.Api.Controllers
                 dto.Description,
                 dto.Date,
                 dto.PatientId,
-                dto.Workers,
-                dto.Pathologies,
-                dto.VitalSigns,
-                dto.Prescriptions), CancellationToken.None);
+                dto.WorkersIds,
+                dto.PathologiesIds,
+
+                (dto.PrescriptionsToUpdate ?? new List<UpdatePrescriptionDto>())
+                    .Select(p => new UpdatePrescriptionData(
+                        id,
+                        p.StartDate,
+                        p.EndDate,
+                        p.TakeFrequency,
+                        p.PrescriberId,
+                        p.MedicinesIds))
+                    .ToList(),
+
+                (dto.PrescriptionsToCreate ?? new List<CreatePrescriptionDto>())
+                    .Select(p => new CreatePrescriptionData(
+                        p.StartDate,
+                        p.EndDate,
+                        p.TakeFrequency,
+                        p.PrescriberId,
+                        p.MedicinesIds))
+                    .ToList(),
+
+                (dto.VitalSignsToUpdate ?? new List<UpdateVitalSignDto>())
+                    .Select(p => new UpdateVitalSignData(
+                        id,
+                        p.HeartRate,
+                        p.BloodPressure,
+                        p.Temperature,
+                        p.OxygenSaturation,
+                        p.Height,
+                        p.Weight,
+                        p.BloodSugar,
+                        p.Date))
+                    .ToList(),
+
+                (dto.VitalSignsToCreate ?? new List<CreateVitalSignDto>())
+                    .Select(p => new CreateVitalSignData(
+                        p.HeartRate,
+                        p.BloodPressure,
+                        p.Temperature,
+                        p.OxygenSaturation,
+                        p.Height,
+                        p.Weight,
+                        p.BloodSugar,
+                        DateTime.Now))
+                    .ToList()), CancellationToken.None);
 
             return this.FromResult(result);
         }

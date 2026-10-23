@@ -12,7 +12,8 @@ namespace PFF.Domain.Commands.VitalSigns
         int OxygenSaturation,
         int? Height,
         float? Weight,
-        float? BloodSugar) : ICommandDefinition
+        float? BloodSugar,
+        DateTime Date) : ICommandDefinition
     {
     }
 }

@@ -15,7 +15,7 @@ namespace PFF.Domain.Model.Entities
         public float? Weight { get; set; }
         public float? BMI { get; set; }
         public float? BloodSugar { get; set; }
-        public DateTime Date { get; set; }
+        public DateTime? Date { get; set; }
         public int PatientId { get; set; }
         public int? ConsultationId { get; set; }
         public virtual Consultation? Consultation { get; set; } = null!;

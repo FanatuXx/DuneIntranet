@@ -10,14 +10,10 @@ namespace PFF.Api.Dtos.Update
         public DateTime? EndDate { get; set; }
 
         [StringLength(256, MinimumLength = 1)]
-        public string? TakeFrequency { get; set; } = default!;
+        public string? TakeFrequency { get; set; }
 
-        public int? ConsultationId { get; set; }
+        public int? PrescriberId { get; set; }
 
-        public int? PatientId { get; set; }
-
-        public int? WorkerId { get; set; }
-
-        public virtual IList<Medicine>? Medicines { get; set; }
+        public virtual IList<int>? MedicinesIds { get; set; }
     }
 }

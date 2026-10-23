@@ -21,8 +21,8 @@ namespace PFF.Domain.Commands.Consultations
         IList<int> WorkersIds,
         IList<int> PathologiesIds,
 
-        IList<CreatePrescriptionData> Prescriptions,
-        IList<CreateVitalSignData> VitalSigns) : ICommandDefinition
+        IList<CreatePrescriptionData>? Prescriptions,
+        IList<CreateVitalSignData>? VitalSigns) : ICommandDefinition
     {
     }
 }

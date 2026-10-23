@@ -18,5 +18,6 @@ namespace PFF.Api.Dtos.Create
         public int? Height { get; set; }
         public float? Weight { get; set; }
         public float? BloodSugar { get; set; }
+        public DateTime Date { get; set; }
     }
 }

@@ -15,6 +15,5 @@ namespace PFF.Api.Dtos.Update
         public float? Weight { get; set; }
         public float? BloodSugar { get; set; }
         public DateTime? Date { get; set; }
-        public int? ConsultationId { get; set; }
     }
 }

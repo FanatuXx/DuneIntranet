@@ -11,7 +11,6 @@
         public string? Description { get; set; }
         public DateTime Date { get; set; }
 
-        public int PatientId { get; set; }
         public PatientSummaryDto? Patient { get; set; }
 
         public IList<WorkerSummaryDto> Workers { get; set; } = new List<WorkerSummaryDto>();

@@ -57,8 +57,6 @@ namespace PFF.Domain.Services
                 Description = consultation.Description,
                 Date = consultation.Date,
 
-                PatientId = consultation.PatientId,
-
                 Patient = consultation.Patient is null ? null : new PatientSummaryDto
                 {
                     Id = consultation.Patient.Id,

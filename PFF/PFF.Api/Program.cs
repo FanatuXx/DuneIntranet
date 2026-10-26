@@ -17,13 +17,28 @@ builder.Services.AddControllers()
         options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
     });
 
-builder.Services.AddCustomSecurity(options =>
+//builder.Services.AddCustomSecurity(options =>
+//{
+//    options.PolicyName = "PreventDeletePolicy";
+//    options.UseCors = true;
+//    options.AddOrigins("http://localhost:4200", "http://127.0.0.1:4200");
+//    options.SetMethods(HttpVerbs.GET | HttpVerbs.POST | HttpVerbs.PATCH | HttpVerbs.PUT);
+//});
+
+string policyName = "TestCors";
+
+builder.Services.AddCors(options =>
 {
-    options.PolicyName = "PreventDeletePolicy";
-    options.UseCors = true;
-    options.AddOrigins("http://localhost:4200", "http://127.0.0.1:4200");
-    options.SetMethods(HttpVerbs.GET | HttpVerbs.POST | HttpVerbs.PATCH | HttpVerbs.PATCH);
-    //options.AddHeaders("id");
+    options.AddPolicy(policyName, policy =>
+    {
+        policy
+            .WithOrigins(
+                "http://localhost:4200",
+                "http://127.0.0.1:4200"
+            )
+            .WithMethods("GET", "POST", "PATCH", "PUT", "OPTIONS")
+            .AllowAnyHeader();
+    });
 });
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -66,9 +81,12 @@ if (app.Environment.IsDevelopment())
     app.MapScalarApiReference();
 }
 
-app.UseCustomSecurity();
-
 app.UseHttpsRedirection();
+
+//app.UseCustomSecurity();
+app.UseCors(policyName);
+
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

@@ -4,6 +4,7 @@ using System.Text;
 
 namespace PFF.Tools.Security
 {
+    [Flags]
     public enum HttpVerbs
     {
         GET = 1,

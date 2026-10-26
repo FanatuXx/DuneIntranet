@@ -1,0 +1,172 @@
+
+:host {
+  display: block;
+  min-height: 100%;
+  background: #f4f7f9;
+  color: #243b39;
+}
+
+.patient-page {
+  width: min(1100px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 32px 0 48px;
+}
+
+.page-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+.page-icon {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  flex-shrink: 0;
+  border-radius: 13px;
+  background: #dcefe9;
+  color: #217361;
+  font-size: 1.25rem;
+}
+
+.page-header h1 {
+  margin: 0 0 5px;
+  color: #193b35;
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+
+.page-header p {
+  margin: 0;
+  color: #71817f;
+  font-size: 0.9rem;
+}
+
+.patient-list {
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid #e2eae7;
+  border-radius: 12px;
+}
+
+.patient-row {
+  display: grid;
+  grid-template-columns: 80px minmax(0, 1fr) 150px;
+  align-items: center;
+  gap: 16px;
+  min-height: 64px;
+  padding: 12px 20px;
+  border-bottom: 1px solid #edf1ef;
+  transition: background 150ms ease;
+}
+
+.patient-row:last-child {
+  border-bottom: 0;
+}
+
+.patient-row:not(.patient-header):hover {
+  background: #f6faf8;
+}
+
+.patient-header {
+  min-height: 42px;
+  background: #f8faf9;
+  color: #71817f;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.patient-id {
+  color: #71817f;
+  font-size: 0.875rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.patient-name {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-width: 0;
+}
+
+.patient-alias {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: #000000;
+  font-size: 0.925rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.patient-alias:hover {
+  text-decoration: underline;
+}
+
+.patient-alias i {
+  font-size: 0.7rem;
+  opacity: 0.7;
+}
+
+.patient-fullname {
+  color: #71817f;
+  font-size: 0.85rem;
+}
+
+.patient-birthdate {
+  color: #52635f;
+  font-size: 0.875rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.list-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 100px;
+  padding: 24px;
+  color: #71817f;
+  font-size: 0.9rem;
+}
+
+.list-state > i {
+  color: #217361;
+  font-size: 1.1rem;
+}
+
+.list-state.error,
+.list-state.error > i {
+  color: #b42318;
+}
+
+@media (max-width: 600px) {
+  .patient-page {
+    width: calc(100% - 24px);
+    padding-top: 24px;
+  }
+
+  .patient-list {
+    overflow-x: auto;
+  }
+
+  .patient-row {
+    grid-template-columns: 48px minmax(180px, 1fr) 105px;
+    gap: 10px;
+    min-width: 390px;
+    padding: 12px;
+  }
+
+  .patient-header {
+    font-size: 0.68rem;
+  }
+
+  .patient-name {
+    gap: 4px;
+  }
+}

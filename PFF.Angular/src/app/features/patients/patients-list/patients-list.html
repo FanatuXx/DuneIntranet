@@ -1,22 +1,70 @@
-<h1>Liste des usagers :</h1>
 
-@if (loading()) {
-  <p>Chargement...</p>
-} @else if (error()) {
-  <p class="error">Erreur: {{ error() }}</p>
-} @else {
-  <div class="users">
-    @for (patient of orderedPatients(); track $index) {
-      <div class="user">
-          <div class="user-id">ID : {{ patient.id }}</div>
-          <div class="user-firstname">Prénom : {{ patient.firstName }}</div>
-          <div class="user-alias">Surnom : <a [routerLink]="['/patients', patient.id]">{{ patient.alias }}</a></div>
-          <div class="user-lastname">Nom : {{ patient.lastName }}</div>
-          <div class="user-birthdate">Date : {{ convertDate(patient.birthDate) }}</div>
+<div class="patient-page">
+
+  <header class="page-header">
+    <div class="page-icon">
+      <i class="pi pi-users"></i>
+    </div>
+
+    <div>
+      <h1>Liste des usagers</h1>
+      <p>Répertoire des patients de la maison médicale</p>
+    </div>
+  </header>
+
+  @if (loading()) {
+    <div class="list-state">
+      <i class="pi pi-spin pi-spinner"></i>
+      <span>Chargement des usagers...</span>
+    </div>
+  } @else if (error()) {
+    <div class="list-state error" role="alert">
+      <i class="pi pi-exclamation-circle"></i>
+      <span>Erreur : {{ error() }}</span>
+    </div>
+  } @else {
+    <div class="patient-list">
+
+      <div class="patient-row patient-header">
+        <div class="patient-id">ID</div>
+        <div class="patient-name">Usager</div>
+        <div class="patient-birthdate">Date de naissance</div>
       </div>
-      <br>
-    } @empty {
-      <p>Aucun usager.</p>
-    }
-  </div>
-}
+
+      @for (patient of orderedPatients(); track patient.id) {
+        <div class="patient-row">
+
+          <div class="patient-id">
+            {{ patient.id }}
+          </div>
+
+          <div class="patient-name">
+            <a
+              class="patient-alias"
+              [routerLink]="['/patients', patient.id]"
+            >
+              {{ patient.alias }}
+              <i class="pi pi-arrow-up-right"></i>
+            </a>
+
+            <span class="patient-fullname">
+              {{ patient.firstName }} {{ patient.lastName }}
+            </span>
+          </div>
+
+          <div class="patient-birthdate">
+            {{ convertDate(patient.birthDate) }}
+          </div>
+
+        </div>
+      } @empty {
+        <div class="list-state">
+          <i class="pi pi-users"></i>
+          <span>Aucun usager enregistré.</span>
+        </div>
+      }
+
+    </div>
+  }
+
+</div>

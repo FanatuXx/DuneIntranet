@@ -1,219 +1,423 @@
-<h1>Nouvel usager :</h1>
-
-<form [formGroup]="form" (ngSubmit)="onSubmit()">
-
-  <h3>Informations obligatoires</h3>
-
-    <label for="alias">
-      Surnom
-      <input type="text" name="alias" id="alias" formControlName="alias">
-    </label>
-    <br>
-
-    <label for="birthDate">
-      Date de naissance
-      <input type="date" name="birthDate" id="birthDate" formControlName="birthDate">
-    </label>
-    @if (birthDate.touched && birthDate.invalid) {
-      <p class="error">ATTENTION : la personne a moins de 18 ans ! La personne doit être réorientée vers un service spécialisé.</p>
-    }
-    <br>
-
-    <div formGroupName="patientAddress">
-      <label for="zipCode">
-        Code postal
-        <input type="text" name="zipCode" id="zipCode" formControlName="zipCode">
-      </label>
-    </div>
-    <br>
-    <br>
-
-    <h3>Informations administratives :</h3>
-
-    <label for="ssin">
-      NISS
-      <input type="text" name="ssin" id="ssin" formControlName="ssin">
-    </label>
-    @if (ssin.touched && ssin.invalid) {
-      @if (ssin.hasError('minlength')) {
-        <p class="error">Le champ doit faire minimum 11 caractères</p>
-      } @else if (ssin.hasError('maxlength')) {
-        <p class="error">Le champ doit faire maximum 15 caractères</p>
-      }
-    }
-    <br>
-
-    <label for="idNumber">
-      Numéro ID
-      <input type="text" name="idNumber" id="idNumber" formControlName="idNumber">
-    </label>
-    @if (idNumber.touched && idNumber.invalid) {
-      @if (idNumber.hasError('minlength')) {
-        <p class="error">Le champ doit faire minimum 12 caractères</p>
-      } @else if (idNumber.hasError('maxlength')) {
-        <p class="error">Le champ doit faire maximum 14 caractères</p>
-      }
-    }
-    <br>
-
-    <label for="firstName">
-      Prénom
-      <input type="text" name="firstName" id="firstName" formControlName="firstName">
-    </label>
-    <br>
-
-    <label for="lastName">
-      Nom
-      <input type="text" name="lastName" id="lastName" formControlName="lastName">
-    </label>
-    <br>
-
-    <label for="gender">
-      Genre
-      <select id="gender" formControlName="gender">
-        <option value="">-- Sélectionnez un genre --</option>
-
-        @for (gender of genderOptions; track gender.value) {
-          <option [value]="gender.value">
-            {{ gender.label }}
-          </option>
-        }
-      </select>
-    </label>
-    <br>
-
-    <label for="phoneNumber">
-      Numéro de téléhphone
-      <input type="text" name="phoneNumber" id="phoneNumber" formControlName="phoneNumber">
-    </label>
-    <br>
-    <br>
-
-    <label for="isInsured">
-      En ordre de mutuelle ?
-      <input type="checkbox" name="isInsured" id="isInsured" formControlName="isInsured">
-    </label>
-    <br>
-
-    <label for="insurance">
-      Mutuelle
-      <input type="text" name="insurance" id="insurance" formControlName="insurance">
-    </label>
-    <br>
-    <br>
-
-    <label for="isWorking">
-      Travailleur ?
-      <input type="checkbox" name="isWorking" id="isWorking" formControlName="isWorking">
-    </label>
-    <br>
-
-    <label for="income">
-      Revenus mensuels 
-      <input type="number" name="income" id="income" formControlName="income">
-    </label>
-    <br>
-    <br>
-
-    <label for="isAtFedasil">
-      Fedasil ?
-      <input type="checkbox" name="isAtFedasil" id="isAtFedasil" formControlName="isAtFedasil">
-    </label>
-    <br>
-
-    <label for="status">
-      Statut de séjour
-      <select id="status" formControlName="status">
-        <option value="">-- Sélectionnez un statut --</option>
-
-        @for (status of statusOptions; track status.value) {
-          <option [value]="status.value">
-            {{ status.label }}
-          </option>
-        }
-      </select>
-    </label>
-    <br>
-    <br>
-
-    <div formGroupName="patientAddress">
-      <h3>Lieu de vie ou de résidence</h3>
-
-      <label for="street">
-        Rue
-        <input type="text" name="street" id="street" formControlName="street">
-      </label>
-      <br>
-
-      <label for="number">
-        Numéro
-        <input type="text" name="number" id="number" formControlName="number">
-      </label>
-      <br>
-
-      <label for="town">
-        Ville
-        <input type="text" name="town" id="town" formControlName="town">
-      </label>
-      <br>
-
-      <label for="country">
-        Pays
-        <input type="text" name="country" id="country" formControlName="country">
-      </label>
-      <br>
+<div class="patient-page">
+  <header class="page-header">
+    <div class="page-icon">
+      <i class="pi pi-user-plus"></i>
     </div>
 
-    <h3>Informations médicales & consommation :</h3>
+    <div>
+      <h1>Nouvel usager</h1>
+      <p>Complétez les informations pour créer un dossier patient.</p>
+    </div>
+  </header>
 
-    <label for="hasInsuranceCard">
-      Possède une carte médicale ?
-      <input type="checkbox" name="hasInsuranceCard" id="hasInsuranceCard" formControlName="hasInsuranceCard">
-    </label>
-    <br>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="patient-form">
 
-    <label for="insuranceCardEndDate">
-      Expiration de la carte médicale 
-      <input type="date" name="insuranceCardEndDate" id="insuranceCardEndDate" formControlName="insuranceCardEndDate">
-    </label>
-    <br>
+    <!-- INFORMATIONS OBLIGATOIRES -->
+    <section class="form-card">
+      <div class="section-heading">
+        <i class="pi pi-user"></i>
+        <div>
+          <h2>Informations obligatoires</h2>
+          <p>Informations de base de l'usager</p>
+        </div>
+      </div>
 
-    <label for="allergies">
-      Allergies
-      <input type="text" name="allergies" id="allergies" formControlName="allergies">
-    </label>
-    <br>
-    <br>
+      <div class="form-grid">
+        <div class="field">
+          <label for="alias">Surnom</label>
+          <input
+            pInputText
+            id="alias"
+            type="text"
+            formControlName="alias"
+            placeholder="Surnom de l'usager"
+            fluid
+          />
+        </div>
 
-    <label for="drugType">
-      Produit consommé
-      <select id="drugType" formControlName="drugType">
-        <option value="">-- Sélectionnez le produit --</option>
+        <div class="field">
+          <label for="birthDate">Date de naissance</label>
+          <p-datepicker
+            inputId="birthDate"
+            formControlName="birthDate"
+            dateFormat="dd/mm/yy"
+            placeholder="Sélectionner une date"
+            [showIcon]="true"
+            fluid
+          />
 
-        @for (drug of drugOptions; track drug.value) {
-          <option [value]="drug.value">
-            {{drug.label}}
-          </option>
-        }
-      </select>
-    </label>
-    <br>
+          @if (birthDate.touched && birthDate.invalid) {
+            <div class="error-message" role="alert">
+              <i class="pi pi-exclamation-triangle"></i>
+              <span>
+                Attention : la personne a moins de 18 ans !
+                Elle doit être réorientée vers un service spécialisé.
+              </span>
+            </div>
+          }
+        </div>
 
-    <label for="consumptionFrequency">
-      Fréquence de consommation
-      <select id="consumptionFrequency" formControlName="consumptionFrequency">
-        <option value="">-- Sélectionnez la fréquence --</option>
+        <div class="field full-width">
+          <label for="zipCode">Code postal</label>
+          <div formGroupName="patientAddress">
+            <input
+              pInputText
+              id="zipCode"
+              type="text"
+              formControlName="zipCode"
+              placeholder="Code postal"
+              fluid
+            />
+          </div>
+        </div>
+      </div>
+    </section>
 
-        @for (frequency of consumptionFrequencyOptions; track frequency.value) {
-          <option [value]="frequency.value">
-            {{frequency.label}}
-          </option>
-        }
-      </select>
-    </label>
-    <br>
-    <br>
+    <!-- INFORMATIONS ADMINISTRATIVES -->
+    <section class="form-card">
+      <div class="section-heading">
+        <i class="pi pi-id-card"></i>
+        <div>
+          <h2>Informations administratives</h2>
+          <p>Identité et situation sociale</p>
+        </div>
+      </div>
 
-    <button type="submit">Créer l'usager</button>
+      <div class="form-grid">
+        <div class="field">
+          <label for="ssin">NISS</label>
+          <input
+            pInputText
+            id="ssin"
+            type="text"
+            formControlName="ssin"
+            placeholder="Numéro NISS"
+            fluid
+          />
 
-</form>
+          @if (ssin.touched && ssin.invalid) {
+            @if (ssin.hasError('minlength')) {
+              <small class="error-text">
+                Minimum 11 caractères.
+              </small>
+            } @else if (ssin.hasError('maxlength')) {
+              <small class="error-text">
+                Maximum 15 caractères.
+              </small>
+            }
+          }
+        </div>
+
+        <div class="field">
+          <label for="idNumber">Numéro ID</label>
+          <input
+            pInputText
+            id="idNumber"
+            type="text"
+            formControlName="idNumber"
+            placeholder="Numéro d'identification"
+            fluid
+          />
+
+          @if (idNumber.touched && idNumber.invalid) {
+            @if (idNumber.hasError('minlength')) {
+              <small class="error-text">
+                Minimum 12 caractères.
+              </small>
+            } @else if (idNumber.hasError('maxlength')) {
+              <small class="error-text">
+                Maximum 14 caractères.
+              </small>
+            }
+          }
+        </div>
+
+        <div class="field">
+          <label for="firstName">Prénom</label>
+          <input
+            pInputText
+            id="firstName"
+            type="text"
+            formControlName="firstName"
+            placeholder="Prénom"
+            fluid
+          />
+        </div>
+
+        <div class="field">
+          <label for="lastName">Nom</label>
+          <input
+            pInputText
+            id="lastName"
+            type="text"
+            formControlName="lastName"
+            placeholder="Nom"
+            fluid
+          />
+        </div>
+
+        <div class="field">
+          <label for="gender">Genre</label>
+          <p-select
+            inputId="gender"
+            formControlName="gender"
+            [options]="genderOptions"
+            optionLabel="label"
+            optionValue="value"
+            placeholder="Sélectionner un genre"
+            [showClear]="true"
+            fluid
+          />
+        </div>
+
+        <div class="field">
+          <label for="phoneNumber">Numéro de téléphone</label>
+          <input
+            pInputText
+            id="phoneNumber"
+            type="tel"
+            formControlName="phoneNumber"
+            placeholder="Numéro de téléphone"
+            fluid
+          />
+        </div>
+
+        <div class="field">
+          <label for="isInsured">En ordre de mutuelle ?</label>
+          <div class="checkbox-field">
+            <p-checkbox
+              inputId="isInsured"
+              formControlName="isInsured"
+              [binary]="true"
+            />
+            <label for="isInsured">Oui, en ordre de mutuelle</label>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="insurance">Mutuelle</label>
+          <input
+            pInputText
+            id="insurance"
+            type="text"
+            formControlName="insurance"
+            placeholder="Nom de la mutuelle"
+            fluid
+          />
+        </div>
+
+        <div class="field">
+          <label for="isWorking">Travailleur ?</label>
+          <div class="checkbox-field">
+            <p-checkbox
+              inputId="isWorking"
+              formControlName="isWorking"
+              [binary]="true"
+            />
+            <label for="isWorking">Oui, exerce une activité</label>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="income">Revenus mensuels (€)</label>
+          <p-inputnumber
+            inputId="income"
+            formControlName="income"
+            mode="currency"
+            currency="EUR"
+            locale="fr-BE"
+            [min]="0"
+            fluid
+          />
+        </div>
+
+        <div class="field">
+          <label for="isAtFedasil">Fedasil ?</label>
+          <div class="checkbox-field">
+            <p-checkbox
+              inputId="isAtFedasil"
+              formControlName="isAtFedasil"
+              [binary]="true"
+            />
+            <label for="isAtFedasil">Pris en charge par Fedasil</label>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="status">Statut de séjour</label>
+          <p-select
+            inputId="status"
+            formControlName="status"
+            [options]="statusOptions"
+            optionLabel="label"
+            optionValue="value"
+            placeholder="Sélectionner un statut"
+            [showClear]="true"
+            fluid
+          />
+        </div>
+      </div>
+    </section>
+
+    <!-- LIEU DE VIE -->
+    <section class="form-card" formGroupName="patientAddress">
+      <div class="section-heading">
+        <i class="pi pi-map-marker"></i>
+        <div>
+          <h2>Lieu de vie ou de résidence</h2>
+          <p>Adresse actuelle de l'usager</p>
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="field">
+          <label for="street">Rue</label>
+          <input
+            pInputText
+            id="street"
+            type="text"
+            formControlName="street"
+            placeholder="Nom de la rue"
+            fluid
+          />
+        </div>
+
+        <div class="field">
+          <label for="number">Numéro</label>
+          <input
+            pInputText
+            id="number"
+            type="text"
+            formControlName="number"
+            placeholder="Numéro"
+            fluid
+          />
+        </div>
+
+        <div class="field">
+          <label for="town">Ville</label>
+          <input
+            pInputText
+            id="town"
+            type="text"
+            formControlName="town"
+            placeholder="Ville"
+            fluid
+          />
+        </div>
+
+        <div class="field">
+          <label for="country">Pays</label>
+          <input
+            pInputText
+            id="country"
+            type="text"
+            formControlName="country"
+            placeholder="Pays"
+            fluid
+          />
+        </div>
+      </div>
+    </section>
+
+    <!-- INFORMATIONS MÉDICALES -->
+    <section class="form-card">
+      <div class="section-heading">
+        <i class="pi pi-heart"></i>
+        <div>
+          <h2>Informations médicales et consommation</h2>
+          <p>Couverture médicale, allergies et consommations</p>
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="field">
+          <label for="hasInsuranceCard">
+            Possède une carte médicale ?
+          </label>
+          <div class="checkbox-field">
+            <p-checkbox
+              inputId="hasInsuranceCard"
+              formControlName="hasInsuranceCard"
+              [binary]="true"
+            />
+            <label for="hasInsuranceCard">Oui, possède une carte médicale</label>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="insuranceCardEndDate">
+            Expiration de la carte médicale
+          </label>
+          <p-datepicker
+            inputId="insuranceCardEndDate"
+            formControlName="insuranceCardEndDate"
+            dateFormat="dd/mm/yy"
+            placeholder="Date d'expiration"
+            [showIcon]="true"
+            fluid
+          />
+        </div>
+
+        <div class="field full-width">
+          <label for="allergies">Allergies</label>
+          <input
+            pInputText
+            id="allergies"
+            type="text"
+            formControlName="allergies"
+            placeholder="Allergies connues ou aucune"
+            fluid
+          />
+        </div>
+
+        <div class="field">
+          <label for="drugType">Produit consommé</label>
+          <p-select
+            inputId="drugType"
+            formControlName="drugType"
+            [options]="drugOptions"
+            optionLabel="label"
+            optionValue="value"
+            placeholder="Sélectionner un produit"
+            [showClear]="true"
+            fluid
+          />
+        </div>
+
+        <div class="field">
+          <label for="consumptionFrequency">
+            Fréquence de consommation
+          </label>
+          <p-select
+            inputId="consumptionFrequency"
+            formControlName="consumptionFrequency"
+            [options]="consumptionFrequencyOptions"
+            optionLabel="label"
+            optionValue="value"
+            placeholder="Sélectionner une fréquence"
+            [showClear]="true"
+            fluid
+          />
+        </div>
+      </div>
+    </section>
+
+    <!-- ACTIONS -->
+    <footer class="form-actions">
+      <p class="form-note">
+        Vérifiez les informations avant de créer le dossier.
+      </p>
+
+      <button
+        pButton
+        type="submit"
+        [disabled]="form.invalid"
+      >
+        <i class="pi pi-user-plus"></i>
+        <span pButtonLabel>Créer l'usager</span>
+      </button>
+    </footer>
+
+  </form>
+</div>

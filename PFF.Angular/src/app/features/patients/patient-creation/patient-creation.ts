@@ -8,9 +8,25 @@ import { DrugType } from '../../../shared/enums/drug-type.enum';
 import { ConsumptionFrequency } from '../../../shared/enums/consumption-frequency.enum';
 import { ResidenceStatus } from '../../../shared/enums/residence-status.enum';
 
+import { InputTextModule } from '@openng/optimus-ui/inputtext';
+import { SelectModule } from '@openng/optimus-ui/select';
+import { CheckboxModule } from '@openng/optimus-ui/checkbox';
+import { DatePickerModule } from '@openng/optimus-ui/datepicker';
+import { InputNumberModule } from '@openng/optimus-ui/inputnumber';
+import { ButtonModule } from '@openng/optimus-ui/button';
+
 @Component({
   selector: 'app-patient-creation',
-  imports: [ ReactiveFormsModule],
+  imports: [ 
+    ReactiveFormsModule,
+    ReactiveFormsModule,
+    InputTextModule,
+    SelectModule,
+    CheckboxModule,
+    DatePickerModule,
+    InputNumberModule,
+    ButtonModule 
+  ],
   templateUrl: './patient-creation.html',
   styleUrl: './patient-creation.css',
 })

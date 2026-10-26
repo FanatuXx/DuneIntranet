@@ -1,5 +1,4 @@
-﻿using PFF.Domain.Model.Entities;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace PFF.Api.Dtos.Create
 {
@@ -21,7 +20,7 @@ namespace PFF.Api.Dtos.Create
         [StringLength(30, MinimumLength = 1)]
         public string Gender { get; set; } = default!;
 
-        [Required] 
+        [Required]
         public DateTime BirthDate { get; set; }
 
         [Required]

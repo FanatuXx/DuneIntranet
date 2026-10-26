@@ -8,6 +8,7 @@ using PFF.Domain.Model.Entities;
 using PFF.Domain.Queries.Consultations;
 using PFF.Domain.Repositories;
 using PFF.Tools.Results;
+using PFF.Domain.Model.ResponseDtos;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -29,19 +30,104 @@ namespace PFF.Domain.Services
             return Result<IEnumerable<Consultation>>.Success(consultations);
         }
 
-        public async Task<Result<Consultation>> HandleAsync(GetConsultationDetailsQuery query)
+        public async Task<Result<ConsultationDetailsDto>> HandleAsync(GetConsultationDetailsQuery query)
         {
             Consultation? consultation = await _dbContext.Consultations
+                .AsNoTracking()
                 .Include(c => c.Patient)
+                .Include(c => c.Workers)
                 .Include(c => c.Pathologies)
                 .Include(c => c.VitalSigns)
                 .Include(c => c.Prescriptions)
+                .Include(c => c.Prescriptions)
+                    .ThenInclude(pre => pre.Medicines)
                 .SingleOrDefaultAsync(c => c.Id == query.Id);
 
             if (consultation is null)
                 return ConsultationErrors.ConsultationNotFound;
 
-            return Result<Consultation>.Success(consultation);
+            ConsultationDetailsDto dto = new ConsultationDetailsDto
+            {
+                Id = consultation.Id,
+                Motive = consultation.Motive,
+                Subjective = consultation.Subjective,
+                Objective = consultation.Objective,
+                Assessment = consultation.Assessment,
+                Plan = consultation.Plan,
+                Description = consultation.Description,
+                Date = consultation.Date,
+
+                PatientId = consultation.PatientId,
+
+                Patient = consultation.Patient is null ? null : new PatientSummaryDto
+                {
+                    Id = consultation.Patient.Id,
+                    SSIN = consultation.Patient.SSIN,
+                    IdNumber = consultation.Patient.IdNumber,
+                    FirstName = consultation.Patient.FirstName,
+                    LastName = consultation.Patient.LastName,
+                    Alias = consultation.Patient.Alias,
+                    Gender = consultation.Patient.Gender,
+                    BirthDate = consultation.Patient.BirthDate,
+                    PhoneNumber = consultation.Patient.PhoneNumber,
+                    Allergies = consultation.Patient.Allergies,
+                    IsInsured = consultation.Patient.IsInsured,
+                    Insurance = consultation.Patient.Insurance,
+                    HasInsuranceCard = consultation.Patient.HasInsuranceCard,
+                    InsuranceCardEndDate = consultation.Patient.InsuranceCardEndDate,
+                    IsAtFedasil = consultation.Patient.IsAtFedasil,
+                    Income = consultation.Patient.Income,
+                    Status = consultation.Patient.Status,
+                    IsWorking = consultation.Patient.IsWorking,
+                    DrugType = consultation.Patient.DrugType,
+                    ConsumptionFrequency = consultation.Patient.ConsumptionFrequency,
+                    RegistrationDate = consultation.Patient.RegistrationDate,
+                    LastVisit = consultation.Patient.LastVisit
+                },
+
+                Workers = consultation.Workers.Select(w => new WorkerSummaryDto
+                {
+                    Id = w.Id,
+                    FirstName = w.FirstName,
+                    LastName = w.LastName,
+                    Occupation = w.Occupation,
+                    Email = w.Email
+                }).ToList(),
+
+                Pathologies = consultation.Pathologies.Select(p => new PathologySummaryDto
+                {
+                    Id = p.Id,
+                    Name = p.Name
+                }).ToList(),
+
+                VitalSigns = consultation.VitalSigns?.Select(vs => new VitalSignSummaryDto
+                {
+                    Id = vs.Id,
+                    HeartRate = vs.HeartRate,
+                    BloodPressure = vs.BloodPressure,
+                    Temperature = vs.Temperature,
+                    OxygenSaturation = vs.OxygenSaturation,
+                    BMI = vs.BMI,
+                    BloodSugar = vs.BloodSugar,
+                }).ToList(),
+
+                Prescriptions = consultation.Prescriptions?.Select(vs => new PrescriptionWithMedicineDto
+                {
+                    Id = vs.Id,
+                    StartDate = vs.StartDate,
+                    EndDate = vs.EndDate,
+                    TakeFrequency = vs.TakeFrequency,
+                    WorkerId = vs.WorkerId,
+                    Medicines = vs.Medicines?.Select(m => new MedicineSummaryDto
+                    {
+                        Id = m.Id,
+                        Name = m.Name,
+                        HowToTake = m.HowToTake
+                    }).ToList()
+                }).ToList(),
+            };
+
+            return Result<ConsultationDetailsDto>.Success(dto);
         }
 
 
@@ -107,6 +193,7 @@ namespace PFF.Domain.Services
                         Consultation = consultation
                     };
 
+                    vitalSign.BMI = vitalSign.BMICalculator();
                     consultation.VitalSigns!.Add(vitalSign);
                 }
 

@@ -13,7 +13,7 @@ namespace PFF.Domain.Model.Entities
         public int OxygenSaturation { get; set; }
         public int? Height { get; set; }
         public float? Weight { get; set; }
-        public float? BMI { get; set; }
+        public float BMI { get; set; }
         public float? BloodSugar { get; set; }
         public DateTime? Date { get; set; }
         public int PatientId { get; set; }
@@ -24,7 +24,11 @@ namespace PFF.Domain.Model.Entities
         public float BMICalculator()
         {
             if (Height is not null && Weight is not null)
-                return (float)(BMI = Weight / (Height * Height));
+            {
+                float height = (float)Height / 100;
+                BMI = (float)(Weight / (height * height));
+                return BMI;
+            }
             return -1;
         }
     }

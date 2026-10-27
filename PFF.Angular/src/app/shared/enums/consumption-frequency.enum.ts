@@ -5,5 +5,6 @@ export enum ConsumptionFrequency {
     onceAWeek = 'Environ une fois par semaine',
     betweenOnceAWeekAndOnceAMonth = 'Entre une fois par semaine et une fois par mois',
     onceAMonth = 'Environ une fois par mois',
-    lessThanOnceAMonth = `Moins d'une fois par mois`
+    lessThanOnceAMonth = `Moins d'une fois par mois`,
+    notSpecified = 'Non spécifié'
 }

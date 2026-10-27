@@ -371,34 +371,60 @@
           />
         </div>
 
-        <div class="field">
-          <label for="drugType">Produit consommé</label>
-          <p-select
-            inputId="drugType"
-            formControlName="drugType"
-            [options]="drugOptions"
-            optionLabel="label"
-            optionValue="value"
-            placeholder="Sélectionner un produit"
-            [showClear]="true"
-            fluid
-          />
-        </div>
+        <div formArrayName="consumptions" class="full-width">
+          @for (consumption of consumptions.controls; track consumption; let i = $index) {
+            <div [formGroupName]="i" class="consumption-row">
 
-        <div class="field">
-          <label for="consumptionFrequency">
-            Fréquence de consommation
-          </label>
-          <p-select
-            inputId="consumptionFrequency"
-            formControlName="consumptionFrequency"
-            [options]="consumptionFrequencyOptions"
-            optionLabel="label"
-            optionValue="value"
-            placeholder="Sélectionner une fréquence"
-            [showClear]="true"
-            fluid
-          />
+              <div class="field">
+                <label [for]="'drugType-' + i">Produit consommé</label>
+                <p-select
+                  [inputId]="'drugType-' + i"
+                  formControlName="drugType"
+                  [options]="drugOptions"
+                  optionLabel="label"
+                  optionValue="value"
+                  placeholder="Sélectionner un produit"
+                  [showClear]="true"
+                  fluid
+                />
+              </div>
+
+              <div class="field">
+                <label [for]="'frequency-' + i">Fréquence de consommation</label>
+                <p-select
+                  [inputId]="'frequency-' + i"
+                  formControlName="frequency"
+                  [options]="consumptionFrequencyOptions"
+                  optionLabel="label"
+                  optionValue="value"
+                  placeholder="Sélectionner une fréquence"
+                  [showClear]="true"
+                  fluid
+                />
+              </div>
+
+              @if (consumption.get('drugType')?.value && consumption.get('frequency')?.value) 
+              {
+                <button
+                  type="button"
+                  class="delete-consumption-button"
+                  (click)="removeConsumption(i)"
+                  aria-label="Supprimer cette consommation"
+                >
+                  <i class="pi pi-trash" aria-hidden="true"></i>
+                </button>
+              }
+            </div>
+          }
+
+          <button
+            type="button"
+            class="add-consumption-button"
+            (click)="addConsumption()"
+          >
+            <i class="pi pi-plus" aria-hidden="true"></i>
+            Ajouter un mode de consommation
+          </button>
         </div>
       </div>
     </section>

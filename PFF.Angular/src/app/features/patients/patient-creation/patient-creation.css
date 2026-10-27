@@ -205,42 +205,49 @@
   cursor: not-allowed;
 }
 
-@media (max-width: 640px) {
-  .patient-page {
-    width: calc(100% - 24px);
-    padding: 24px 0 36px;
-  }
+.consumption-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
+  gap: 1rem;
+  align-items: end;
+  margin-bottom: 1rem;
+}
 
-  .page-header {
-    gap: 12px;
-  }
+.delete-consumption-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.2rem;
+  height: 2.2rem;
+  margin-bottom: 0;
+  padding: 0;
+  border: none;
+  border-radius: 6px;
+  background-color: #dc2626;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
 
-  .page-icon {
-    width: 46px;
-    height: 46px;
-    border-radius: 13px;
-  }
+.delete-consumption-button:hover {
+  background-color: #b91c1c;
+}
 
-  .form-card {
-    padding: 20px 16px;
-    border-radius: 14px;
-  }
+.delete-consumption-button i {
+  font-size: 1.1rem;
+}
 
-  .form-grid {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 20px;
-  }
+.add-consumption-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.65rem 1rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background-color: transparent;
+  cursor: pointer;
+}
 
-  .full-width {
-    grid-column: auto;
-  }
-
-  .form-actions {
-    align-items: stretch;
-    flex-direction: column;
-  }
-
-  .form-actions button[pButton] {
-    width: 100%;
-  }
+.add-consumption-button:hover {
+  background-color: #f3f4f6;
 }

@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { PatientsService } from '../../../core/services/patients.service';
 import { Router } from '@angular/router';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { legalAgeValidator } from '../../../shared/validators/legal-age.validator';
 import { Gender } from '../../../shared/enums/gender.enum';
 import { DrugType } from '../../../shared/enums/drug-type.enum';
@@ -18,7 +18,6 @@ import { ButtonModule } from '@openng/optimus-ui/button';
 @Component({
   selector: 'app-patient-creation',
   imports: [ 
-    ReactiveFormsModule,
     ReactiveFormsModule,
     InputTextModule,
     SelectModule,
@@ -79,8 +78,9 @@ export class PatientCreation implements OnInit {
       income: ['', [Validators.min(0)]],
       status: [''],
       isWorking: [''],
-      drugType: [''],
-      consumptionFrequency: [''],
+      consumptions: this.formBuilder.array([
+        this.createConsumption()
+      ]),
       patientAddress: this.formBuilder.group({ //Permet de créer un form imbriqué dans mon form principal
         street: ['', [Validators.minLength(1), Validators.maxLength(256)]],
         number: ['', [Validators.minLength(1), Validators.maxLength(10)]],
@@ -179,6 +179,30 @@ export class PatientCreation implements OnInit {
     return this.form.controls['country'];
   }
 
+  get consumptions(): FormArray {
+    return this.form.get('consumptions') as FormArray;
+  }
+
+  private createConsumption(): FormGroup {
+    return this.formBuilder.group({
+      drugType: [''],
+      frequency: ['']
+    });
+  }
+
+  addConsumption(): void {
+    this.consumptions.push(this.createConsumption());
+  }
+
+  removeConsumption(index: number): void {
+    this.consumptions.removeAt(index);
+
+    if (this.consumptions.length === 0) {
+      this.consumptions.push(this.createConsumption());
+    }
+  }
+  
+
   onSubmit() {
     if (this.form.invalid) {
       return;
@@ -203,13 +227,19 @@ export class PatientCreation implements OnInit {
     });
 
 
-    this.patientsService.create(this.form.getRawValue()).subscribe({
-      next: () => this.router.navigate(["patients"]),
-      error: (err) => console.log("Erreur: ", err)
-    })
+    const patientData = this.form.getRawValue();
+
+    patientData.consumptions = patientData.consumptions.filter(
+      (consumption: { drugType: string; frequency: string }) =>
+        consumption.drugType && consumption.frequency
+    );
+
+    this.patientsService.create(patientData).subscribe({
+      next: () => this.router.navigate(['patients']),
+      error: (err) => console.log('Erreur : ', err)
+    });
   }
 }
-
 
 //// TEMPLATE TO RECEIVE ALL USEFUL INFO IF SUBMITTING FAILS
 //

@@ -6,6 +6,7 @@ namespace PFF.Api.Dtos.Create
     {
         public string? Street { get; set; }
         public string? Number { get; set; }
+
         [Required]
         public string ZipCode { get; set; } = default!;
         public string? Town { get; set; } 

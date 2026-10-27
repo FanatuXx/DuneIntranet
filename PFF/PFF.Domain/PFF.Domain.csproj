@@ -35,4 +35,8 @@
     <ProjectReference Include="..\Tools\PFF.Tools.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Queries\Consumptions\" />
+  </ItemGroup>
+
 </Project>

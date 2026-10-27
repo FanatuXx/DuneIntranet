@@ -24,8 +24,7 @@ namespace PFF.Api.Dtos.Create
         public int? Income { get; set; } 
         public string? Status { get; set; } 
         public bool? IsWorking { get; set; } 
-        public string? DrugType { get; set; } 
-        public string? ConsumptionFrequency { get; set; }
         public CreatePatientAddressDto PatientAddress { get; set; } = new();
+        public IList<CreateConsumptionDto>? Consumptions { get; set; } 
     }
 }

@@ -20,9 +20,8 @@
         public int? Income { get; set; }
         public string? Status { get; set; }
         public bool? IsWorking { get; set; } = false;
-        public string? DrugType { get; set; }
-        public string? ConsumptionFrequency { get; set; }
         public DateTime RegistrationDate { get; set; }
         public DateTime LastVisit { get; set; }
+        public IList<ConsumptionSummaryDto>? Consumptions {  get; set; }
     }
 }

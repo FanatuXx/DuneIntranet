@@ -2,7 +2,9 @@
 using PFF.Api.Dtos.Create;
 using PFF.Api.Dtos.Update;
 using PFF.Api.Infrastructure;
+using PFF.Domain.Commands.Consumptions;
 using PFF.Domain.Commands.Patient;
+using PFF.Domain.Commands.Patients;
 using PFF.Domain.Queries.Patients;
 using PFF.Domain.Repositories;
 using PFF.Tools.Results;
@@ -38,7 +40,7 @@ namespace PFF.Api.Controllers
         public async Task<IActionResult> Create([FromBody] CreatePatientDto dto)
         {
             Result result = await _patientRepository.HandleAsync(new CreatePatientCommand(
-                dto.SSIN, 
+                dto.SSIN,
                 dto.IdNumber,
                 dto.FirstName,
                 dto.LastName,
@@ -49,22 +51,27 @@ namespace PFF.Api.Controllers
                 dto.Allergies,
                 dto.IsInsured,
                 dto.Insurance,
-                dto.HasInsuranceCard, 
-                dto.InsuranceCardEndDate, 
+                dto.HasInsuranceCard,
+                dto.InsuranceCardEndDate,
                 dto.IsAtFedasil,
-                dto.Income, 
-                dto.Status, 
-                dto.IsWorking, 
-                dto.DrugType,
-                dto.ConsumptionFrequency,
+                dto.Income,
+                dto.Status,
+                dto.IsWorking,
                 DateTime.Now,
                 DateTime.Now,
-                dto.PatientAddress.Street,
-                dto.PatientAddress.Number,
-                dto.PatientAddress.ZipCode,
-                dto.PatientAddress.Town,
-                dto.PatientAddress.Country
-                ), CancellationToken.None);
+
+                dto.PatientAddress != null ? new CreatePatientAddressData(
+                    dto.PatientAddress?.Street,
+                    dto.PatientAddress?.Number,
+                    dto.PatientAddress!.ZipCode,
+                    dto.PatientAddress?.Town,
+                    dto.PatientAddress?.Country) : null,
+
+                (dto.Consumptions ?? new List<CreateConsumptionDto>())
+                    .Select(c => new CreateConsumptionData(
+                        c.DrugType,
+                        c.Frequency))
+                    .ToList()), CancellationToken.None);
 
             if (result.IsFailure)
                 return BadRequest(result.Error);
@@ -95,13 +102,27 @@ namespace PFF.Api.Controllers
                 dto.Income,
                 dto.Status,
                 dto.IsWorking,
-                dto.DrugType,
-                dto.ConsumptionFrequency,
-                dto.PatientAddress?.Street,
-                dto.PatientAddress?.Number,
-                dto.PatientAddress?.ZipCode,
-                dto.PatientAddress?.Town,
-                dto.PatientAddress?.Country), CancellationToken.None);
+
+                dto.PatientAddress != null ? new UpdatePatientAddressData(
+                    id,
+                    dto.PatientAddress?.Street,
+                    dto.PatientAddress?.Number,
+                    dto.PatientAddress!.ZipCode,
+                    dto.PatientAddress?.Town,
+                    dto.PatientAddress?.Country) : null,
+
+                (dto.ConsumptionsToUpdate ?? new List<UpdateConsumptionDto>())
+                    .Select(c => new UpdateConsumptionData(
+                        id,
+                        c.DrugType,
+                        c.Frequency))
+                    .ToList(),
+
+                (dto.ConsumptionsToCreate ?? new List<CreateConsumptionDto>())
+                    .Select(c => new CreateConsumptionData(
+                        c.DrugType,
+                        c.Frequency))
+                    .ToList()), CancellationToken.None);
 
             return this.FromResult(result);
         }

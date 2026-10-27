@@ -1,5 +1,6 @@
 ﻿using PFF.Domain.Commands.Patient;
 using PFF.Domain.Model.Entities;
+using PFF.Domain.Model.ResponseDtos;
 using PFF.Domain.Queries.Patients;
 using PFF.Tools.CommandQuerySeparation;
 
@@ -10,7 +11,7 @@ namespace PFF.Domain.Repositories
         ICommandAsyncHandler<UpdatePatientCommand>,
         ICommandAsyncHandler<DeletePatientCommand>,
         IQueryAsyncHandler<GetPatientsQuery, IEnumerable<Patient>>,
-        IQueryAsyncHandler<GetPatientDetailsQuery, Patient>
+        IQueryAsyncHandler<GetPatientDetailsQuery, PatientDetailsDto>
     {
     }
 }

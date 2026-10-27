@@ -1,4 +1,6 @@
-﻿using PFF.Tools.CommandQuerySeparation;
+﻿using PFF.Domain.Commands.Consumptions;
+using PFF.Domain.Commands.Patients;
+using PFF.Tools.CommandQuerySeparation;
 
 namespace PFF.Domain.Commands.Patient
 {
@@ -20,15 +22,12 @@ namespace PFF.Domain.Commands.Patient
         int? Income,
         string? Status,
         bool? IsWorking,
-        string? DrugType,
-        string? ConsumptionFrequency,
         DateTime RegistrationDate,
         DateTime LastVisit,
-        string? Street,
-        string? Number,
-        string ZipCode,
-        string? Town,
-        string? Country) : ICommandDefinition
+
+        CreatePatientAddressData PatientAddress,
+
+        IList<CreateConsumptionData>? Consumptions) : ICommandDefinition
     {
     }
 }

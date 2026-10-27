@@ -133,6 +133,39 @@ namespace PFF.Domain.Migrations
                         });
                 });
 
+            modelBuilder.Entity("PFF.Domain.Model.Entities.Consumption", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("DrugType")
+                        .IsRequired()
+                        .HasColumnType("NVARCHAR(50)")
+                        .HasColumnName("Produit");
+
+                    b.Property<string>("Frequency")
+                        .IsRequired()
+                        .HasColumnType("NVARCHAR(128)")
+                        .HasColumnName("Fréquence");
+
+                    b.Property<int>("PatientId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PatientId");
+
+                    b.ToTable("Consommation", null, t =>
+                        {
+                            t.HasCheckConstraint("CK_Consommation_Fréquence", "LEN(TRIM(Fréquence)) > 0");
+
+                            t.HasCheckConstraint("CK_Consommation_Produit", "LEN(TRIM(Produit)) > 0");
+                        });
+                });
+
             modelBuilder.Entity("PFF.Domain.Model.Entities.Medicine", b =>
                 {
                     b.Property<int>("Id")
@@ -208,14 +241,6 @@ namespace PFF.Domain.Migrations
                     b.Property<DateTime>("BirthDate")
                         .HasColumnType("DATETIME")
                         .HasColumnName("DateNaissance");
-
-                    b.Property<string>("ConsumptionFrequency")
-                        .HasColumnType("NVARCHAR(128)")
-                        .HasColumnName("FréquenceConsommation");
-
-                    b.Property<string>("DrugType")
-                        .HasColumnType("NVARCHAR(50)")
-                        .HasColumnName("ProduitConsommé");
 
                     b.Property<string>("FirstName")
                         .HasColumnType("NVARCHAR(50)")
@@ -393,7 +418,7 @@ namespace PFF.Domain.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<double?>("BMI")
+                    b.Property<double>("BMI")
                         .HasColumnType("FLOAT")
                         .HasColumnName("IMC");
 
@@ -624,6 +649,17 @@ namespace PFF.Domain.Migrations
                     b.Navigation("Patient");
                 });
 
+            modelBuilder.Entity("PFF.Domain.Model.Entities.Consumption", b =>
+                {
+                    b.HasOne("PFF.Domain.Model.Entities.Patient", "Patient")
+                        .WithMany("Consumptions")
+                        .HasForeignKey("PatientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Patient");
+                });
+
             modelBuilder.Entity("PFF.Domain.Model.Entities.Patient", b =>
                 {
                     b.HasOne("PFF.Domain.Model.Entities.PatientAddress", "PatientAddress")
@@ -716,6 +752,8 @@ namespace PFF.Domain.Migrations
                     b.Navigation("ChronicTreatments");
 
                     b.Navigation("Consultations");
+
+                    b.Navigation("Consumptions");
 
                     b.Navigation("Prescriptions");
                 });

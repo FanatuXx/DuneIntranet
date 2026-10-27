@@ -1,4 +1,8 @@
-﻿using PFF.Tools.CommandQuerySeparation;
+﻿using PFF.Domain.Commands.Consumptions;
+using PFF.Domain.Commands.Patients;
+using PFF.Domain.Commands.Prescriptions;
+using PFF.Domain.Commands.VitalSigns;
+using PFF.Tools.CommandQuerySeparation;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -24,13 +28,12 @@ namespace PFF.Domain.Commands.Patient
         int? Income,
         string? Status,
         bool? IsWorking,
-        string? DrugType,
-        string? ConsumptionFrequency,
-        string? Street,
-        string? Number,
-        string? ZipCode,
-        string? Town,
-        string? Country) : ICommandDefinition
+
+        UpdatePatientAddressData? PatientAddress,
+
+        IList<UpdateConsumptionData>? ConsumptionsToUpdate,
+        IList<CreateConsumptionData>? ConsumptionsToCreate) : ICommandDefinition
+
 
     {
     }

@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using PFF.Domain.Commands.Consultations;
 using PFF.Domain.Commands.Prescriptions;
 using PFF.Domain.Commands.VitalSigns;
@@ -9,9 +8,6 @@ using PFF.Domain.Queries.Consultations;
 using PFF.Domain.Repositories;
 using PFF.Tools.Results;
 using PFF.Domain.Model.ResponseDtos;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace PFF.Domain.Services
 {
@@ -38,7 +34,6 @@ namespace PFF.Domain.Services
                 .Include(c => c.Workers)
                 .Include(c => c.Pathologies)
                 .Include(c => c.VitalSigns)
-                .Include(c => c.Prescriptions)
                 .Include(c => c.Prescriptions)
                     .ThenInclude(pre => pre.Medicines)
                 .SingleOrDefaultAsync(c => c.Id == query.Id);
@@ -77,10 +72,15 @@ namespace PFF.Domain.Services
                     Income = consultation.Patient.Income,
                     Status = consultation.Patient.Status,
                     IsWorking = consultation.Patient.IsWorking,
-                    DrugType = consultation.Patient.DrugType,
-                    ConsumptionFrequency = consultation.Patient.ConsumptionFrequency,
                     RegistrationDate = consultation.Patient.RegistrationDate,
-                    LastVisit = consultation.Patient.LastVisit
+                    LastVisit = consultation.Patient.LastVisit,
+
+                    Consumptions = consultation.Patient.Consumptions?.Select(c => new ConsumptionSummaryDto
+                    {
+                        Id = c.Id,
+                        DrugType = c.DrugType,
+                        Frequency = c.Frequency
+                    }).ToList()
                 },
 
                 Workers = consultation.Workers.Select(w => new WorkerSummaryDto
@@ -109,14 +109,14 @@ namespace PFF.Domain.Services
                     BloodSugar = vs.BloodSugar,
                 }).ToList(),
 
-                Prescriptions = consultation.Prescriptions?.Select(vs => new PrescriptionWithMedicineDto
+                Prescriptions = consultation.Prescriptions?.Select(pre => new PrescriptionWithMedicineDto
                 {
-                    Id = vs.Id,
-                    StartDate = vs.StartDate,
-                    EndDate = vs.EndDate,
-                    TakeFrequency = vs.TakeFrequency,
-                    WorkerId = vs.WorkerId,
-                    Medicines = vs.Medicines?.Select(m => new MedicineSummaryDto
+                    Id = pre.Id,
+                    StartDate = pre.StartDate,
+                    EndDate = pre.EndDate,
+                    TakeFrequency = pre.TakeFrequency,
+                    WorkerId = pre.WorkerId,
+                    Medicines = pre.Medicines?.Select(m => new MedicineSummaryDto
                     {
                         Id = m.Id,
                         Name = m.Name,
@@ -354,6 +354,81 @@ namespace PFF.Domain.Services
                 };
 
                 existingVitalSigns!.Add(vitalSign);
+            }
+
+
+            IList<Prescription> existingPrescriptions = consultation.Prescriptions!;
+
+            foreach (UpdatePrescriptionData data in command.PrescriptionsToUpdate ?? new List<UpdatePrescriptionData>())
+            {
+                Prescription? prescription = existingPrescriptions?.SingleOrDefault(p => p.Id == data.Id);
+
+                if (prescription is null)
+                    return PrescriptionErrors.PrescriptionNotFound;
+
+                prescription.StartDate = data.StartDate ?? prescription.StartDate;                                    // ?? permet d'attribuer la valeur uniquement si elle n'est pas null (la valeur qui précède le ??), sinon on prend la valeur APRES les "??"
+                prescription.EndDate = data.EndDate ?? prescription.EndDate;
+                prescription.TakeFrequency = data.TakeFrequency ?? prescription.TakeFrequency;
+                prescription.WorkerId = data.PrescriberId ?? prescription.WorkerId;
+
+                if (data.PrescriberId > 0)
+                {
+                    Worker? worker = await _dbContext.Workers.FindAsync(data.PrescriberId);
+
+                    if (worker is null)
+                        return WorkerErrors.WorkerNotFound;
+
+                    prescription.Worker = worker;
+                }
+
+                if (data.MedicinesIds?.Count > 0)
+                {
+                    IList<Medicine>? medicines = await _dbContext.Medicines
+                        .Where(p => data.MedicinesIds.Contains(p.Id))
+                        .ToListAsync();
+
+                    if (medicines.Count != data.MedicinesIds?.Distinct().Count())
+                    {
+                        return MedicineErrors.MedicineNotFound;
+                    }
+
+                    prescription.Medicines = medicines;
+                }
+            }
+
+            foreach (CreatePrescriptionData data in command.PrescriptionsToCreate ?? new List<CreatePrescriptionData>())
+            {
+                Worker? worker = await _dbContext.Workers.FindAsync(data.PrescriberId);
+
+                if (worker is null)
+                    return WorkerErrors.WorkerNotFound;
+
+                Prescription prescription = new Prescription
+                {
+
+                    StartDate = data.StartDate,
+                    EndDate = data.EndDate,
+                    TakeFrequency = data.TakeFrequency,
+                    Worker = worker,
+                    Patient = consultation.Patient,
+                    Consultation = consultation
+                };
+
+                if (data.MedicinesIds?.Count > 0)
+                {
+                    IList<Medicine>? medicines = await _dbContext.Medicines
+                        .Where(p => data.MedicinesIds.Contains(p.Id))
+                        .ToListAsync();
+
+                    if (medicines.Count != data.MedicinesIds?.Distinct().Count())
+                    {
+                        return MedicineErrors.MedicineNotFound;
+                    }
+
+                    prescription.Medicines = medicines;
+                }
+
+                existingPrescriptions!.Add(prescription);
             }
 
             await _dbContext.SaveChangesAsync();

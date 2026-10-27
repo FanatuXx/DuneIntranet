@@ -90,16 +90,6 @@ namespace PFF.Domain.Configurations
                 .HasColumnType("BIT")
                 .HasColumnName("Fedasil");
 
-            builder.Property(patient => patient.DrugType)
-                .HasColumnType("NVARCHAR(50)")
-                .HasColumnName("ProduitConsommé")
-                .HasConversion<string>();
-
-            builder.Property(patient => patient.ConsumptionFrequency)
-                .HasColumnType("NVARCHAR(128)")
-                .HasColumnName("FréquenceConsommation")
-                .HasConversion<string>();
-
             builder.Property(patient => patient.Income)
                 .HasColumnType("INT")
                 .HasColumnName("Revenus");
@@ -126,6 +116,9 @@ namespace PFF.Domain.Configurations
 
             builder.HasMany(patient => patient.Consultations)
                 .WithOne(c => c.Patient);
+
+            builder.HasMany(patient => patient.Consumptions)
+                .WithOne(c => c.Patient);        
         }
     }
 }

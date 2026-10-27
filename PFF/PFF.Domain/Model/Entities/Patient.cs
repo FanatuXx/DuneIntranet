@@ -20,8 +20,6 @@
         public int? Income { get; set; }
         public string? Status { get; set; }
         public bool? IsWorking { get; set; } = false;
-        public string? DrugType { get; set; }
-        public string? ConsumptionFrequency { get; set; }
         public DateTime RegistrationDate { get; set; }
         public DateTime LastVisit { get; set; }
         public int? PatientAddressId { get; set; }
@@ -29,5 +27,6 @@
         public virtual IList<Prescription> Prescriptions { get; set; } = new List<Prescription>();
         public virtual IList<Consultation> Consultations { get; set; } = new List<Consultation>();
         public virtual IList<ChronicTreatment> ChronicTreatments { get; set; } = new List<ChronicTreatment>();
+        public virtual IList<Consumption> Consumptions { get; set; } = new List<Consumption>();
     }
 }

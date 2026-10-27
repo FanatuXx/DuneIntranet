@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using PFF.Api.Dtos.Create;
+using PFF.Domain.Model.Entities;
+using System.ComponentModel.DataAnnotations;
 
 namespace PFF.Api.Dtos.Update
 {
@@ -21,8 +23,10 @@ namespace PFF.Api.Dtos.Update
         public int? Income { get; set; }
         public string? Status { get; set; }
         public bool? IsWorking { get; set; }
-        public string? DrugType { get; set; }
-        public string? ConsumptionFrequency { get; set; }
+
         public UpdatePatientAddressDto? PatientAddress { get; set; }
+
+        public IList<UpdateConsumptionDto>? ConsumptionsToUpdate { get; set; }
+        public IList<CreateConsumptionDto>? ConsumptionsToCreate { get; set; }
     }
 }

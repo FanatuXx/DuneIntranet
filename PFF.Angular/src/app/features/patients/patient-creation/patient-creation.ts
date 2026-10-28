@@ -24,7 +24,7 @@ import { ButtonModule } from '@openng/optimus-ui/button';
     CheckboxModule,
     DatePickerModule,
     InputNumberModule,
-    ButtonModule 
+    ButtonModule,
   ],
   templateUrl: './patient-creation.html',
   styleUrl: './patient-creation.css',
@@ -35,6 +35,8 @@ export class PatientCreation implements OnInit {
   private readonly patientsService: PatientsService = inject(PatientsService);
   private readonly formBuilder: FormBuilder = inject(FormBuilder);
   private readonly router = inject(Router);
+
+  readonly maxBirthDate = new Date();
 
   genderOptions = Object.entries(Gender).map(([value, label]) => ({
   value,

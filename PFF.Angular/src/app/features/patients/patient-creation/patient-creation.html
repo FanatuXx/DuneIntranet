@@ -6,7 +6,7 @@
 
     <div>
       <h1>Nouvel usager</h1>
-      <p>Complétez les informations pour créer un dossier patient.</p>
+      <p>Complétez les informations pour créer un dossier d'usager.</p>
     </div>
   </header>
 
@@ -43,6 +43,7 @@
             dateFormat="dd/mm/yy"
             placeholder="Sélectionner une date"
             [showIcon]="true"
+            [maxDate]="maxBirthDate"
             fluid
           />
 
@@ -50,8 +51,7 @@
             <div class="error-message" role="alert">
               <i class="pi pi-exclamation-triangle"></i>
               <span>
-                Attention : la personne a moins de 18 ans !
-                Elle doit être réorientée vers un service spécialisé.
+                Attention : la personne a moins de 18 ans !<br>Elle doit être réorientée vers un service spécialisé.
               </span>
             </div>
           }
@@ -265,7 +265,7 @@
         <i class="pi pi-map-marker"></i>
         <div>
           <h2>Lieu de vie ou de résidence</h2>
-          <p>Adresse actuelle de l'usager</p>
+          <p>Adresse actuelle de l'usager ou lieu le plus fréquenté</p>
         </div>
       </div>
 
@@ -422,7 +422,6 @@
             class="add-consumption-button"
             (click)="addConsumption()"
           >
-            <i class="pi pi-plus" aria-hidden="true"></i>
             Ajouter un mode de consommation
           </button>
         </div>

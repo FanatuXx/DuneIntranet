@@ -5,7 +5,7 @@ header {
     align-items: center; /*Permet de centrer les éléments de la bannière au centre (par rapport au haut et au bas) */
     justify-content: space-between; /*Permet de séparer le logo (tout à gauche) des éléments de la liste (tout à droite) */
     padding: 15px 30px; /*Permet de définir l'écart par rapport aux bords haut/bas et gauche/droite de la page*/
-    color: white;
+    color: rgb(239, 239, 239);
 }
 
 .logo {
@@ -22,7 +22,7 @@ nav ul {
 }
 
 nav a {
-    color: white;
+    color: rgb(239, 239, 239);
     text-decoration: none; /*Permet d'enlever le surlignage par défaut du a*/
     font-size: 1rem;
     transition: color 0.3s; /*Permet de définir un interval de temps pendant lequel l'élément passera de la couleur A à la couleur B (hovering) */

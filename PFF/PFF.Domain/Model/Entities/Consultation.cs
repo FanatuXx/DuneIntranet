@@ -16,8 +16,8 @@ namespace PFF.Domain.Model.Entities
         public int PatientId { get; set; }
         public virtual Patient Patient { get; set; } = null!;
         public virtual IList<Worker> Workers { get; set; } = new List<Worker>();
-        public virtual IList<Prescription> Prescriptions { get; set; } = new List<Prescription>();
-        public virtual IList<VitalSign> VitalSigns { get; set; } = new List<VitalSign>();
+        public virtual IList<Prescription>? Prescriptions { get; set; }
+        public virtual IList<VitalSign>? VitalSigns { get; set; }
 
         public virtual IList<Pathology> Pathologies { get; set; } = new List<Pathology>();
     }

@@ -10,8 +10,8 @@ namespace PFF.Domain.Model.Entities
         public int Id { get; set; }
         public string Name { get; set; } = default!;
         public string HowToTake { get; set; } = default!;
-        public virtual IList<Prescription> Prescriptions { get; set; } = new List<Prescription>();
-        public virtual IList<ChronicTreatment> ChronicTreatments { get; set; } = new List<ChronicTreatment>();
+        public virtual IList<Prescription>? Prescriptions { get; set; }
+        public virtual IList<ChronicTreatment>? ChronicTreatments { get; set; }
     }
 }
 

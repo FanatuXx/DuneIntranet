@@ -18,7 +18,7 @@ export interface CreatePatientAddressRequest {
 export interface UpdatePatientAddressRequest {
     street: string | null,
     number: string |null,
-    zipCode: number,
+    zipCode: number | null,
     town: string | null,
     country: string | null
 }

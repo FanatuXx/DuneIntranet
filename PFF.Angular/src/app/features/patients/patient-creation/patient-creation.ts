@@ -38,6 +38,8 @@ export class PatientCreation implements OnInit {
 
   readonly maxBirthDate = new Date();
 
+  // #region Pipes mapping
+
   genderOptions = Object.entries(Gender).map(([value, label]) => ({
   value,
   label
@@ -57,6 +59,8 @@ export class PatientCreation implements OnInit {
   value,
   label
   }));
+
+  // #endregion
 
   form!: FormGroup;
   formAddress!: FormGroup;
@@ -92,7 +96,8 @@ export class PatientCreation implements OnInit {
       })
     });
   }
-
+ 
+  // #region Getters
   get ssin() {
     return this.form.controls['ssin'];
   };
@@ -184,6 +189,7 @@ export class PatientCreation implements OnInit {
   get consumptions(): FormArray {
     return this.form.get('consumptions') as FormArray;
   }
+  // #endregion
 
   private createConsumption(): FormGroup {
     return this.formBuilder.group({

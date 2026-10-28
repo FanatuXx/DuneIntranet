@@ -11,7 +11,7 @@ import { DrugLabelPipe } from '../../../shared/pipes/drug-label-pipe';
 import { Gender } from '../../../shared/enums/gender.enum';
 import { DrugType } from '../../../shared/enums/drug-type.enum';
 import { ConsumptionFrequency } from '../../../shared/enums/consumption-frequency.enum';
-import { PatientAddress } from '../../../shared/models/patientAddress.model';
+import { finalize } from 'rxjs';
 
 @Component({
   imports: [ResidenceLabelPipe, GenderLabelPipe, ConsumptionLabelPipe, DrugLabelPipe, RouterLink, RouterModule],
@@ -41,20 +41,27 @@ export class PatientDetails implements OnInit {
     console.log(this.activatedRoute.snapshot.params['id']);
     console.log('id :>> ', this.id());
 
-    this.patientsService.getById(this.id()).subscribe({
+  this.patientsService.getById(this.id())
+    .pipe(finalize(() => this.loading.set(false)))
+    .subscribe({
       next: (patient: Patient) => {
         this.patient.set(patient);
       },
       error: (err) => {
-        this.error.set(err);
-      },
-      complete: () => {
-        this.loading.set(false);
-      },
+        this.error.set(
+          err?.error?.message ??
+          err?.message ??
+          'Une erreur est survenue lors du chargement du patient.'
+        );
+      }
     });
   }
 
-  convertDate(date: Date) {
+  convertDate(date: Date | string | null | undefined): string | null {
+    if (!date) {
+      return null;
+    }
+
     return this.datepipe.transform(date, 'dd/MM/yyyy');
   }
 }

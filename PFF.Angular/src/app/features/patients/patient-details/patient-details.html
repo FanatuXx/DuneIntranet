@@ -1,56 +1,243 @@
-<h1>Fiche de {{patient()?.alias}} ({{id()}}):</h1>
+ <div class="patient-details-page">
+  @if (loading()) {
+    <div class="state-card">
+      <span class="pi pi-spinner pi-spin state-icon" aria-hidden="true"></span>
+      <p>Chargement de la fiche de l'usager</p>
+    </div>
+  } @else if (error()) {
+    <div class="state-card error-state" role="alert">
+      <span class="pi pi-exclamation-circle state-icon" aria-hidden="true"></span>
+      <h2>Impossible de charger la fiche de l'usager</h2>
+      <p>{{ error() }}</p>
+    </div>
+  } @else if (patient(); as p) {
+    <header class="page-header">
+      <div class="header-icon" aria-hidden="true">
+        <i class="pi pi-user" aria-hidden="true"></i>
+      </div>
+      <div class="header-content">
+        <p class="eyebrow">DOSSIER DE L'USAGER</p>
+        <h1>{{ p.alias || (p.firstName + ' ' + p.lastName) }}</h1>
+        <p class="header-subtitle">
+          Fiche détaillée
+          <span class="patient-id">N° {{ p.id }}</span>
+        </p>
+      </div>
+      <span class="record-badge">
+        <i class="pi pi-check-circle" aria-hidden="true"></i>
+        Dossier consulté
+      </span>
+    </header>
 
-@if (loading()) {
-  <p>Chargement...</p>
-} @else if (error()) {
-  <p class="error">Erreur: {{ error() }}</p>
-} @else {
-    <h3>Indentification & informations administratives</h3>
-      <div class="user">
-          <div class="user-id">ID : {{ patient()?.id }}</div>
-          <div class="user-ssin">NISS : {{ patient()?.ssin }}</div>
-          <div class="user-idNumber">Numéro ID : {{ patient()?.idNumber }}</div>
-          <div class="user-firstname">Prénom : {{ patient()?.firstName }}</div>
-          <div class="user-alias">Surnom : {{ patient()?.alias }} </div>
-          <div class="user-lastname">Nom : {{ patient()?.lastName }}</div>
-          <div class="user-birthdate">Date de naissance : {{ convertDate(patient()?.birthDate!) }}</div>
-          <div class="user-gender">Genre : {{ patient()?.gender | GenderLabelPipe }}</div>
-          <div class="user-phoneNumber">Téléphone : {{ patient()?.phoneNumber }}</div>
-          <div class="user-isInsured">Est assuré ? {{ patient()?.isInsured ? 'Oui' : 'Non'}}</div>
-          @if (patient()?.isInsured) {
-            <div class="user-insurance">Assurance : {{ patient()?.insurance }}</div>
-          <div class="user-isAtFedasil">Fedasil ? {{ patient()?.isAtFedasil ? 'Oui' : 'Non'}}</div>
-          <div class="user-income">Revenu : {{ patient()?.income }}</div>
+    <div class="details-layout">
+      <section class="details-card">
+        <div class="section-heading">
+          <span class="section-icon"><i class="pi pi-user" aria-hidden="true"></i></span>
+          <div>
+            <h2>Identification</h2>
+            <p>Identité et coordonnées de l'usager</p>
+          </div>
+        </div>
 
-          <div class="user-status">Statut de séjour : {{ patient()?.status! | ResidenceLabelPipe }}</div>
-          <div class="user-isWorking">A un travail : {{ patient()?.isWorking ? 'Oui' : 'Non'}}</div>
+        <div class="details-grid">
+          <div class="detail-item">
+            <span class="detail-label">Prénom</span>
+            <span class="detail-value" [class.detail-value-empty]="!p.firstName">{{ p.firstName || 'Non renseigné' }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Nom</span>
+            <span class="detail-value" [class.detail-value-empty]="!p.lastName">{{ p.lastName || 'Non renseigné' }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Surnom</span>
+            <span class="detail-value">{{ p.alias || 'Non renseigné' }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Date de naissance</span>
+            <span class="detail-value">{{ convertDate(p.birthDate) || 'Non renseignée' }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Genre</span>
+            <span class="detail-value" [class.detail-value-empty]="!p.gender">{{ p.gender != null ? (p.gender | GenderLabelPipe) : 'Non renseigné' }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Téléphone</span>
+            <span class="detail-value" [class.detail-value-empty]="!p.phoneNumber">{{ p.phoneNumber || 'Non renseigné' }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">NISS</span>
+            <span class="detail-value" [class.detail-value-empty]="!p.ssin">{{ p.ssin || 'Non renseigné' }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Numéro d'identification</span>
+            <span class="detail-value" [class.detail-value-empty]="!p.idNumber">{{ p.idNumber || 'Non renseigné' }}</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="details-card">
+        <div class="section-heading">
+          <span class="section-icon"><i class="pi pi-map-marker" aria-hidden="true"></i></span>
+          <div>
+            <h2>Adresse et résidence</h2>
+            <p>Lieu de vie ou de fréquentation</p>
+          </div>
+        </div>
+
+        <div class="details-grid">
+          <div class="detail-item">
+            <span class="detail-label">Rue</span>
+            <span class="detail-value" [class.detail-value-empty]="!p.patientAddress?.street">{{ p.patientAddress?.street || 'Non renseignée' }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Numéro</span>
+            <span class="detail-value" [class.detail-value-empty]="!p.patientAddress?.number">{{ p.patientAddress?.number || 'Non renseigné' }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Code postal</span>
+            <span class="detail-value">{{ p.patientAddress?.zipCode || 'Non renseigné' }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Ville</span>
+            <span class="detail-value" [class.detail-value-empty]="!p.patientAddress?.town">{{ p.patientAddress?.town || 'Non renseignée' }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Pays</span>
+            <span class="detail-value" [class.detail-value-empty]="!p.patientAddress?.country">{{ p.patientAddress?.country || 'Non renseigné' }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Statut de séjour</span>
+            <span class="detail-value" [class.detail-value-empty]="!p.status">{{ p.status != null ? (p.status | ResidenceLabelPipe) : 'Non renseigné' }}</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="details-card">
+        <div class="section-heading">
+          <span class="section-icon"><i class="pi pi-briefcase" aria-hidden="true"></i></span>
+          <div>
+            <h2>Informations administratives</h2>
+            <p>Assurance, emploi et situation financière</p>
+          </div>
+        </div>
+
+        <div class="details-grid">
+          <div class="detail-item">
+            <span class="detail-label">Usager assuré</span>
+            <span class="status-pill" [class.status-yes]="p.isInsured" [class.status-no]="!p.isInsured">
+              {{ p.isInsured ? 'Oui' : 'Non' }}
+            </span>
+          </div>
+          @if (p.isInsured) {
+            <div class="detail-item">
+              <span class="detail-label">Organisme d'assurance</span>
+              <span class="detail-value" [class.detail-value-empty]="!p.insurance">{{ p.insurance || 'Non renseigné' }}</span>
+            </div>
           }
-          <div class="user-registrationDate">Date d'inscription : {{ convertDate(patient()?.registrationDate!)}}</div>
-          <div class="user-lastVisit">Dernière visite : {{ convertDate(patient()?.lastVisit!)}}</div>
-      </div>
+          <div class="detail-item">
+            <span class="detail-label">Travaille</span>
+            <span class="status-pill" [class.status-yes]="p.isWorking" [class.status-no]="!p.isWorking">
+              {{ p.isWorking ? 'Oui' : 'Non' }}
+            </span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Pris en charge par Fedasil</span>
+            <span class="status-pill" [class.status-yes]="p.isAtFedasil" [class.status-no]="!p.isAtFedasil">
+              {{ p.isAtFedasil ? 'Oui' : 'Non' }}
+            </span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Revenu</span>
+            <span class="detail-value" [class.detail-value-empty]="!p.income">{{ p.income != null ? (p.income + ' €') : 'Non renseigné' }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Date d'inscription</span>
+            <span class="detail-value">{{ convertDate(p.registrationDate) || 'Non renseignée' }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Dernière visite</span>
+            <span class="detail-value">{{ convertDate(p.lastVisit) || 'Aucune visite enregistrée' }}</span>
+          </div>
+        </div>
+      </section>
 
-    <h3>Lieu de vie ou de résidence</h3>
-      <div class="user">
-        <div class="user-street">Rue : {{patient()?.patientAddress.street}}</div>
-        <div class="user-number">Numéro : {{patient()?.patientAddress.number}}</div>
-        <div class="user-zipCode">Code postal : {{patient()?.patientAddress.zipCode}}</div>
-        <div class="user-town">Ville : {{patient()?.patientAddress.town}}</div>
-        <div class="user-country">Pays : {{patient()?.patientAddress.country}}</div>
-      </div>
+      <section class="details-card">
+        <div class="section-heading">
+          <span class="section-icon"><i class="pi pi-heart" aria-hidden="true"></i></span>
+          <div>
+            <h2>Informations médicales</h2>
+            <p>Allergies et carte médicale</p>
+          </div>
+        </div>
 
-    <h3>Indentification & informations administratives</h3>
-      <div class="user">
-          <div class="user-allergies">Allergies : {{ patient()?.allergies }}</div>
-
-          <div class="user-hasInsuranceCard">A une carte médicale ? {{ patient()?.hasInsuranceCard ? 'Oui' : 'Non' }}</div>
-          @if (patient()?.hasInsuranceCard) {
-            <div class="user-insuranceCardEndDate">Expiration : {{ convertDate(patient()?.birthDate!) }}</div>
+        <div class="details-grid">
+          <div class="detail-item detail-item-wide">
+            <span class="detail-label">Allergies</span>
+            <span class="detail-value" [class.detail-value-empty]="!p.allergies">{{ p.allergies || 'Aucune information renseignée' }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Carte médicale</span>
+            <span class="status-pill" [class.status-yes]="p.hasInsuranceCard" [class.status-no]="!p.hasInsuranceCard">
+              {{ p.hasInsuranceCard ? 'Oui' : 'Non' }}
+            </span>
+          </div>
+          @if (p.hasInsuranceCard) {
+            <div class="detail-item">
+              <span class="detail-label">Expiration de la carte</span>
+              <span class="detail-value" [class.detail-value-empty]="!p.insuranceCardEndDate">{{ convertDate(p.insuranceCardEndDate) || 'Non renseignée' }}</span>
+            </div>
           }
+        </div>
+      </section>
 
-          <div class="user-drugType">Produit consommé : {{ patient()?.drugType | DrugLabelPipe }}</div>
-          <div class="user-consumptionFrequency">Fréquence de consommation : {{ patient()?.consumptionFrequency | ConsumptionLabelPipe }}</div>
+      <section class="details-card">
+        <div class="section-heading">
+          <span class="section-icon"><i class="pi pi-list" aria-hidden="true"></i></span>
+          <div>
+            <h2>Consommations</h2>
+            <p>Produits consommés et fréquence déclarée</p>
+          </div>
+        </div>
+
+        @if (p.consumptions?.length) {
+          <div class="consumption-list">
+            @for (consumption of p.consumptions; track consumption.id) {
+              <article class="consumption-item">
+                <div class="consumption-icon">
+                  <i class="pi pi-circle" aria-hidden="true"></i>
+                </div>
+                <div class="consumption-content">
+                  <span class="detail-label">Produit consommé</span>
+                  <span class="detail-value">{{ consumption.drugType | DrugLabelPipe }}</span>
+                </div>
+                <div class="consumption-frequency">
+                  <span class="detail-label">Fréquence</span>
+                  <span class="detail-value">{{ consumption.frequency | ConsumptionLabelPipe }}</span>
+                </div>
+              </article>
+            }
+          </div>
+        } @else {
+          <p class="empty-state">Aucune consommation renseignée.</p>
+        }
+      </section>
+    </div>
+
+    <footer class="page-actions">
+      <a class="secondary-button" routerLink="/patients">
+        <i class="pi pi-arrow-left" aria-hidden="true"></i>
+        Retour à la liste
+      </a>
+      <div class="action-group">
+        <a class="primary-button" [routerLink]="['/patients', p.id, 'edit']">
+          <i class="pi pi-pencil" aria-hidden="true"></i>
+          Modifier la fiche
+        </a>
+        <a class="danger-button" [routerLink]="['/patients', p.id, 'delete']">
+          <i class="pi pi-trash" aria-hidden="true"></i>
+          Supprimer
+        </a>
       </div>
-      <br>
-    <button><a [routerLink]="['/patients', patient()!.id, 'edit']"> Modifier </a></button>
-    <button><a [routerLink]="['/patients', patient()!.id, 'delete']"> Supprimer </a></button>
-    }
+    </footer>
+  }
+</div>

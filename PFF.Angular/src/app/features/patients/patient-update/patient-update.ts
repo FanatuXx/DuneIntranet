@@ -1,5 +1,5 @@
 import { Component, inject, input, OnInit, signal } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { PatientsService } from '../../../core/services/patients.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Gender } from '../../../shared/enums/gender.enum';
@@ -10,12 +10,17 @@ import { legalAgeValidator } from '../../../shared/validators/legal-age.validato
 import { Patient } from '../../../shared/models/patient.model';
 import { DatePipe } from '@angular/common';
 
+import { DatePickerModule } from '@openng/optimus-ui/datepicker';
+
+import { finalize } from 'rxjs';
+
 @Component({
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, DatePickerModule],
   selector: 'app-patient-update',
   styleUrl: './patient-update.css',
   templateUrl: './patient-update.html',
 })
+
 export class PatientUpdate implements OnInit {
 
   private readonly activatedRoute = inject(ActivatedRoute);
@@ -30,6 +35,9 @@ export class PatientUpdate implements OnInit {
   constructor(public datepipe: DatePipe){}
 
   readonly id = input.required<number>();
+  readonly maxBirthDate = new Date();
+
+  deletedConsumptionIds: number[] = [];
 
   genderOptions = Object.entries(Gender).map(([value, label]) => ({
   value,
@@ -57,13 +65,13 @@ export class PatientUpdate implements OnInit {
     this.form = this.formBuilder.group({
       ssin: ['', [Validators.minLength(11), Validators.maxLength(15)]],
       idNumber: ['', [Validators.minLength(12), Validators.maxLength(14)]],
-      firstName: [''],
-      lastName: [''],
-      alias: [''],
+      firstName: ['', [Validators.minLength(1), Validators.maxLength(50)]],
+      lastName: ['', [Validators.minLength(1), Validators.maxLength(50)]],
+      alias: ['', [Validators.minLength(1), Validators.maxLength(50)]],
       gender: [''],
       birthDate: ['', legalAgeValidator()],
       phoneNumber: ['', [Validators.minLength(9), Validators.maxLength(16)]],
-      allergies: [''],
+      allergies: ['', [Validators.minLength(1), Validators.maxLength(256)]],
       isInsured: [''],
       insurance: ['', [Validators.minLength(2), Validators.maxLength(50)]],
       hasInsuranceCard: [''],
@@ -72,24 +80,76 @@ export class PatientUpdate implements OnInit {
       income: ['', [Validators.min(0)]],
       status: [''],
       isWorking: [''],
-      drugType: [''],
-      consumptionFrequency: ['']
+      consumptions: this.formBuilder.array([   //Permet de créer un form imbriqué dans mon form principal
+        this.updateConsumption()
+      ]),
+      patientAddress: this.formBuilder.group({ //Permet de créer un form imbriqué dans mon form principal
+        street: ['', [Validators.minLength(1), Validators.maxLength(256)]],
+        number: ['', [Validators.minLength(1), Validators.maxLength(10)]],
+        zipCode: ['', [Validators.minLength(1), Validators.maxLength(5)]],
+        town: ['', [Validators.minLength(1), Validators.maxLength(128)]],
+        country: ['', [Validators.minLength(1), Validators.maxLength(128)]]
+      })
     });
 
-    this.patientsService.getById(this.id()).subscribe({
+  this.loading.set(true);
+
+  this.patientsService.getById(this.id())
+    .pipe(
+      finalize(() => this.loading.set(false)) //Set loading to false either way the request succees or fails
+    )
+    .subscribe({
       next: (patient: Patient) => {
-        this.patient.set(patient); //Permet d'utiliser des propriétés de patient dans le titre 
+        this.patient.set(patient);
+
         this.form.patchValue({
           ...patient,
-          birthDate: this.datepipe.transform(patient.birthDate, 'yyyy-MM-dd'),
-          insuranceCardEndDate: this.datepipe.transform(patient.insuranceCardEndDate, 'yyyy-MM-dd'),
+          birthDate: patient.birthDate
+            ? new Date(patient.birthDate)
+            : null,
+
+          insuranceCardEndDate: patient.insuranceCardEndDate
+            ? new Date(patient.insuranceCardEndDate)
+            : null,
+          patientAddress: patient.patientAddress ?? {
+            street: '',
+            number: '',
+            zipCode: '',
+            town: '',
+            country: ''
+          }
         });
-        this.loading.set(false);
+
+        // Reconstruire le FormArray des consommations
+        this.consumptions.clear({ emitEvent: false });
+
+        if (patient.consumptions?.length) {
+          patient.consumptions.forEach(consumption => {
+            const consumptionForm = this.updateConsumption();
+
+            consumptionForm.patchValue({
+              id: consumption.id,
+              drugType: consumption.drugType ?? '',
+              frequency: consumption.frequency ?? ''
+            });
+
+            this.consumptions.push(consumptionForm, {
+              emitEvent: false
+            });
+          });
+        } else {
+          this.consumptions.push(this.updateConsumption(), {
+            emitEvent: false
+          });
+        }
       },
+
       error: (err) => {
-        this.error.set(err.message ?? 'Erreur de chargement');
-        this.loading.set(false);
-      },
+        console.error('Erreur de chargement du patient :', err);
+        this.error.set(
+          err?.error?.message ?? err?.message ?? 'Erreur de chargement'
+        );
+      }
     });
   };
 
@@ -162,14 +222,37 @@ export class PatientUpdate implements OnInit {
     return this.form.controls['isWorking'];
   }
   
-  get drugType() {
-    return this.form.controls['drugType'];
+  get street() {
+    return this.form.get('patientAddress.street');
   }
 
-  get consumptionFrequency() {
-    return this.form.controls['consumptionFrequency'];
+  get number() {
+    return this.form.get('patientAddress.number');
   }
 
+  get zipCode() {
+    return this.form.get('patientAddress.zipCode');
+  }
+
+  get town() {
+    return this.form.get('patientAddress.town');
+  }
+
+  get country() {
+    return this.form.get('patientAddress.country');
+  }
+
+  get consumptions(): FormArray {
+    return this.form.get('consumptions') as FormArray;
+  }
+
+  private updateConsumption(): FormGroup {
+    return this.formBuilder.group({
+      id: [null],
+      drugType: [''],
+      frequency: ['']
+    });
+  }
 
 
   onSubmit() {
@@ -195,9 +278,45 @@ export class PatientUpdate implements OnInit {
       }
     });
 
-    this.patientsService.update(this.id(), this.form.getRawValue()).subscribe({
-      next: () => this.router.navigate(['patients']),
-      error: (err) => console.log('Erreur: ', err),
-    });
+  const patientData = this.form.getRawValue();
+
+  patientData.consumptions = patientData.consumptions.filter(
+    (consumption: { drugType: string; frequency: string }) =>
+      consumption.drugType && consumption.frequency
+  );
+
+  const payload = {
+    ...patientData,
+    consumptionsToDeleteIds: this.deletedConsumptionIds
+  };
+
+  this.patientsService.update(this.id(), payload).subscribe({
+    next: () => this.router.navigate(['patients']),
+    error: (err) => console.error('Erreur de mise à jour :', err),
+  });
+  }
+
+  addConsumption(): void 
+  {
+    this.consumptions.push(this.updateConsumption());
+  }
+
+  removeConsumption(index: number): void {
+    const consumption = this.consumptions.at(index);
+    const id = consumption.get('id')?.value;
+
+    if (id != null) {
+      this.deletedConsumptionIds.push(id);
+    }
+
+    if (this.consumptions.length > 1) {
+      this.consumptions.removeAt(index);
+    } else {
+      this.consumptions.at(0).reset({
+        id: null,
+        drugType: '',
+        frequency: ''
+      });
+    }
   }
 }

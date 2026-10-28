@@ -1,189 +1,493 @@
-<h1>Modification de {{patient()?.alias}} ({{id()}}):</h1>
 
-@if (loading()) {
-  <p>Chargement...</p>
-} @else if (error()) {
-  <p class="error">Erreur: {{ error() }}</p>
-} @else {
-    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+<div class="patient-page">
 
-    <h3>Informations obligatoires</h3>
+  <!-- EN-TÊTE -->
+  <header class="page-header">
+    <div class="page-icon">
+      <i class="pi pi-user-edit"></i>
+    </div>
 
-        <label for="alias">
-        Alias
-        <input type="text" name="alias" id="alias" formControlName="alias">
-        </label>
-        <br>
-
-        <label for="birthDate">
-        Date de naissance
-        <input type="date" name="birthDate" id="birthDate" formControlName="birthDate">
-        </label>
-        @if (birthDate.touched && birthDate.invalid) {
-        <p class="error">ATTENTION : la personne a moins de 18 ans ! La personne doit être réorientée vers un service spécialisé.</p>
+    <div class="page-title">
+      <h1>Modifier un usager</h1>
+      <p>
+        @if (patient(); as currentPatient) {
+          Dossier de {{ currentPatient.alias }} · ID {{ currentPatient.id }}
+        } @else {
+          Modification des informations du dossier de l'usager
         }
-        <br>
-        <br>
+      </p>
+    </div>
 
-        <h3>Informations administratives :</h3>
-
-        <label for="ssin">
-        NISS
-        <input type="text" name="ssin" id="ssin" formControlName="ssin">
-        </label>
-        @if (ssin.touched && ssin.invalid) {
-        @if (ssin.hasError('minlength')) {
-            <p class="error">Le champ doit faire minimum 11 caractères</p>
-        } @else if (ssin.hasError('maxlength')) {
-            <p class="error">Le champ doit faire maximum 15 caractères</p>
-        }
-        }
-        <br>
-
-        <label for="idNumber">
-        Numéro ID
-        <input type="text" name="idNumber" id="idNumber" formControlName="idNumber">
-        </label>
-        @if (idNumber.touched && idNumber.invalid) {
-        @if (idNumber.hasError('minlength')) {
-            <p class="error">Le champ doit faire minimum 12 caractères</p>
-        } @else if (idNumber.hasError('maxlength')) {
-            <p class="error">Le champ doit faire maximum 14 caractères</p>
-        }
-        }
-        <br>
-
-        <label for="firstName">
-        Prénom
-        <input type="text" name="firstName" id="firstName" formControlName="firstName">
-        </label>
-        <br>
-
-        <label for="lastName">
-        Nom
-        <input type="text" name="lastName" id="lastName" formControlName="lastName">
-        </label>
-        <br>
-
-        <label for="gender">
-        Genre
-        <select id="gender" formControlName="gender" >
-            <option value=""> -- Sélectionnez un genre -- </option>
-
-            @for (gender of genderOptions; track gender.value) {
-            <option [value]="gender.value">
-                {{ gender.label }}
-            </option>
-            }
-        </select>
-        </label>
-        <br>
-
-        <label for="phoneNumber">
-        Numéro de téléhphone
-        <input type="text" name="phoneNumber" id="phoneNumber" formControlName="phoneNumber">
-        </label>
-        <br>
-        <br>
-
-        <label for="isInsured">
-        En ordre de mutuelle ?
-        <input type="checkbox" name="isInsured" id="isInsured" formControlName="isInsured">
-        </label>
-        <br>
-
-        <label for="insurance">
-        Mutuelle
-        <input type="text" name="insurance" id="insurance" formControlName="insurance">
-        </label>
-        <br>
-        <br>
-
-        <label for="isWorking">
-        Travailleur ?
-        <input type="checkbox" name="isWorking" id="isWorking" formControlName="isWorking">
-        </label>
-        <br>
-
-        <label for="income">
-        Revenus mensuels 
-        <input type="number" name="income" id="income" formControlName="income">
-        </label>
-        <br>
-        <br>
-
-        <label for="isAtFedasil">
-        Fedasil ?
-        <input type="checkbox" name="isAtFedasil" id="isAtFedasil" formControlName="isAtFedasil">
-        </label>
-        <br>
-
-        <label for="status">
-        Statut de séjour
-        <select id="status" formControlName="status">
-            <option value=""> -- Sélectionnez un statut -- </option>
-
-            @for (status of statusOptions; track status.value) {
-            <option [value]="status.value">
-                {{ status.label }}
-            </option>
-            }
-        </select>
-        </label>
-        <br>
-        <br>
-
-        <h3>Informations médicales & consommation :</h3>
-
-        <label for="hasInsuranceCard">
-        Possède une carte médicale ?
-        <input type="checkbox" name="hasInsuranceCard" id="hasInsuranceCard" formControlName="hasInsuranceCard">
-        </label>
-        <br>
-
-        <label for="insuranceCardEndDate">
-        Expiration de la carte médicale 
-        <input type="date" name="insuranceCardEndDate" id="insuranceCardEndDate" formControlName="insuranceCardEndDate">
-        </label>
-        <br>
-
-        <label for="allergies">
-        Allergies
-        <input type="text" name="allergies" id="allergies" formControlName="allergies">
-        </label>
-        <br>
-        <br>
-
-        <label for="drugType">
-        Produit consommé
-        <select id="drugType" formControlName="drugType">
-            <option value=""> -- Sélectionnez un produit -- </option>
-
-            @for (drug of drugOptions; track drug.value) {
-            <option [value]="drug.value">
-                {{drug.label}}
-            </option>
-            }
-        </select>
-        </label>
-        <br>
-
-        <label for="consumptionFrequency">
-        Fréquence de consommation
-        <select id="consumptionFrequency" formControlName="consumptionFrequency">
-            <option value=""> -- Sélectionnez une fréquence -- </option>
-
-            @for (frequency of consumptionFrequencyOptions; track frequency.value) {
-            <option [value]="frequency.value">
-                {{frequency.label}}
-            </option>
-            }
-        </select>
-        </label>
-        <br>
-        <br>
-
-        <button type="submit">Modifier l'usager</button>
-
-    </form> 
+    @if (patient()) {
+      <span class="patient-badge">
+        <i class="pi pi-pencil"></i>
+        Modification
+      </span>
     }
+  </header>
+
+  @if (loading()) {
+    <div class="state-card" role="status">
+      <i class="pi pi-spin pi-spinner"></i>
+      <span>Chargement du dossier de l'usager...</span>
+    </div>
+  } @else if (error()) {
+    <div class="state-card state-error" role="alert">
+      <i class="pi pi-exclamation-circle"></i>
+      <div>
+        <strong>Impossible de charger le dossier</strong>
+        <p>{{ error() }}</p>
+      </div>
+    </div>
+  } @else {
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="patient-form">
+
+      <!-- INFORMATIONS OBLIGATOIRES -->
+      <section class="form-card">
+        <div class="section-heading">
+          <div class="section-icon">
+            <i class="pi pi-user"></i>
+          </div>
+          <div>
+            <h2>Informations obligatoires</h2>
+            <p>Informations de base de l'usager</p>
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <div class="field">
+            <label for="alias">Surnom</label>
+            <input
+              id="alias"
+              type="text"
+              formControlName="alias"
+              placeholder="Surnom de l'usager"
+            />
+          </div>
+
+          <div class="field">
+            <label for="birthDate">Date de naissance</label>
+            <p-datepicker
+                formControlName="birthDate"
+                dateFormat="dd-mm-yy"
+                placeholder="jj-mm-aaaa"
+                [showIcon]="true"
+                [maxDate]="maxBirthDate"
+                class="w-full"
+            />
+
+            @if (birthDate.touched && birthDate.invalid) {
+              <div class="error-message" role="alert">
+                <i class="pi pi-exclamation-triangle"></i>
+                <span>
+                    Attention : la personne a moins de 18 ans !<br>Elle doit être réorientée vers un service spécialisé.
+                </span>
+              </div>
+            }
+          </div>
+        </div>
+      </section>
+
+      <!-- INFORMATIONS ADMINISTRATIVES -->
+      <section class="form-card">
+        <div class="section-heading">
+          <div class="section-icon">
+            <i class="pi pi-id-card"></i>
+          </div>
+          <div>
+            <h2>Informations administratives</h2>
+            <p>Identité et situation sociale</p>
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <div class="field">
+            <label for="ssin">NISS</label>
+            <input
+              id="ssin"
+              type="text"
+              formControlName="ssin"
+              placeholder="Numéro NISS"
+            />
+
+            @if (ssin.touched && ssin.invalid) {
+              @if (ssin.hasError('minlength')) {
+                <small class="error-text">
+                  Minimum 11 caractères.
+                </small>
+              } @else if (ssin.hasError('maxlength')) {
+                <small class="error-text">
+                  Maximum 15 caractères.
+                </small>
+              }
+            }
+          </div>
+
+          <div class="field">
+            <label for="idNumber">Numéro ID</label>
+            <input
+              id="idNumber"
+              type="text"
+              formControlName="idNumber"
+              placeholder="Numéro d'identification"
+            />
+
+            @if (idNumber.touched && idNumber.invalid) {
+              @if (idNumber.hasError('minlength')) {
+                <small class="error-text">
+                  Minimum 12 caractères.
+                </small>
+              } @else if (idNumber.hasError('maxlength')) {
+                <small class="error-text">
+                  Maximum 14 caractères.
+                </small>
+              }
+            }
+          </div>
+
+          <div class="field">
+            <label for="firstName">Prénom</label>
+            <input
+              id="firstName"
+              type="text"
+              formControlName="firstName"
+              placeholder="Prénom"
+            />
+          </div>
+
+          <div class="field">
+            <label for="lastName">Nom</label>
+            <input
+              id="lastName"
+              type="text"
+              formControlName="lastName"
+              placeholder="Nom"
+            />
+          </div>
+
+          <div class="field">
+            <label for="gender">Genre</label>
+            <select id="gender" formControlName="gender">
+              <option value="">Sélectionner un genre</option>
+              @for (gender of genderOptions; track gender.value) {
+                <option [value]="gender.value">
+                  {{ gender.label }}
+                </option>
+              }
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="phoneNumber">Numéro de téléphone</label>
+            <input
+              id="phoneNumber"
+              type="tel"
+              formControlName="phoneNumber"
+              placeholder="Numéro de téléphone"
+            />
+          </div>
+
+          <div class="field">
+            <label>En ordre de mutuelle ?</label>
+            <label class="checkbox-field" for="isInsured">
+              <input
+                id="isInsured"
+                type="checkbox"
+                formControlName="isInsured"
+              />
+              <span>En ordre de mutuelle</span>
+            </label>
+          </div>
+
+          <div class="field">
+            <label for="insurance">Mutuelle</label>
+            <input
+              id="insurance"
+              type="text"
+              formControlName="insurance"
+              placeholder="Nom de la mutuelle"
+            />
+          </div>
+
+          <div class="field">
+            <label>Travailleur ?</label>
+            <label class="checkbox-field" for="isWorking">
+              <input
+                id="isWorking"
+                type="checkbox"
+                formControlName="isWorking"
+              />
+              <span>Exerce une activité professionnelle</span>
+            </label>
+          </div>
+
+          <div class="field">
+            <label for="income">Revenus mensuels (€)</label>
+            <input
+              id="income"
+              type="number"
+              formControlName="income"
+              min="0"
+              step="0.01"
+              placeholder="0,00"
+            />
+          </div>
+
+          <div class="field">
+            <label>Fedasil ?</label>
+            <label class="checkbox-field" for="isAtFedasil">
+              <input
+                id="isAtFedasil"
+                type="checkbox"
+                formControlName="isAtFedasil"
+              />
+              <span>Prise en charge par Fedasil</span>
+            </label>
+          </div>
+
+          <div class="field">
+            <label for="status">Statut de séjour</label>
+            <select id="status" formControlName="status">
+              <option value="">Sélectionner un statut</option>
+              @for (status of statusOptions; track status.value) {
+                <option [value]="status.value">
+                  {{ status.label }}
+                </option>
+              }
+            </select>
+          </div>
+        </div>
+      </section>
+
+      <!-- LIEU DE VIE -->
+      <section class="form-card" formGroupName="patientAddress">
+        <div class="section-heading">
+          <div class="section-icon">
+            <i class="pi pi-map-marker"></i>
+          </div>
+          <div>
+            <h2>Lieu de vie ou de résidence</h2>
+            <p>Adresse actuelle de l'usager ou lieu le plus fréquenté</p>
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <div class="field">
+            <label for="street">Rue</label>
+            <input
+              id="street"
+              type="text"
+              formControlName="street"
+              placeholder="Nom de la rue"
+            />
+          </div>
+
+          <div class="field">
+            <label for="number">Numéro</label>
+            <input
+              id="number"
+              type="text"
+              formControlName="number"
+              placeholder="Numéro"
+            />
+          </div>
+
+          <div class="field">
+            <label for="zipCode">Code postal</label>
+            <input
+              id="zipCode"
+              type="text"
+              formControlName="zipCode"
+              placeholder="Code postal"
+            />
+          </div>
+
+          <div class="field">
+            <label for="town">Ville</label>
+            <input
+              id="town"
+              type="text"
+              formControlName="town"
+              placeholder="Ville"
+            />
+          </div>
+
+          <div class="field full-width">
+            <label for="country">Pays</label>
+            <input
+              id="country"
+              type="text"
+              formControlName="country"
+              placeholder="Pays"
+            />
+          </div>
+        </div>
+      </section>
+
+      <!-- INFORMATIONS MÉDICALES -->
+      <section class="form-card">
+        <div class="section-heading">
+          <div class="section-icon">
+            <i class="pi pi-heart"></i>
+          </div>
+          <div>
+            <h2>Informations médicales</h2>
+            <p>Couverture médicale et allergies</p>
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <div class="field">
+            <label>Possède une carte médicale ?</label>
+            <label class="checkbox-field" for="hasInsuranceCard">
+              <input
+                id="hasInsuranceCard"
+                type="checkbox"
+                formControlName="hasInsuranceCard"
+              />
+              <span>Possède une carte médicale</span>
+            </label>
+          </div>
+
+          <div class="field">
+            <label for="insuranceCardEndDate">
+              Expiration de la carte médicale
+            </label>
+            <p-datepicker
+                formControlName="insuranceCardEndDate"
+                dateFormat="dd-mm-yy"
+                placeholder="jj-mm-aaaa"
+                [showIcon]="true"
+                class="w-full"
+            />
+          </div>
+
+          <div class="field full-width">
+            <label for="allergies">Allergies</label>
+            <input
+              id="allergies"
+              type="text"
+              formControlName="allergies"
+              placeholder="Allergies connues"
+            />
+          </div>
+        </div>
+      </section>
+
+      <!-- CONSOMMATIONS -->
+      <section class="form-card">
+        <div class="section-heading">
+          <div class="section-icon">
+            <i class="pi pi-list"></i>
+          </div>
+          <div>
+            <h2>Consommations</h2>
+            <p>Produits consommés et fréquences déclarées</p>
+          </div>
+        </div>
+
+        <div formArrayName="consumptions" class="consumptions-list">
+
+          @for (
+            consumption of consumptions.controls;
+            track consumption;
+            let i = $index
+          ) {
+            <div class="consumption-item" [formGroupName]="i">
+
+              <div class="consumption-heading">
+                <span class="consumption-number">
+                  Consommation {{ i + 1 }}
+                </span>
+
+                @if (
+                  consumption.get('drugType')?.value &&
+                  consumption.get('frequency')?.value
+                ) {
+                  <button
+                    class="remove-button"
+                    type="button"
+                    (click)="removeConsumption(i)"
+                    [attr.aria-label]="'Supprimer la consommation ' + (i + 1)"
+                  >
+                    <i class="pi pi-trash"></i>
+                    Supprimer
+                  </button>
+                }
+              </div>
+
+              <div class="form-grid">
+                <div class="field">
+                  <label [for]="'drugType-' + i">
+                    Produit consommé
+                  </label>
+                  <select
+                    [id]="'drugType-' + i"
+                    formControlName="drugType"
+                  >
+                    <option value="">Sélectionner un produit</option>
+                    @for (drug of drugOptions; track drug.value) {
+                      <option [value]="drug.value">
+                        {{ drug.label }}
+                      </option>
+                    }
+                  </select>
+                </div>
+
+                <div class="field">
+                  <label [for]="'frequency-' + i">
+                    Fréquence de consommation
+                  </label>
+                  <select
+                    [id]="'frequency-' + i"
+                    formControlName="frequency"
+                  >
+                    <option value="">Sélectionner une fréquence</option>
+                    @for (
+                      frequency of consumptionFrequencyOptions;
+                      track frequency.value
+                    ) {
+                      <option [value]="frequency.value">
+                        {{ frequency.label }}
+                      </option>
+                    }
+                  </select>
+                </div>
+              </div>
+
+            </div>
+          }
+
+        </div>
+
+        <button
+          class="secondary-button add-button"
+          type="button"
+          (click)="addConsumption()"
+        >
+          <i class="pi pi-plus"></i>
+          Ajouter une consommation
+        </button>
+      </section>
+
+      <!-- ACTIONS -->
+      <footer class="form-actions">
+        <p class="form-note">
+          Vérifiez les modifications avant d'enregistrer le dossier.
+        </p>
+
+        <button
+          class="primary-button"
+          type="submit"
+          [disabled]="form.invalid"
+        >
+          <i class="pi pi-check"></i>
+          Enregistrer les modifications
+        </button>
+      </footer>
+
+    </form>
+  }
+
+</div>

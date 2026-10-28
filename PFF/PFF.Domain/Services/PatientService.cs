@@ -219,6 +219,16 @@ namespace PFF.Domain.Services
 
             IList<Consumption> existingConsumptions = patient.Consumptions!;
 
+            foreach (int id in command.ConsumptionsToDeleteIds ?? new List<int>())
+            {
+                Consumption? consumption = existingConsumptions.SingleOrDefault(c => c.Id == id);
+
+                if (consumption is null)
+                    return ConsumptionErrors.ConsumptionNotFound;
+
+                _dbContext.Consumptions.Remove(consumption);
+            }
+
             foreach (UpdateConsumptionData data in command.ConsumptionsToUpdate ?? new List<UpdateConsumptionData>())
             {
                 Consumption? consumption = existingConsumptions?.SingleOrDefault(vs => vs.Id == data.Id);

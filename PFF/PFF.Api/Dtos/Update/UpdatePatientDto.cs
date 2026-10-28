@@ -23,6 +23,7 @@ namespace PFF.Api.Dtos.Update
         public int? Income { get; set; }
         public string? Status { get; set; }
         public bool? IsWorking { get; set; }
+        public IList<int>? ConsumptionsToDeleteIds { get; set; }
 
         public UpdatePatientAddressDto? PatientAddress { get; set; }
 

@@ -28,6 +28,7 @@ namespace PFF.Domain.Commands.Patient
         int? Income,
         string? Status,
         bool? IsWorking,
+        IList<int>? ConsumptionsToDeleteIds,
 
         UpdatePatientAddressData? PatientAddress,
 

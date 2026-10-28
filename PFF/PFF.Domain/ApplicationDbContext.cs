@@ -14,6 +14,7 @@ namespace PFF.Domain
         public virtual DbSet<Prescription> Prescriptions { get { return Set<Prescription>(); } }
         public virtual DbSet<VitalSign> VitalSigns { get { return Set<VitalSign>(); } }
         public virtual DbSet<ChronicTreatment> ChronicTreatments { get {  return Set<ChronicTreatment>(); } }
+        public virtual DbSet<Consumption> Consumptions { get { return Set<Consumption>(); } }
 
         public ApplicationDbContext(DbContextOptions options) : base (options) 
         { }

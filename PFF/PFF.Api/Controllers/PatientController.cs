@@ -102,6 +102,7 @@ namespace PFF.Api.Controllers
                 dto.Income,
                 dto.Status,
                 dto.IsWorking,
+                dto.ConsumptionsToDeleteIds,
 
                 dto.PatientAddress != null ? new UpdatePatientAddressData(
                     id,

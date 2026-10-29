@@ -36,6 +36,7 @@ export class ConsultationCreation implements OnInit {
   form!: FormGroup;
 
   ngOnInit(): void {
+    
     this.loadWorkers();
     this.loadPathologies();
 
@@ -160,16 +161,16 @@ export class ConsultationCreation implements OnInit {
     this.prescriptions.push(this.createPrescription());
   }
 
-    addVitalSign(): void {
-    this.vitalSigns.push(this.createVitalSign());
-  }
-
   removePrescription(index: number): void {
     this.prescriptions.removeAt(index);
 
     if (this.prescriptions.length === 0) {
       this.prescriptions.push(this.createPrescription());
     }
+  }
+
+  addVitalSign(): void {
+    this.vitalSigns.push(this.createVitalSign());
   }
 
   removeVitalSign(index: number): void {

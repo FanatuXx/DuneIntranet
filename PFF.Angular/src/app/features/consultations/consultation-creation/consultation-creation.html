@@ -25,6 +25,14 @@
         }
         </select>
 
+        <button
+            type="button"
+            class="add-consumption-button"
+            (click)="addConsumption()"
+        >
+        Ajouter un mode de consommation
+        </button>
+
         <label for="date">
         Date de la consultation 
         <input type="date" name="date" id="date" formControlName="date">
@@ -70,6 +78,52 @@
         <br>
 
     <h3>Prescription(s) :</h3>
+
+        <div formArrayName="prescriptions" class="full-width">
+          @for (prescription of prescriptions.controls; track prescription; let i = $index) {
+            <div [formGroupName]="i" class="prescription-row">
+
+              <div class="field">
+                <label [for]="'drugType-' + i">Produit consommé</label>
+                <p-select
+                  [inputId]="'drugType-' + i"
+                  formControlName="drugType"
+                  [options]="drugOptions"
+                  optionLabel="label"
+                  optionValue="value"
+                  placeholder="Sélectionner un produit"
+                  [showClear]="true"
+                  fluid
+                />
+              </div>
+
+              <div class="field">
+                <label [for]="'frequency-' + i">Fréquence de consommation</label>
+                <p-select
+                  [inputId]="'frequency-' + i"
+                  formControlName="frequency"
+                  [options]="consumptionFrequencyOptions"
+                  optionLabel="label"
+                  optionValue="value"
+                  placeholder="Sélectionner une fréquence"
+                  [showClear]="true"
+                  fluid
+                />
+              </div>
+
+              @if (consumption.get('drugType')?.value && consumption.get('frequency')?.value) 
+              {
+                <button
+                  type="button"
+                  class="delete-consumption-button"
+                  (click)="removeConsumption(i)"
+                  aria-label="Supprimer cette consommation"
+                >
+                  <i class="pi pi-trash" aria-hidden="true"></i>
+                </button>
+              }
+            </div>
+          }
 
 
     <h3>Prise(s) de paramètres :</h3>

@@ -292,7 +292,7 @@ namespace PFF.Domain.Migrations
                         .HasColumnName("DateDernièreVisite")
                         .HasDefaultValueSql("GETDATE()");
 
-                    b.Property<int?>("PatientAddressId")
+                    b.Property<int>("PatientAddressId")
                         .HasColumnType("int");
 
                     b.Property<string>("PhoneNumber")
@@ -430,7 +430,7 @@ namespace PFF.Domain.Migrations
                         .HasColumnType("FLOAT")
                         .HasColumnName("Glycémie");
 
-                    b.Property<int?>("ConsultationId")
+                    b.Property<int>("ConsultationId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("Date")
@@ -448,9 +448,6 @@ namespace PFF.Domain.Migrations
                     b.Property<int>("OxygenSaturation")
                         .HasColumnType("INT")
                         .HasColumnName("Saturation");
-
-                    b.Property<int>("PatientId")
-                        .HasColumnType("int");
 
                     b.Property<decimal?>("Temperature")
                         .HasColumnType("DECIMAL(3, 1)")
@@ -664,7 +661,9 @@ namespace PFF.Domain.Migrations
                 {
                     b.HasOne("PFF.Domain.Model.Entities.PatientAddress", "PatientAddress")
                         .WithMany("Patients")
-                        .HasForeignKey("PatientAddressId");
+                        .HasForeignKey("PatientAddressId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("PatientAddress");
                 });
@@ -700,7 +699,9 @@ namespace PFF.Domain.Migrations
                 {
                     b.HasOne("PFF.Domain.Model.Entities.Consultation", "Consultation")
                         .WithMany("VitalSigns")
-                        .HasForeignKey("ConsultationId");
+                        .HasForeignKey("ConsultationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Consultation");
                 });

@@ -11,7 +11,8 @@ namespace PFF.Domain.Repositories
         ICommandAsyncHandler<UpdatePatientCommand>,
         ICommandAsyncHandler<DeletePatientCommand>,
         IQueryAsyncHandler<GetPatientsQuery, IEnumerable<Patient>>,
-        IQueryAsyncHandler<GetPatientDetailsQuery, PatientDetailsDto>
+        IQueryAsyncHandler<GetPatientDetailsQuery, PatientDetailsDto>,
+        IQueryAsyncHandler<GetSearchedPatientsQuery, IEnumerable<Patient>>
     {
     }
 }

@@ -24,10 +24,17 @@ namespace PFF.Domain.Services
             _dbContext = dbContext;
         }
 
-
         public async Task<Result<IEnumerable<Patient>>> HandleAsync(GetPatientsQuery query)
         {
             List<Patient> patients = await _dbContext.Patients.ToListAsync();
+            return Result<IEnumerable<Patient>>.Success(patients);
+        }
+
+        public async Task<Result<IEnumerable<Patient>>> HandleAsync(GetSearchedPatientsQuery query)
+        {
+            List<Patient> patients = await _dbContext.Patients
+                .Where(w => w.Alias.Contains(query.Input))
+                .ToListAsync();
             return Result<IEnumerable<Patient>>.Success(patients);
         }
 

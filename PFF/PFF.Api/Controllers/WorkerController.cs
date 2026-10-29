@@ -10,7 +10,7 @@ using PFF.Tools.Results;
 namespace PFF.Api.Controllers
 {
     [ApiController]
-    [Route(("api/workers"))]
+    [Route("api/workers")]
     public class WorkerController : ControllerBase
     {
         private readonly IWorkerRepository _workerRepository;
@@ -27,10 +27,17 @@ namespace PFF.Api.Controllers
             return this.FromResult(result);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         public async Task<IActionResult> GetDetails(int id)
         {
             var result = await _workerRepository.HandleAsync(new GetWorkerDetailsQuery(id));
+            return this.FromResult(result);
+        }
+
+        [HttpGet("{input}")]
+        public async Task<IActionResult> GetSearched(string input)
+        {
+            var result = await _workerRepository.HandleAsync(new GetSearchedWorkersQuery(input));
             return this.FromResult(result);
         }
 

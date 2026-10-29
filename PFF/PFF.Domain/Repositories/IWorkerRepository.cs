@@ -11,6 +11,7 @@ namespace PFF.Domain.Repositories
     public interface IWorkerRepository :
         IQueryAsyncHandler<GetWorkersQuery, IEnumerable<Worker>>,
         IQueryAsyncHandler<GetWorkerDetailsQuery, Worker>,
+        IQueryAsyncHandler<GetSearchedWorkersQuery, IEnumerable<Worker>>,
         ICommandAsyncHandler<CreateWorkerCommand>,
         ICommandAsyncHandler<UpdateWorkerCommand>,
         ICommandAsyncHandler<DeleteWorkerCommand>

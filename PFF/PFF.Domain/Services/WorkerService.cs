@@ -36,6 +36,14 @@ namespace PFF.Domain.Services
             return Result<Worker>.Success(worker);
         }
 
+        public async Task<Result<IEnumerable<Worker>>> HandleAsync(GetSearchedWorkersQuery query)
+        {
+            IList<Worker> workers = await _dbContext.Workers
+                .Where(w => w.FirstName.Contains(query.Input))
+                .ToListAsync();
+            return Result<IEnumerable<Worker>>.Success(workers);
+        }
+
         public async Task<Result> HandleAsync(CreateWorkerCommand command, CancellationToken cancellationToken)
         {
             try

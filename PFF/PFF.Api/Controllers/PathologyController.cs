@@ -10,7 +10,7 @@ using PFF.Tools.Results;
 namespace PFF.Api.Controllers
 {
     [ApiController]
-    [Route("api/[Controller]")]
+    [Route("api/pathologies")]
     public class PathologyController : ControllerBase
     {
         private readonly IPathologyRepository _pathologyRepository;

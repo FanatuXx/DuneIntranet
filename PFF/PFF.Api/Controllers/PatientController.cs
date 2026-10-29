@@ -29,7 +29,14 @@ namespace PFF.Api.Controllers
             return this.FromResult(result);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{input}")]
+        public async Task<IActionResult> GetSearched(string input)
+        {
+            var result = await _patientRepository.HandleAsync(new GetSearchedPatientsQuery(input));
+            return this.FromResult(result);
+        }
+
+        [HttpGet("{id:int}")]
         public async Task<IActionResult> GetDetails(int id)
         {
             var result = await _patientRepository.HandleAsync(new GetPatientDetailsQuery(id));
@@ -65,7 +72,7 @@ namespace PFF.Api.Controllers
                     dto.PatientAddress?.Number,
                     dto.PatientAddress!.ZipCode,
                     dto.PatientAddress?.Town,
-                    dto.PatientAddress?.Country) : null,
+                    dto.PatientAddress?.Country) : null!,
 
                 (dto.Consumptions ?? new List<CreateConsumptionDto>())
                     .Select(c => new CreateConsumptionData(

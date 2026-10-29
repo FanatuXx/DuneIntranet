@@ -1,1 +1,81 @@
-<p>consultation-creation works!</p>
+<h1>Nouvelle consultation :</h1>
+
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+    <h3>Identification</h3>
+
+        <label for="worker-select">Choisissez un médecin :</label>
+        <select id="worker-select" formControlName="selectedWorkers">
+        <option ngValue="null" disabled>-- Sélectionnez un médecin --</option>
+        
+        @for (worker of workers; track worker.id) {
+            <option [value]="worker.id">{{ worker.firstName }} {{ worker.lastName }}</option>
+        }
+        </select>
+
+        <app-patient-search-bar> 
+        </app-patient-search-bar>
+
+        <label for="pathology-select">Choisissez une pathologie :</label>
+        <select id="pathology-select" formControlName="selectedPathologies">
+        <option ngValue="null" disabled>-- Sélectionnez une pathologie --</option>
+        
+        @for (pathology of pathologies; track pathology.id) {
+            <option [value]="pathology.id">{{ pathology.name }}</option>
+        }
+        </select>
+
+        <label for="date">
+        Date de la consultation 
+        <input type="date" name="date" id="date" formControlName="date">
+        </label>
+        <br>
+
+    <h3>Anamnèse (MSOAP)</h3>
+
+        <label for="motive">
+        Motif
+        <input type="text" name="motive" id="motive" formControlName="motive">
+        </label>
+        <br>
+
+        <label for="subjective">
+        Subjectif
+        <input type="text" name="subjective" id="subjective" formControlName="subjective">
+        </label>
+        <br>
+
+        <label for="objective">
+        Objectif
+        <input type="text" name="objective" id="objective" formControlName="objective">
+        </label>
+        <br>
+
+        <label for="assessment">
+        Évaluation
+        <input type="text" name="assessment" id="assessment" formControlName="assessment">
+        </label>
+        <br>
+
+        <label for="plan">
+        Plan d'action
+        <input type="text" name="plan" id="plan" formControlName="plan">
+        </label>
+        <br>
+
+        <label for="description">
+        Description
+        <input type="text" name="description" id="description" formControlName="description">
+        </label>
+        <br>
+
+    <h3>Prescription(s) :</h3>
+
+
+    <h3>Prise(s) de paramètres :</h3>
+
+
+
+    <button type="submit">Créer l'usager</button>
+
+</form>

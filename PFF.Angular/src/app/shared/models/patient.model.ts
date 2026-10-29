@@ -79,3 +79,8 @@ export interface UpdatePatientRequest {
     consumptions: Consumption[] | null
 }
 
+export interface PatientEntry {
+  id: number,
+  alias: string,
+  birthDate: Date;
+}

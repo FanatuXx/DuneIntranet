@@ -1,0 +1,41 @@
+<form [formGroup]="searchPatientForm" (ngSubmit)="onSubmit()" class="search-container">
+  <label for="searchQuery">Rechercher une entrée :</label>
+  
+  <div class="input-wrapper">
+    <input
+      id="searchQuery"
+      type="text"
+      formControlName="searchQuery"
+      placeholder="Tapez au moins 2 caractères..."
+      autocomplete="off"
+    />
+    
+    <!-- Nouveau bloc conditionnel @if -->
+    @if (isLoading) {
+      <span class="loader">Chargement en cours...</span>
+    }
+  </div>
+
+  <!-- Résolution de l'observable avec la syntaxe @if / as -->
+  @if (filteredResults$ | async; as results) {
+    <ul class="suggestions-list">
+      
+      <!-- Nouveau bloc de boucle @for (le 'track' est obligatoire et ultra performant) -->
+      @for (entry of results; track entry.id) {
+        <li (click)="selectEntry(entry)">
+          <strong>{{ entry.alias }}</strong> — <small>{{ entry.birthDate }}</small>
+        </li>
+      } @empty {
+        <!-- Le bloc @empty s'affiche automatiquement si le tableau 'results' est vide -->
+        @if (searchPatientForm.controls.searchQuery.value.length >= 2 && !isLoading) {
+          <li>Aucun résultat trouvé dans la base de données.</li>
+        }
+      }
+
+    </ul>
+  }
+
+  <input type="hidden" formControlName="selectedId" />
+
+  <button type="submit" [disabled]="searchPatientForm.invalid">Valider la sélection</button>
+</form>

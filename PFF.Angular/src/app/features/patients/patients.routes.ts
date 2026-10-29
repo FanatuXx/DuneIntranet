@@ -35,6 +35,4 @@ export const routes: Routes = [
         loadComponent: () => import("./patient-delete/patient-delete")
             .then(f => f.PatientDelete)
     },
-
-
 ]

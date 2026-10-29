@@ -8,3 +8,12 @@ export interface Pathology {
     consultations: Consultation[],
     chronicTreatments: ChronicTreatment[]
 }
+
+export interface CreatePathologyRequest {
+    name: string
+}
+
+export interface UpdatePathologyRequest {
+    id: number,
+    name: string
+}

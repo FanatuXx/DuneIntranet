@@ -15,6 +15,12 @@ export const routes: Routes = [
         path: 'patients',
         loadChildren: () => import('./features/patients/patients.routes').then((x) => x.routes),
         title: "Dune Intranet | Usagers",
+    },
+    {
+        path: 'consultations',
+        loadChildren: () => import('./features/consultations/consultations.routes').then((x) => x.routes),
+        title: "Dune Intranet | Consultations",
     }
+
 
 ];

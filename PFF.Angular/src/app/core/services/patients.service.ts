@@ -1,7 +1,7 @@
 import { inject, Service } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
-import { CreatePatientRequest, Patient, UpdatePatientRequest } from '../../shared/models/patient.model';
+import { CreatePatientRequest, Patient, PatientEntry, UpdatePatientRequest } from '../../shared/models/patient.model';
 import { Observable } from 'rxjs';
 
 @Service()
@@ -12,6 +12,10 @@ export class PatientsService {
 
     getAll(): Observable<Patient[]> {
         return this.http.get<Patient[]>(this.baseUrl);
+    }
+
+    getSearch(input: string): Observable<PatientEntry[]> {
+        return this.http.get<PatientEntry[]>(`${this.baseUrl}/${input}`);
     }
 
     getById(id: number): Observable<Patient> {

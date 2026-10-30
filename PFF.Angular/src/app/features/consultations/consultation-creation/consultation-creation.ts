@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { ConsultationsService } from '../../../core/services/consultations.service';
-import { ReactiveFormsModule, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ReactiveFormsModule, FormArray, FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
+import { Router, RouterLink } from '@angular/router';
 import { WorkersService } from '../../../core/services/workers.service';
 import { Worker } from '../../../shared/models/worker.model';
 import { PathologiesService } from '../../../core/services/pathologies.service';
@@ -9,18 +9,21 @@ import { Pathology } from '../../../shared/models/pathology.model';
 import { PatientSearchBar } from '../../patients/patient-search-bar/patient-search-bar';
 import { Medicine } from '../../../shared/models/medicine.model';
 import { MedicinesService } from '../../../core/services/medicines.service';
+import { InputTextModule } from '@openng/optimus-ui/inputtext';
+import { TextareaModule } from '@openng/optimus-ui/textarea';
+import { SelectModule } from '@openng/optimus-ui/select';
 import { DatePicker } from '@openng/optimus-ui/datepicker';
-
+import { finalize } from 'rxjs';
 
 @Component({
-  imports: [PatientSearchBar, ReactiveFormsModule, DatePicker],
+  imports: [PatientSearchBar, ReactiveFormsModule, InputTextModule, TextareaModule, SelectModule, DatePicker, RouterLink],
   selector: 'app-consultation-creation',
   styleUrl: './consultation-creation.css',
   templateUrl: './consultation-creation.html',
 })
 export class ConsultationCreation implements OnInit {
 
-  private readonly patientsService: ConsultationsService = inject(ConsultationsService);
+  private readonly consultationsService: ConsultationsService = inject(ConsultationsService);
   private readonly workersService: WorkersService = inject(WorkersService);
   private readonly medicinesService: MedicinesService = inject(MedicinesService);
   private readonly pathologiesService: PathologiesService = inject(PathologiesService);
@@ -58,7 +61,7 @@ export class ConsultationCreation implements OnInit {
       assessment: ['', [Validators.minLength(1), Validators.maxLength(256)]],
       plan: ['', [Validators.minLength(1), Validators.maxLength(256)]],
       description: ['', [Validators.minLength(1), Validators.maxLength(256)]],
-      date: ['', [Validators.required]],
+      date: [null, Validators.required],
       patientId: ['', [Validators.required]],
 
       workersIds: this.formBuilder.array([
@@ -115,6 +118,13 @@ export class ConsultationCreation implements OnInit {
     return this.form.get('workersIds') as FormArray;
   }
 
+  get workerOptions() {
+    return this.workers.map(worker => ({
+      ...worker,
+      displayName: `${worker.firstName} ${worker.lastName}`
+    }));
+  }
+
   get pathologiesIds(): FormArray {
     return this.form.get('pathologiesIds') as FormArray;
   }
@@ -153,6 +163,10 @@ export class ConsultationCreation implements OnInit {
     }
   }
 
+  getWorkerControl(index: number): FormControl {
+    return this.workersIds.at(index) as FormControl;
+  }
+
   // #endregion
 
   // #region Pathologies functions
@@ -183,8 +197,8 @@ export class ConsultationCreation implements OnInit {
 
   public createPrescription(): FormGroup {
     return this.formBuilder.group({
-      startDate: [''],
-      endDate: [''],
+      startDate: [null],
+      endDate: [null],
       takeFrequency: [''],
 
       prescriberId: ['', [Validators.min(1)]],
@@ -218,9 +232,8 @@ export class ConsultationCreation implements OnInit {
       oxygenSaturation: [''],
       height: [''],
       weight: [''],
-      bmi: [''],
       bloodSugar: [''],
-      date: [''],
+      date: [null],
     });
   }
 
@@ -253,6 +266,13 @@ export class ConsultationCreation implements OnInit {
   getMedicinesIds(prescriptionIndex: number): FormArray {
     const prescriptionGroup = this.prescriptions.at(prescriptionIndex) as FormGroup;
     return prescriptionGroup.get('medicinesIds') as FormArray;
+  }
+
+  getMedicineControl(
+    prescriptionIndex: number,
+    medicineIndex: number
+  ): FormControl {
+    return this.getMedicinesIds(prescriptionIndex).at(medicineIndex) as FormControl;
   }
 
   // Ajoute une nouvelle liste déroulante (un contrôle vide) à une prescription spécifique
@@ -314,13 +334,13 @@ export class ConsultationCreation implements OnInit {
       }
     });
 
-    this.patientsService.create(this.form.getRawValue()).subscribe({
-      next: () => this.router.navigate(['consultations']),
-      error: (err) => {
-        console.log('Erreur : ', err);
-        // 3. Réactivez le bouton en cas d'échec de l'API pour permettre de réessayer
-        this.isSubmitting = false; 
-      }
+    this.consultationsService.create(this.form.getRawValue())
+      .pipe(finalize(() => this.isSubmitting = false))
+      .subscribe({
+        next: () => this.router.navigate(['consultations']),
+        error: (err) => {
+          console.error('Erreur de création de consultation :', err);
+        }
     });
   }
 }

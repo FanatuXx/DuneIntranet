@@ -5,9 +5,11 @@ import { Observable, of } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap, catchError, tap } from 'rxjs/operators';
 import { PatientsService } from '../../../core/services/patients.service';
 import { PatientEntry } from '../../../shared/models/patient.model';
+import { DatePipe } from '@angular/common';
+import { InputTextModule } from '@openng/optimus-ui/inputtext';
 
 @Component({
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, InputTextModule, DatePipe],
   selector: 'app-patient-search-bar',
   styleUrl: './patient-search-bar.css',
   templateUrl: './patient-search-bar.html',
@@ -53,26 +55,19 @@ export class PatientSearchBar implements OnInit {
   }
 
   selectEntry(entry: PatientEntry): void {
-    this.searchPatientForm.controls.searchQuery.setValue(entry.alias, { emitEvent: false });
-    // Stockez directement l'ID sous forme de chaîne
-    this.searchPatientForm.controls.selectedId.setValue(entry.id.toString());
+    const birthDate = entry.birthDate
+      ? new Date(entry.birthDate).toLocaleDateString('fr-BE')
+      : '';
 
-    // Émission directe convertie de manière sécurisée
-    const idValue = parseInt(entry.id.toString(), 10);
-    console.log('Enfant (clic) : Émission de l\'ID ->', idValue);
-    this.patientSelected.emit(idValue);
-  }
+    const searchValue = `${entry.alias}${
+      birthDate ? ' — Né(e) le ' + birthDate : ''
+    }`;
 
-  onSubmit(): void {
-    if (this.searchPatientForm.valid) {
-      const rawId = this.searchPatientForm.controls.selectedId.value;
-      const idValue = parseInt(rawId, 10);
-      
-      // On n'émet que si l'ID est un nombre valide supérieur à 0
-      if (!isNaN(idValue) && idValue > 0) {
-        console.log('Enfant (submit) : Émission de l\'ID ->', idValue);
-        this.patientSelected.emit(idValue);
-      }
-    }
+    this.searchPatientForm.patchValue({
+      searchQuery: searchValue,
+      selectedId: String(entry.id)
+    });
+
+    this.patientSelected.emit(entry.id);
   }
 }

@@ -1,247 +1,575 @@
-<h1>Nouvelle consultation :</h1>
 
-<form [formGroup]="form" (ngSubmit)="onSubmit()">
+<div class="consultation-page">
 
-    <h3>Identification</h3>
+  <header class="page-header">
+    <div class="page-title">
+      <i class="pi pi-calendar-plus"></i>
 
-        <div formArrayName="workersIds">
-          @for (workerControl of workersIds.controls; track workerControl) {
-            <div class="worker-block">
-              <label [for]="'worker-select-' + $index">Choisissez un travailleur :</label>
-              
-              <select [id]="'worker-select-' + $index" [formControlName]="$index">
-                <option [ngValue]="null" disabled>-- Sélectionnez un travailleur --</option>
-                @for (worker of workers; track worker.id) {
-                  <option [value]="worker.id">{{ worker.firstName }} {{worker.lastName}}</option>
-                }
-              </select>
+      <div>
+        <span class="page-eyebrow">GESTION DES SOINS</span>
+        <h1>Nouvelle consultation</h1>
+      </div>
+    </div>
+  </header>
 
-              @if (workersIds.length > 1) {
-                <button type="button" class="remove-button" (click)="removeWorker($index)">
-                  Supprimer
-                </button>
-              }
-            </div>
-          }
-        </div>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
 
-        <button
-            type="button"
-            class="add-worker-button"
-            (click)="addWorker()"
-        >
-          Ajouter un travailleur
-        </button>
+    <!-- IDENTIFICATION -->
 
-      <app-patient-search-bar (patientSelected)="onPatientSelected($event)"></app-patient-search-bar>
-
-
-        <div formArrayName="pathologiesIds">
-          @for (pathologyControl of pathologiesIds.controls; track pathologyControl) {
-            <div class="pathology-block">
-              <label [for]="'pathology-select-' + $index">Choisissez une pathologie :</label>
-              
-              <select [id]="'pathology-select-' + $index" [formControlName]="$index">
-                <option [ngValue]="null" disabled>-- Sélectionnez une pathologie --</option>
-                @for (pathology of pathologies; track pathology.id) {
-                  <option [value]="pathology.id">{{ pathology.name }}</option>
-                }
-              </select>
-
-              @if (pathologiesIds.length > 1) {
-                <button type="button" class="remove-button" (click)="removePathology($index)">
-                  Supprimer
-                </button>
-              }
-            </div>
-          }
-        </div>
-
-        <button
-            type="button"
-            class="add-pathology-button"
-            (click)="addPathology()"
-        >
-          Ajouter une pathologie
-        </button>
-
+    <section class="form-card">
+      <div class="section-heading">
+        <span class="section-icon">
+          <i class="pi pi-user" aria-hidden="true"></i>
+        </span>
         <div>
-          <label>Date de la consultation :</label>
-          <p-datePicker 
-            formControlName="date" 
-            ngDefaultControl
-            dateFormat="dd/mm/yy">
-          </p-datePicker>
+          <h2>Identification</h2>
+          <p>Patient, intervenants et informations générales</p>
+        </div>
+      </div>
+
+      <div class="form-grid">
+
+        <!-- Patient -->
+        <div class="field-group">
+          <label>Patient <span class="required">*</span></label>
+          <app-patient-search-bar
+            (patientSelected)="onPatientSelected($event)"
+          />
+          @if (form.get('patientId')?.invalid && form.get('patientId')?.touched) {
+            <small class="field-error">Veuillez sélectionner un patient.</small>
+          }
         </div>
 
-    <h3>Anamnèse (MSOAP)</h3>
+        <!-- Date -->
+        <div class="field-group">
+          <label for="consultation-date">
+            Date de consultation <span class="required">*</span>
+          </label>
+          <p-datepicker
+            inputId="consultation-date"
+            formControlName="date"
+            dateFormat="dd-mm-yy"
+            placeholder="jj-mm-aaaa"
+            [showIcon]="true"
+            [showButtonBar]="true"
+            class="w-full"
+          />
+          @if (date.invalid && date.touched) {
+            <small class="field-error">La date de consultation est obligatoire.</small>
+          }
+        </div>
 
-        <label for="motive">
-        Motif
-        <input type="text" name="motive" id="motive" formControlName="motive">
-        </label>
-        <br>
+        <!-- Travailleurs -->
+        <div class="field-group identification-repeat-group">
+          <div class="field-label-row">
+            <label>Travailleur(s) participant(s)</label>
+          </div>
 
-        <label for="subjective">
-        Subjectif
-        <input type="text" name="subjective" id="subjective" formControlName="subjective">
-        </label>
-        <br>
+          <div formArrayName="workersIds" class="repeat-list">
+          @for (workerControl of workersIds.controls; track $index; let i = $index) {
+            <div class="worker-row">
+              <p-select
+                [options]="workerOptions"
+                optionLabel="displayName"
+                optionValue="id"
+                placeholder="Choisir un travailleur"
+                [formControl]="getWorkerControl(i)"
+                class="compact-select"
+              ></p-select>
 
-        <label for="objective">
-        Objectif
-        <input type="text" name="objective" id="objective" formControlName="objective">
-        </label>
-        <br>
-
-        <label for="assessment">
-        Évaluation
-        <input type="text" name="assessment" id="assessment" formControlName="assessment">
-        </label>
-        <br>
-
-        <label for="plan">
-        Plan d'action
-        <input type="text" name="plan" id="plan" formControlName="plan">
-        </label>
-        <br>
-
-        <label for="description">
-        Description
-        <input type="text" name="description" id="description" formControlName="description">
-        </label>
-        <br>
-
-    <h3>Prescription(s) :</h3>
-
-      <div formArrayName="prescriptions">
-        @for (prescription of prescriptions.controls; track prescription; let i = $index) {
-          <div [formGroupName]="i" style="border: 1px solid #ccc; padding: 10px; margin-bottom: 10px;">
-            
-            <div>
-              <label>Date de début :</label>
-              <p-datePicker 
-                formControlName="startDate" 
-                ngDefaultControl
-                dateFormat="dd/mm/yy">
-              </p-datePicker>
+              <button
+                type="button"
+                class="remove-button"
+                (click)="removeWorker(i)"
+                aria-label="Supprimer ce travailleur"
+              >
+                <i class="pi pi-trash"></i>
+              </button>
             </div>
+          }
+          </div>
 
-            <div>
-              <label>Date de fin :</label>
-              <p-datePicker 
-                formControlName="endDate" 
-                ngDefaultControl
-                dateFormat="dd/mm/yy">
-              </p-datePicker>
-            </div>
+          <button type="button" class="add-button" (click)="addWorker()">
+            <i class="pi pi-plus" aria-hidden="true"></i>
+            Ajouter un travailleur
+          </button>
+        </div>
 
-            <div>
-              <label>Posologie :</label>
-              <input type="text" formControlName="takeFrequency">
-            </div>
+        <!-- Pathologies -->
+        <div class="field-group identification-repeat-group">
+          <div class="field-label-row">
+            <label>Pathologie(s) associée(s)</label>
+          </div>
 
-            <div>
-              <label>Choisissez un travailleur :</label>
-              <select formControlName="prescriberId">
-                <option value="">-- Sélectionnez un travailleur --</option>
-                @for (worker of workers; track worker.id) {
-                  <option [value]="worker.id">{{ worker.firstName }} {{ worker.lastName }}</option>
-                }
-              </select>
-            </div>
-
-            <div formArrayName="medicinesIds">
-              @for (medicineControl of getMedicinesIds(i).controls; track medicineControl; let mIndex = $index) {
-                <div>
-                  <select [formControlName]="mIndex">
-                    <option [value]="null">-- Sélectionner un médicament --</option>
-                    @for (med of medicines; track med.id) {
-                      <option [value]="med.id">{{ med.name }}</option>
-                    }
-                  </select>
-                  <button type="button" (click)="removeMedicine(i, mIndex)">Retirer</button>
+          <div formArrayName="pathologiesIds" class="repeat-list">
+            @for (pathologyControl of pathologiesIds.controls; track pathologyControl; let i = $index) {
+              <div class="repeat-row">
+                <div class="repeat-index">{{ i + 1 }}</div>
+                <div class="repeat-field">
+                  <p-select
+                    [formControlName]="i"
+                    [options]="pathologies"
+                    optionLabel="name"
+                    optionValue="id"
+                    placeholder="Sélectionner une pathologie"
+                    [showClear]="true"
+                    [filter]="true"
+                    filterPlaceholder="Rechercher une pathologie"
+                    class="w-full"
+                  />
                 </div>
+                @if (pathologiesIds.length > 1) {
+                  <button
+                    type="button"
+                    class="icon-remove-button"
+                    (click)="removePathology(i)"
+                    aria-label="Supprimer cette pathologie"
+                    title="Supprimer"
+                  >
+                    <i class="pi pi-trash" aria-hidden="true"></i>
+                  </button>
+                }
+              </div>
+            }
+          </div>
+
+          <button type="button" class="add-button" (click)="addPathology()">
+            <i class="pi pi-plus" aria-hidden="true"></i>
+            Ajouter une pathologie
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ANAMNESE -->
+
+    <section class="form-card">
+      <div class="section-heading">
+        <span class="section-icon">
+          <i class="pi pi-file-edit" aria-hidden="true"></i>
+        </span>
+        <div>
+          <h2>Anamnèse (MSOAP)</h2>
+          <p>Motif de consultation, observations et conduite à tenir</p>
+        </div>
+      </div>
+
+      <div class="form-grid">
+
+        <div class="field-group field-full">
+          <label for="motive">Motif de consultation <span class="required">*</span></label>
+          <textarea
+            pTextarea
+            id="motive"
+            formControlName="motive"
+            rows="2"
+            [autoResize]="true"
+            placeholder="Pourquoi le patient consulte-t-il ?"
+          ></textarea>
+          <small class="field-hint">Maximum 256 caractères.</small>
+        </div>
+
+        <div class="field-group field-full">
+          <label for="subjective">Subjectif</label>
+          <textarea
+            pTextarea
+            id="subjective"
+            formControlName="subjective"
+            rows="3"
+            [autoResize]="true"
+            placeholder="Symptômes et ressenti rapportés par le patient..."
+          ></textarea>
+        </div>
+
+        <div class="field-group field-full">
+          <label for="objective">Objectif</label>
+          <textarea
+            pTextarea
+            id="objective"
+            formControlName="objective"
+            rows="3"
+            [autoResize]="true"
+            placeholder="Observations et constatations cliniques..."
+          ></textarea>
+        </div>
+
+        <div class="field-group field-full">
+          <label for="assessment">Évaluation</label>
+          <textarea
+            pTextarea
+            id="assessment"
+            formControlName="assessment"
+            rows="3"
+            [autoResize]="true"
+            placeholder="Analyse et interprétation de la situation..."
+          ></textarea>
+        </div>
+
+        <div class="field-group field-full">
+          <label for="plan">Plan d'action</label>
+          <textarea
+            pTextarea
+            id="plan"
+            formControlName="plan"
+            rows="3"
+            [autoResize]="true"
+            placeholder="Traitement, suivi et actions envisagées..."
+          ></textarea>
+        </div>
+
+        <div class="field-group field-full">
+          <label for="description">Description complémentaire</label>
+          <textarea
+            pTextarea
+            id="description"
+            formControlName="description"
+            rows="3"
+            [autoResize]="true"
+            placeholder="Informations complémentaires..."
+          ></textarea>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- PRESCRIPTIONS -->
+
+    <section class="form-card">
+      <div class="section-heading">
+        <span class="section-icon">
+          <i class="pi pi-file" aria-hidden="true"></i>
+        </span>
+        <div>
+          <h2>Prescription(s)</h2>
+          <p>Traitements et médicaments prescrits</p>
+        </div>
+      </div>
+
+      <div formArrayName="prescriptions" class="repeat-card-list">
+
+        @for (prescription of prescriptions.controls; track prescription; let i = $index) {
+          <article class="nested-card" [formGroupName]="i">
+
+            <div class="nested-card-header">
+              <div>
+                <span class="nested-card-number">PRESCRIPTION {{ i + 1 }}</span>
+                <h3>Traitement</h3>
+              </div>
+              @if (prescriptions.length > 1) {
+                <button
+                  type="button"
+                  class="text-remove-button"
+                  (click)="removePrescription(i)"
+                >
+                  <i class="pi pi-trash" aria-hidden="true"></i>
+                  Supprimer
+                </button>
               }
-              <button type="button" (click)="addMedicine(i)">Ajouter un médicament</button>
             </div>
 
-            <div>
-              <button type="button" (click)="removePrescription(i)">Supprimer cette prescription</button>
-            </div>
+            <div class="form-grid">
 
-          </div>
+              <div class="field-group">
+                <label [for]="'prescription-start-' + i">Date de début</label>
+                <p-datepicker
+                  [inputId]="'prescription-start-' + i"
+                  formControlName="startDate"
+                  dateFormat="dd-mm-yy"
+                  placeholder="jj-mm-aaaa"
+                  [showIcon]="true"
+                  class="w-full"
+                />
+              </div>
+
+              <div class="field-group">
+                <label [for]="'prescription-end-' + i">Date de fin</label>
+                <p-datepicker
+                  [inputId]="'prescription-end-' + i"
+                  formControlName="endDate"
+                  dateFormat="dd-mm-yy"
+                  placeholder="jj-mm-aaaa"
+                  [showIcon]="true"
+                  class="w-full"
+                />
+              </div>
+
+              <div class="field-group">
+                <label [for]="'prescription-frequency-' + i">Posologie</label>
+                <input
+                  pInputText
+                  [id]="'prescription-frequency-' + i"
+                  type="text"
+                  formControlName="takeFrequency"
+                  placeholder="Ex. : 1 comprimé matin et soir"
+                />
+              </div>
+
+              <div class="field-group">
+                <label [for]="'prescriber-' + i">Prescripteur</label>
+                <p-select
+                  [inputId]="'prescriber-' + i"
+                  formControlName="prescriberId"
+                  [options]="workerOptions"
+                  optionLabel="displayName"
+                  optionValue="id"
+                  placeholder="Sélectionner un travailleur"
+                  [showClear]="true"
+                  [filter]="true"
+                  class="w-full"
+                />
+              </div>
+
+              <div class="field-group">
+                <label>Médicament(s)</label>
+
+                <div formArrayName="medicinesIds" class="repeat-list">
+                @for (medicineControl of getMedicinesIds(i).controls; track $index; let j = $index) {
+                  <div class="medicine-row">
+                    <p-select
+                      [options]="medicines"
+                      optionLabel="name"
+                      optionValue="id"
+                      placeholder="Choisir un médicament"
+                      [formControl]="getMedicineControl(i, j)"
+                      class="compact-select"
+                    ></p-select>
+
+                    <button
+                      type="button"
+                      class="remove-button"
+                      (click)="removeMedicine(i, j)"
+                      aria-label="Supprimer ce médicament"
+                    >
+                      <i class="pi pi-trash"></i>
+                    </button>
+                  </div>
+                }
+                </div>
+
+                <button
+                  type="button"
+                  class="compact-add-button"
+                  (click)="addMedicine(i)"
+                >
+                  <i class="pi pi-plus"></i>
+                  Ajouter un médicament
+                </button>
+              </div>
+
+            </div>
+          </article>
         }
-        <button type="button" (click)="addPrescription()">Ajouter une prescription</button>
+
       </div>
 
-    <h3>Prise(s) de paramètres :</h3>
+      <button type="button" class="add-button add-button-primary" (click)="addPrescription()">
+        <i class="pi pi-plus" aria-hidden="true"></i>
+        Ajouter une prescription
+      </button>
+    </section>
 
+    <!-- PARAMETRES VITAUX -->
 
-      <div formArrayName="vitalSigns">
+    <section class="form-card">
+      <div class="section-heading">
+        <span class="section-icon">
+          <i class="pi pi-heart" aria-hidden="true"></i>
+        </span>
+        <div>
+          <h2>Prise(s) de paramètres</h2>
+          <p>Mesures et constantes physiologiques du patient</p>
+        </div>
+      </div>
+
+      <div formArrayName="vitalSigns" class="repeat-card-list">
+
         @for (vitalSign of vitalSigns.controls; track vitalSign; let i = $index) {
-          <div [formGroupName]="i" style="border: 1px solid #ccc; padding: 10px; margin-bottom: 10px;">
-            
-            <h4>Mesure #{{ i + 1 }}</h4>
+          <article class="nested-card" [formGroupName]="i">
 
-            <div>
-              <label>Date de la prise :</label>
-              <p-datePicker 
-                formControlName="date" 
-                ngDefaultControl
-                dateFormat="dd/mm/yy">
-              </p-datePicker>
+            <div class="nested-card-header">
+              <div>
+                <span class="nested-card-number">MESURE {{ i + 1 }}</span>
+                <h3>Constantes physiologiques</h3>
+              </div>
+
+              @if (vitalSigns.length > 1) {
+                <button
+                  type="button"
+                  class="text-remove-button"
+                  (click)="removeVitalSign(i)"
+                >
+                  <i class="pi pi-trash" aria-hidden="true"></i>
+                  Supprimer
+                </button>
+              }
             </div>
 
-            <div>
-              <label>Fréquence cardiaque (bpm) :</label>
-              <input type="text" formControlName="heartRate">
-            </div>
+            <div class="form-grid">
 
-            <div>
-              <label>Tension artérielle :</label>
-              <input type="text" formControlName="bloodPressure">
-            </div>
+              <div class="field-group">
+                <label [for]="'vital-date-' + i">Date de la prise</label>
+                <p-datepicker
+                  [inputId]="'vital-date-' + i"
+                  formControlName="date"
+                  dateFormat="dd-mm-yy"
+                  placeholder="jj-mm-aaaa"
+                  [showIcon]="true"
+                  class="w-full"
+                />
+              </div>
 
-            <div>
-              <label>Température (°C) :</label>
-              <input type="text" formControlName="temperature">
-            </div>
+              <div class="field-group">
+                <label [for]="'heart-rate-' + i">Fréquence cardiaque</label>
+                <div class="input-with-unit">
+                  <input
+                    pInputText
+                    [id]="'heart-rate-' + i"
+                    type="number"
+                    formControlName="heartRate"
+                    placeholder="Ex. : 75"
+                  />
+                  <span>bpm</span>
+                </div>
+              </div>
 
-            <div>
-              <label>Saturation en oxygène (%) :</label>
-              <input type="text" formControlName="oxygenSaturation">
-            </div>
+              <div class="field-group">
+                <label [for]="'blood-pressure-' + i">Tension artérielle</label>
 
-            <div>
-              <label>Taille (cm) :</label>
-              <input type="text" formControlName="height">
-            </div>
+                <div class="input-with-unit">
+                  <input
+                    pInputText
+                    [id]="'blood-pressure-' + i"
+                    type="text"
+                    formControlName="bloodPressure"
+                    placeholder="Ex. : 120/80"
+                  />
+                  <span>mmHg</span>
+                </div>
+              </div>
 
-            <div>
-              <label>Poids (kg) :</label>
-              <input type="text" formControlName="weight">
-            </div>
+              <div class="field-group">
+                <label [for]="'temperature-' + i">Température</label>
+                <div class="input-with-unit">
+                  <input
+                    pInputText
+                    [id]="'temperature-' + i"
+                    type="number"
+                    step="0.1"
+                    formControlName="temperature"
+                    placeholder="Ex. : 37.2"
+                  />
+                  <span>°C</span>
+                </div>
+              </div>
 
-            <div>
-              <label>Glycémie :</label>
-              <input type="text" formControlName="bloodSugar">
-            </div>
+              <div class="field-group">
+                <label [for]="'oxygen-' + i">Saturation en oxygène</label>
+                <div class="input-with-unit">
+                  <input
+                    pInputText
+                    [id]="'oxygen-' + i"
+                    type="number"
+                    formControlName="oxygenSaturation"
+                    placeholder="Ex. : 98"
+                  />
+                  <span>%</span>
+                </div>
+              </div>
 
-            <div>
-              <label>IMC : Sera calculé automatique sur base du poids et de la taille rensignés. (-1 si ces informations ne sont pas disponibles)</label>
-            </div>
+              <div class="field-group">
+                <label [for]="'height-' + i">Taille</label>
+                <div class="input-with-unit">
+                  <input
+                    pInputText
+                    [id]="'height-' + i"
+                    type="number"
+                    step="0.1"
+                    formControlName="height"
+                    placeholder="Ex. : 175"
+                  />
+                  <span>cm</span>
+                </div>
+              </div>
 
-            <div>
-              <button type="button" (click)="removeVitalSign(i)">Supprimer cette mesure</button>
-            </div>
+              <div class="field-group">
+                <label [for]="'weight-' + i">Poids</label>
+                <div class="input-with-unit">
+                  <input
+                    pInputText
+                    [id]="'weight-' + i"
+                    type="number"
+                    step="0.1"
+                    formControlName="weight"
+                    placeholder="Ex. : 70"
+                  />
+                  <span>kg</span>
+                </div>
+              </div>
 
-          </div>
+              <div class="field-group">
+                <label [for]="'blood-sugar-' + i">Glycémie</label>
+
+                <div class="input-with-unit">
+                  <input
+                    pInputText
+                    [id]="'blood-sugar-' + i"
+                    type="text"
+                    formControlName="bloodSugar"
+                    placeholder="Ex. : 1.0"
+                  />
+                  <span>g/L</span>
+                </div>
+              </div>
+
+              <div class="field-group field-full">
+                <div class="info-note">
+                  <i class="pi pi-info-circle" aria-hidden="true"></i>
+                  <span>
+                    L'IMC sera calculé automatiquement à partir de la taille et du poids renseignés.\n
+                    Si ces données ne sont pas disponibles, une valeur de -1 sera attribuée.
+                  </span>
+                </div>
+              </div>
+
+            </div>
+          </article>
         }
 
-        <button type="button" (click)="addVitalSign()">Ajouter une prise de paramètres</button>
       </div>
-      
-  <button type="submit">Créer la consultation</button>
 
-</form>
+      <button type="button" class="add-button add-button-primary" (click)="addVitalSign()">
+        <i class="pi pi-plus" aria-hidden="true"></i>
+        Ajouter une prise de paramètres
+      </button>
+    </section>
+
+    <!-- ACTIONS -->
+
+    <footer class="form-actions">
+      <button
+        type="button"
+        class="secondary-button"
+        routerLink="/consultations"
+      >
+        <i class="pi pi-arrow-left" aria-hidden="true"></i>
+        Annuler
+      </button>
+
+      <button
+        type="submit"
+        class="submit-button"
+        [disabled]="form.invalid || isSubmitting"
+      >
+        @if (isSubmitting) {
+          <i class="pi pi-spinner pi-spin" aria-hidden="true"></i>
+          Création en cours...
+        } @else {
+          <i class="pi pi-check" aria-hidden="true"></i>
+          Créer la consultation
+        }
+      </button>
+    </footer>
+
+  </form>
+</div>

@@ -1,0 +1,90 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.search-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.search-container label {
+  color: #36534a;
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.search-container input[pInputText] {
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: 8px;
+}
+
+.suggestions-list {
+  padding: 0.35rem;
+  margin: 0;
+  list-style: none;
+  background: #fff;
+  border: 1px solid #e0eae6;
+  border-radius: 9px;
+  box-shadow: 0 4px 12px rgb(25 65 55 / 5%);
+}
+
+.suggestions-list li {
+  margin: 0;
+}
+
+.suggestion-item {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem;
+  color: #294a40;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.suggestion-item:hover {
+  background: #edf6f2;
+}
+
+.suggestion-item span {
+  color: #81908a;
+  font-size: 0.8rem;
+}
+
+.no-results,
+.search-loader {
+  padding: 0.7rem;
+  color: #87948f;
+  font-size: 0.82rem;
+}
+
+.validate-patient-button {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.65rem 0.9rem;
+  color: #217361;
+  background: #eaf5f1;
+  border: 1px solid #d5e9e1;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.validate-patient-button:hover:not(:disabled) {
+  background: #dcefe7;
+}
+
+.validate-patient-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

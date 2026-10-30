@@ -1,41 +1,55 @@
-<form [formGroup]="searchPatientForm" (ngSubmit)="onSubmit()" class="search-container">
-  <label for="searchQuery">Rechercher une entrée :</label>
-  
-  <div class="input-wrapper">
-    <input
-      id="searchQuery"
-      type="text"
-      formControlName="searchQuery"
-      placeholder="Tapez au moins 2 caractères..."
-      autocomplete="off"
-    />
-    
-    <!-- Nouveau bloc conditionnel @if -->
-    @if (isLoading) {
-      <span class="loader">Chargement en cours...</span>
-    }
-  </div>
+<div class="patient-search">
+  <input
+    id="searchQuery"
+    type="text"
+    pInputText
+    [formControl]="searchPatientForm.controls.searchQuery"
+    placeholder="Nom ou prénom du patient..."
+    autocomplete="off"
+  />
 
-  <!-- Résolution de l'observable avec la syntaxe @if / as -->
-  @if (filteredResults$ | async; as results) {
-    <ul class="suggestions-list">
-      
-      <!-- Nouveau bloc de boucle @for (le 'track' est obligatoire et ultra performant) -->
-      @for (entry of results; track entry.id) {
-        <li (click)="selectEntry(entry)">
-          <strong>{{ entry.alias }}</strong> — <small>{{ entry.birthDate }}</small>
-        </li>
-      } @empty {
-        <!-- Le bloc @empty s'affiche automatiquement si le tableau 'results' est vide -->
-        @if (searchPatientForm.controls.searchQuery.value.length >= 2 && !isLoading) {
-          <li>Aucun résultat trouvé dans la base de données.</li>
-        }
-      }
-
-    </ul>
+  @if (isLoading) {
+    <div class="search-message">
+      <i class="pi pi-spin pi-spinner"></i>
+      Recherche en cours...
+    </div>
   }
 
-  <input type="hidden" formControlName="selectedId" />
+  @if (filteredResults$ | async; as results) {
+    @if (results.length > 0) {
+      <ul class="suggestions-list">
+        @for (entry of results; track entry.id) {
+          <li>
+            <button
+              type="button"
+              class="suggestion-item"
+              (click)="selectEntry(entry)"
+            >
+              <i class="pi pi-user"></i>
 
-  <button type="submit" [disabled]="searchPatientForm.invalid">Valider la sélection</button>
-</form>
+              <span class="suggestion-content">
+                <strong>{{ entry.alias }}</strong>
+
+                <small>
+                  Né(e) le {{ entry.birthDate | date:'dd/MM/yyyy' }}
+                </small>
+              </span>
+            </button>
+          </li>
+        }
+      </ul>
+    } @else if (
+      !isLoading && 
+      searchPatientForm.controls.searchQuery.value.length >= 2 &&
+      !searchPatientForm.controls.selectedId.value ) {
+      <p class="search-message">Aucun patient trouvé.</p>
+    }
+  }
+
+  @if (searchPatientForm.controls.selectedId.value) {
+    <p class="selected-patient">
+      <i class="pi pi-check-circle"></i>
+      Patient sélectionné
+    </p>
+  }
+</div>

@@ -62,7 +62,9 @@
         <!-- Travailleurs -->
         <div class="field-group identification-repeat-group">
           <div class="field-label-row">
-            <label>Travailleur(s) participant(s)</label>
+            <label>
+              Travailleur(s) participant(s) <span class="required">*</span>
+            </label>
           </div>
 
           <div formArrayName="workersIds" class="repeat-list">
@@ -98,7 +100,9 @@
         <!-- Pathologies -->
         <div class="field-group identification-repeat-group">
           <div class="field-label-row">
-            <label>Pathologie(s) associée(s)</label>
+            <label>
+              Pathologie(s) associée(s) <span class="required">*</span>
+            </label>
           </div>
 
           <div formArrayName="pathologiesIds" class="repeat-list">
@@ -167,7 +171,6 @@
             [autoResize]="true"
             placeholder="Pourquoi le patient consulte-t-il ?"
           ></textarea>
-          <small class="field-hint">Maximum 256 caractères.</small>
         </div>
 
         <div class="field-group field-full">

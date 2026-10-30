@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, Output, EventEmitter } from '@angular/core';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Observable, of } from 'rxjs';
@@ -14,6 +14,8 @@ import { PatientEntry } from '../../../shared/models/patient.model';
 })
 
 export class PatientSearchBar implements OnInit {
+
+  @Output() patientSelected = new EventEmitter<number>();
 
   private fb = inject(NonNullableFormBuilder);
   private readonly patientsService: PatientsService = inject(PatientsService);
@@ -50,19 +52,27 @@ export class PatientSearchBar implements OnInit {
     );
   }
 
-  // Action exécutée lorsque l'utilisateur clique sur une suggestion
   selectEntry(entry: PatientEntry): void {
-    // 1. Met à jour le champ texte avec la valeur lisible
     this.searchPatientForm.controls.searchQuery.setValue(entry.alias, { emitEvent: false });
-    
-    // 2. Stocke l'identifiant unique (clé primaire) dans le champ masqué ou technique
+    // Stockez directement l'ID sous forme de chaîne
     this.searchPatientForm.controls.selectedId.setValue(entry.id.toString());
+
+    // Émission directe convertie de manière sécurisée
+    const idValue = parseInt(entry.id.toString(), 10);
+    console.log('Enfant (clic) : Émission de l\'ID ->', idValue);
+    this.patientSelected.emit(idValue);
   }
 
   onSubmit(): void {
     if (this.searchPatientForm.valid) {
-      console.log('Données du formulaire prêtes pour l\'envoi :', this.searchPatientForm.value);
-      // Exemple : { searchQuery: 'Alice', selectedId: '42' }
+      const rawId = this.searchPatientForm.controls.selectedId.value;
+      const idValue = parseInt(rawId, 10);
+      
+      // On n'émet que si l'ID est un nombre valide supérieur à 0
+      if (!isNaN(idValue) && idValue > 0) {
+        console.log('Enfant (submit) : Émission de l\'ID ->', idValue);
+        this.patientSelected.emit(idValue);
+      }
     }
   }
 }

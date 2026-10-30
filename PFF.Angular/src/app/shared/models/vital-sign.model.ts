@@ -22,7 +22,7 @@ export interface CreateVitalSignRequest {
     oxygenSaturation: number,
     height: number | null,
     weight: number | null,
-    bmi: number,
+    bmi: number | null,
     bloodSugar: number | null,
     date: Date,
 }

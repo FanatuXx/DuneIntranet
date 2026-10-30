@@ -4,40 +4,75 @@
 
     <h3>Identification</h3>
 
-        <label for="worker-select">Choisissez un médecin :</label>
-        <select id="worker-select" formControlName="selectedWorkers">
-        <option ngValue="null" disabled>-- Sélectionnez un médecin --</option>
-        
-        @for (worker of workers; track worker.id) {
-            <option [value]="worker.id">{{ worker.firstName }} {{ worker.lastName }}</option>
-        }
-        </select>
+        <div formArrayName="workersIds">
+          @for (workerControl of workersIds.controls; track workerControl) {
+            <div class="worker-block">
+              <label [for]="'worker-select-' + $index">Choisissez un travailleur :</label>
+              
+              <select [id]="'worker-select-' + $index" [formControlName]="$index">
+                <option [ngValue]="null" disabled>-- Sélectionnez un travailleur --</option>
+                @for (worker of workers; track worker.id) {
+                  <option [value]="worker.id">{{ worker.firstName }} {{worker.lastName}}</option>
+                }
+              </select>
 
-        <app-patient-search-bar> 
-        </app-patient-search-bar>
-
-        <label for="pathology-select">Choisissez une pathologie :</label>
-        <select id="pathology-select" formControlName="selectedPathologies">
-        <option ngValue="null" disabled>-- Sélectionnez une pathologie --</option>
-        
-        @for (pathology of pathologies; track pathology.id) {
-            <option [value]="pathology.id">{{ pathology.name }}</option>
-        }
-        </select>
+              @if (workersIds.length > 1) {
+                <button type="button" class="remove-button" (click)="removeWorker($index)">
+                  Supprimer
+                </button>
+              }
+            </div>
+          }
+        </div>
 
         <button
             type="button"
-            class="add-consumption-button"
-            (click)="addConsumption()"
+            class="add-worker-button"
+            (click)="addWorker()"
         >
-        Ajouter un mode de consommation
+          Ajouter un travailleur
         </button>
 
-        <label for="date">
-        Date de la consultation 
-        <input type="date" name="date" id="date" formControlName="date">
-        </label>
-        <br>
+      <app-patient-search-bar (patientSelected)="onPatientSelected($event)"></app-patient-search-bar>
+
+
+        <div formArrayName="pathologiesIds">
+          @for (pathologyControl of pathologiesIds.controls; track pathologyControl) {
+            <div class="pathology-block">
+              <label [for]="'pathology-select-' + $index">Choisissez une pathologie :</label>
+              
+              <select [id]="'pathology-select-' + $index" [formControlName]="$index">
+                <option [ngValue]="null" disabled>-- Sélectionnez une pathologie --</option>
+                @for (pathology of pathologies; track pathology.id) {
+                  <option [value]="pathology.id">{{ pathology.name }}</option>
+                }
+              </select>
+
+              @if (pathologiesIds.length > 1) {
+                <button type="button" class="remove-button" (click)="removePathology($index)">
+                  Supprimer
+                </button>
+              }
+            </div>
+          }
+        </div>
+
+        <button
+            type="button"
+            class="add-pathology-button"
+            (click)="addPathology()"
+        >
+          Ajouter une pathologie
+        </button>
+
+        <div>
+          <label>Date de la consultation :</label>
+          <p-datePicker 
+            formControlName="date" 
+            ngDefaultControl
+            dateFormat="dd/mm/yy">
+          </p-datePicker>
+        </div>
 
     <h3>Anamnèse (MSOAP)</h3>
 
@@ -79,57 +114,134 @@
 
     <h3>Prescription(s) :</h3>
 
-        <div formArrayName="prescriptions" class="full-width">
-          @for (prescription of prescriptions.controls; track prescription; let i = $index) {
-            <div [formGroupName]="i" class="prescription-row">
-
-              <div class="field">
-                <label [for]="'drugType-' + i">Produit consommé</label>
-                <p-select
-                  [inputId]="'drugType-' + i"
-                  formControlName="drugType"
-                  [options]="drugOptions"
-                  optionLabel="label"
-                  optionValue="value"
-                  placeholder="Sélectionner un produit"
-                  [showClear]="true"
-                  fluid
-                />
-              </div>
-
-              <div class="field">
-                <label [for]="'frequency-' + i">Fréquence de consommation</label>
-                <p-select
-                  [inputId]="'frequency-' + i"
-                  formControlName="frequency"
-                  [options]="consumptionFrequencyOptions"
-                  optionLabel="label"
-                  optionValue="value"
-                  placeholder="Sélectionner une fréquence"
-                  [showClear]="true"
-                  fluid
-                />
-              </div>
-
-              @if (consumption.get('drugType')?.value && consumption.get('frequency')?.value) 
-              {
-                <button
-                  type="button"
-                  class="delete-consumption-button"
-                  (click)="removeConsumption(i)"
-                  aria-label="Supprimer cette consommation"
-                >
-                  <i class="pi pi-trash" aria-hidden="true"></i>
-                </button>
-              }
+      <div formArrayName="prescriptions">
+        @for (prescription of prescriptions.controls; track prescription; let i = $index) {
+          <div [formGroupName]="i" style="border: 1px solid #ccc; padding: 10px; margin-bottom: 10px;">
+            
+            <div>
+              <label>Date de début :</label>
+              <p-datePicker 
+                formControlName="startDate" 
+                ngDefaultControl
+                dateFormat="dd/mm/yy">
+              </p-datePicker>
             </div>
-          }
 
+            <div>
+              <label>Date de fin :</label>
+              <p-datePicker 
+                formControlName="endDate" 
+                ngDefaultControl
+                dateFormat="dd/mm/yy">
+              </p-datePicker>
+            </div>
+
+            <div>
+              <label>Posologie :</label>
+              <input type="text" formControlName="takeFrequency">
+            </div>
+
+            <div>
+              <label>Choisissez un travailleur :</label>
+              <select formControlName="prescriberId">
+                <option value="">-- Sélectionnez un travailleur --</option>
+                @for (worker of workers; track worker.id) {
+                  <option [value]="worker.id">{{ worker.firstName }} {{ worker.lastName }}</option>
+                }
+              </select>
+            </div>
+
+            <div formArrayName="medicinesIds">
+              @for (medicineControl of getMedicinesIds(i).controls; track medicineControl; let mIndex = $index) {
+                <div>
+                  <select [formControlName]="mIndex">
+                    <option [value]="null">-- Sélectionner un médicament --</option>
+                    @for (med of medicines; track med.id) {
+                      <option [value]="med.id">{{ med.name }}</option>
+                    }
+                  </select>
+                  <button type="button" (click)="removeMedicine(i, mIndex)">Retirer</button>
+                </div>
+              }
+              <button type="button" (click)="addMedicine(i)">Ajouter un médicament</button>
+            </div>
+
+            <div>
+              <button type="button" (click)="removePrescription(i)">Supprimer cette prescription</button>
+            </div>
+
+          </div>
+        }
+        <button type="button" (click)="addPrescription()">Ajouter une prescription</button>
+      </div>
 
     <h3>Prise(s) de paramètres :</h3>
 
 
+      <div formArrayName="vitalSigns">
+        @for (vitalSign of vitalSigns.controls; track vitalSign; let i = $index) {
+          <div [formGroupName]="i" style="border: 1px solid #ccc; padding: 10px; margin-bottom: 10px;">
+            
+            <h4>Mesure #{{ i + 1 }}</h4>
 
-    <button type="submit">Créer l'usager</button>
+            <div>
+              <label>Date de la prise :</label>
+              <p-datePicker 
+                formControlName="date" 
+                ngDefaultControl
+                dateFormat="dd/mm/yy">
+              </p-datePicker>
+            </div>
+
+            <div>
+              <label>Fréquence cardiaque (bpm) :</label>
+              <input type="text" formControlName="heartRate">
+            </div>
+
+            <div>
+              <label>Tension artérielle :</label>
+              <input type="text" formControlName="bloodPressure">
+            </div>
+
+            <div>
+              <label>Température (°C) :</label>
+              <input type="text" formControlName="temperature">
+            </div>
+
+            <div>
+              <label>Saturation en oxygène (%) :</label>
+              <input type="text" formControlName="oxygenSaturation">
+            </div>
+
+            <div>
+              <label>Taille (cm) :</label>
+              <input type="text" formControlName="height">
+            </div>
+
+            <div>
+              <label>Poids (kg) :</label>
+              <input type="text" formControlName="weight">
+            </div>
+
+            <div>
+              <label>Glycémie :</label>
+              <input type="text" formControlName="bloodSugar">
+            </div>
+
+            <div>
+              <label>IMC : Sera calculé automatique sur base du poids et de la taille rensignés. (-1 si ces informations ne sont pas disponibles)</label>
+            </div>
+
+            <div>
+              <button type="button" (click)="removeVitalSign(i)">Supprimer cette mesure</button>
+            </div>
+
+          </div>
+        }
+
+        <button type="button" (click)="addVitalSign()">Ajouter une prise de paramètres</button>
+      </div>
+      
+  <button type="submit">Créer la consultation</button>
 
 </form>

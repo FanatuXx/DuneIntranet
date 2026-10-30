@@ -197,7 +197,7 @@ namespace PFF.Domain.Services
 
                 foreach (CreatePrescriptionData prescriptionData in command.Prescriptions) //Boucle dans la liste de prescriptions et ajoute chacune d'elle dans la consultation
                 {
-                    IList<int> medicineIds = prescriptionData.MedicinesIds
+                    IList<int> medicineIds = (prescriptionData.MedicinesIds ?? new List<int>())
                         .Distinct()
                         .ToList();
 

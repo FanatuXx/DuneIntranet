@@ -9,19 +9,19 @@ namespace PFF.Api.Dtos.Create
         [StringLength(256, MinimumLength = 1)]
         public string Motive { get; set; } = default!;
 
-        [StringLength(256, MinimumLength = 1)]
+        [StringLength(256)]
         public string? Subjective { get; set; }
 
-        [StringLength(256, MinimumLength = 1)]
+        [StringLength(256)]
         public string? Objective { get; set; }
 
-        [StringLength(256, MinimumLength = 1)]
+        [StringLength(256)]
         public string? Assessment { get; set; }
 
-        [StringLength(256, MinimumLength = 1)]
+        [StringLength(256)]
         public string? Plan { get; set; }
 
-        [StringLength(256, MinimumLength = 1)]
+        [StringLength(256)]
         public string? Description { get; set; }
 
         [Required]

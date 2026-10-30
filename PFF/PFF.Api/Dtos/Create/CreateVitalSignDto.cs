@@ -7,7 +7,7 @@ namespace PFF.Api.Dtos.Create
         [Required]
         public int HeartRate { get; set; }
 
-        [StringLength(50, MinimumLength = 1)]
+        [StringLength(50)]
         public string? BloodPressure { get; set; } = default!;
 
         public decimal? Temperature { get; set; }

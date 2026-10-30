@@ -454,7 +454,7 @@
   align-items: center;
   gap: 0.6rem;
   max-width: 440px;
-  margin-bottom: 0.6rem;
+  margin-bottom: 0;
 }
 
 .worker-row p-select {
@@ -530,30 +530,22 @@
   background: #fff1f1;
 }
 
-@media (max-width: 600px) {
-  .worker-row,
-  .medicine-row {
-    max-width: 100%;
-  }
-
-  .worker-row p-select,
-  .medicine-row p-select {
-    max-width: none;
-  }
+.form-grid {
+  align-items: stretch;
 }
 
-/* Alignement des boutons travailleurs et pathologies */
 .identification-repeat-group {
-  display: flex;
-  flex-direction: column;
+  align-self: stretch;
   height: 100%;
+  box-sizing: border-box;
 }
 
-.identification-repeat-group .repeat-list {
-  min-height: 46px;
+.identification-repeat-group > .repeat-list {
+  flex: 1 1 auto;
+  min-height: 0;
 }
 
-.identification-repeat-group .add-button {
+.identification-repeat-group > .add-button {
   align-self: flex-start;
   margin-top: auto;
 }

@@ -1,12 +1,11 @@
 <div class="patient-page">
   <header class="page-header">
-    <div class="page-icon">
+    <div class="page-title">
       <i class="pi pi-user-plus"></i>
-    </div>
-
-    <div>
-      <h1>Nouvel usager</h1>
-      <p>Complétez les informations pour créer un dossier d'usager.</p>
+      <div>
+        <span class="page-eyebrow">GESTION DES USAGERS</span>
+        <h1>Nouvel usager</h1>
+      </div>
     </div>
   </header>
 
@@ -57,7 +56,7 @@
           }
         </div>
 
-        <div class="field full-width">
+        <div class="field">
           <label for="zipCode">Code postal</label>
           <div formGroupName="patientAddress">
             <input
@@ -359,7 +358,7 @@
           />
         </div>
 
-        <div class="field full-width">
+        <div class="field">
           <label for="allergies">Allergies</label>
           <input
             pInputText

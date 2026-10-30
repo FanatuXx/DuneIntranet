@@ -99,6 +99,10 @@
   gap: 1.25rem;
 }
 
+.details-layout > .details-card:last-child {
+  grid-column: 1 / -1;
+}
+
 .details-card {
   min-width: 0;
   padding: 1.5rem;

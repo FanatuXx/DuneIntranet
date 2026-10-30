@@ -14,34 +14,42 @@
 
 .page-header {
   display: flex;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.page-title {
+  display: inline-flex;
   align-items: center;
-  gap: 14px;
-  margin-bottom: 24px;
+  gap: 1rem;
+  width: fit-content;
+  max-width: 100%;
+  padding: 1rem 1.75rem;
+  background: #fff;
+  border: 1px solid #e3eae8;
+  border-radius: 14px;
+  box-shadow: 0 3px 12px rgba(35, 75, 65, 0.05);
 }
 
-.page-icon {
-  display: grid;
-  place-items: center;
-  width: 46px;
-  height: 46px;
-  flex-shrink: 0;
-  border-radius: 13px;
-  background: #dcefe9;
+.page-title > i {
+  font-size: 1.7rem;
   color: #217361;
-  font-size: 1.25rem;
 }
 
-.page-header h1 {
-  margin: 0 0 5px;
-  color: #193b35;
-  font-size: 1.6rem;
+.page-eyebrow {
+  display: block;
+  margin-bottom: 0.25rem;
+  color: #217361;
+  font-size: 0.7rem;
   font-weight: 700;
+  letter-spacing: 0.09em;
 }
 
-.page-header p {
+.page-title h1 {
   margin: 0;
-  color: #71817f;
-  font-size: 0.9rem;
+  color: #263b37;
+  font-size: 1.5rem;
+  font-weight: 700;
 }
 
 .patient-list {

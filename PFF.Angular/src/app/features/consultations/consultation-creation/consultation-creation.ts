@@ -322,8 +322,7 @@ export class ConsultationCreation implements OnInit {
     if (this.form.invalid || this.isSubmitting) {
       return;
     }
-
-    // 2. Bloquez immédiatement les clics suivants
+    
     this.isSubmitting = true;
 
     // Convert empty field into null
@@ -337,7 +336,7 @@ export class ConsultationCreation implements OnInit {
     this.consultationsService.create(this.form.getRawValue())
       .pipe(finalize(() => this.isSubmitting = false))
       .subscribe({
-        next: () => this.router.navigate(['consultations']),
+        next: () => this.router.navigate(['dashboard']),
         error: (err) => {
           console.error('Erreur de création de consultation :', err);
         }

@@ -8,7 +8,7 @@ export const routes: Routes = [
     },
     {
         path: 'dashboard',
-        loadComponent: () => import('./features/dashboard/dashboard').then((f) => f.Dashboard),
+        loadComponent: () => import('./features/patients/patients-list/patients-list').then((f) => f.PatientsList),
         title: 'DUNE Intranet | Dashboard',
     },
     {

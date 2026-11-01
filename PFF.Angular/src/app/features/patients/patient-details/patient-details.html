@@ -195,7 +195,7 @@
           </div>
         </div>
 
-        @if (p.consumptions?.length) {
+        @if (p.consumptions?.length > 0) {
           <div class="consumption-list">
             @for (consumption of p.consumptions; track consumption.id) {
               <article class="consumption-item">

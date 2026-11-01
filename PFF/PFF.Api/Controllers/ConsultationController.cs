@@ -51,14 +51,14 @@ namespace PFF.Api.Controllers
                 dto.WorkersIds,
                 dto.PathologiesIds,
 
-                (dto.Prescriptions ?? new List<CreatePrescriptionDto>())    //Si dto.Prescription est null, on crée une liste vide 
-                    .Select(p => new CreatePrescriptionData(                //On transforme les DTO reçus de l'API en objets de commande
+                (dto.Prescriptions ?? new List<CreatePrescriptionDto>())    
+                    .Select(p => new CreatePrescriptionData(               
                         p.StartDate,
                         p.EndDate,
                         p.TakeFrequency,
                         p.PrescriberId,
                         p.MedicinesIds))
-                    .ToList(),                                              //puis on rassemble ces objets dans une liste compatible avec la commande métier.
+                    .ToList(),                                              
 
                 (dto.VitalSigns ?? new List<CreateVitalSignDto>())
                     .Select(vs => new CreateVitalSignData(

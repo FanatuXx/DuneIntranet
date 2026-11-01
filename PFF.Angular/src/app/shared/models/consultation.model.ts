@@ -34,8 +34,8 @@ export interface CreateConsultationRequest {
     workersIds: number[],
     pathologiesIds: number[],
 
-    prescriptions: CreatePrescriptionRequest[] | null,
-    vitalSigns: CreateVitalSignRequest[] | null,
+    prescriptions?: CreatePrescriptionRequest[] | null,
+    vitalSigns?: CreateVitalSignRequest[] | null,
 }
 
 export interface UpdateConsultationRequest {

@@ -21,7 +21,7 @@ namespace PFF.Domain.Model.ResponseDtos
         public bool? HasInsuranceCard { get; set; } = false;
         public DateTime? InsuranceCardEndDate { get; set; }
         public bool? IsAtFedasil { get; set; } = false;
-        public int? Income { get; set; }
+        public decimal? Income { get; set; }
         public string? Status { get; set; }
         public bool? IsWorking { get; set; } = false;
         public DateTime RegistrationDate { get; set; }

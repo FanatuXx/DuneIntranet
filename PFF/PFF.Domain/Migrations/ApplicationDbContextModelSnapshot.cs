@@ -258,8 +258,8 @@ namespace PFF.Domain.Migrations
                         .HasColumnType("NVARCHAR(14)")
                         .HasColumnName("NuméroID");
 
-                    b.Property<int?>("Income")
-                        .HasColumnType("INT")
+                    b.Property<decimal?>("Income")
+                        .HasColumnType("DECIMAL(7, 2)")
                         .HasColumnName("Revenus");
 
                     b.Property<string>("Insurance")

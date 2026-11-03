@@ -3,26 +3,23 @@
 
   <!-- EN-TÊTE -->
   <header class="page-header">
-    <div class="page-icon">
-      <i class="pi pi-user-edit"></i>
+    <div class="header-icon" aria-hidden="true">
+      <i class="pi pi-user-edit" aria-hidden="true"></i>
     </div>
 
-    <div class="page-title">
-      <h1>Modifier un usager</h1>
-      <p>
-        @if (patient(); as currentPatient) {
-          Dossier de {{ currentPatient.alias }} · ID {{ currentPatient.id }}
-        } @else {
-          Modification des informations du dossier de l'usager
-        }
-      </p>
-    </div>
+    @if (patient(); as currentPatient) {
+      <div class="header-content">
+        <p class="eyebrow">MODIFICATION DU DOSSIER</p>
 
-    @if (patient()) {
-      <span class="patient-badge">
-        <i class="pi pi-pencil"></i>
-        Modification
-      </span>
+        <h1>
+          {{ currentPatient.alias }}
+        </h1>
+          
+        <p class="header-subtitle">
+          Modification de la fiche
+          <span class="patient-id">N° {{ currentPatient.id }}</span>
+        </p>
+      </div>
     }
   </header>
 
@@ -55,36 +52,92 @@
           </div>
         </div>
 
+         
         <div class="form-grid">
-          <div class="field">
-            <label for="alias">Surnom</label>
-            <input
-              id="alias"
-              type="text"
-              formControlName="alias"
-              placeholder="Surnom de l'usager"
-            />
+
+          <div class="form-column">
+
+            <div class="field">
+              <label for="alias">Surnom</label>
+              <input
+                id="alias"
+                type="text"
+                formControlName="alias"
+                placeholder="Surnom de l'usager"
+              />
+
+              @if (alias.invalid) {
+                @if (alias.hasError('required')) {
+                  <small class="error-text">
+                    Le surnom est obligatoire
+                  </small> 
+                } @else if (alias.hasError('maxlength')) {
+                  <small class="error-text">
+                    Maximum 50 caractères
+                  </small>
+                }
+              }
+            </div>
+
+            <div class="field" formGroupName="patientAddress">
+              <label for="zipCode">Code postal</label>
+              <input
+                id="zipCode"
+                type="text"
+                formControlName="zipCode"
+                placeholder="Code postal"
+              />
+
+              @if (zipCode?.invalid) {
+                @if (zipCode.hasError('required')) {
+                  <small class="error-text">
+                    Le code postal est obligatoire
+                  </small>
+                } @else if (zipCode.hasError('minlength')) {
+                    <small class="error-text">
+                      Minimum 4 caractères
+                    </small>
+                } @else if (zipCode.hasError('maxlength')) {
+                    <small class="error-text">
+                      Maximum 5 caractères
+                    </small>
+                  }
+              }              
+            </div>
+
           </div>
 
-          <div class="field">
-            <label for="birthDate">Date de naissance</label>
-            <p-datepicker
+          <div class="form-column">
+
+            <div class="field">
+              <label for="birthDate">Date de naissance</label>
+
+              <p-datepicker
                 formControlName="birthDate"
-                dateFormat="dd-mm-yy"
-                placeholder="jj-mm-aaaa"
+                dateFormat="dd/mm/yy"
+                placeholder="Sélectionner une date"
                 [showIcon]="true"
                 [maxDate]="maxBirthDate"
                 class="w-full"
-            />
+              />
 
-            @if (birthDate.touched && birthDate.invalid) {
-              <div class="error-message" role="alert">
-                <i class="pi pi-exclamation-triangle"></i>
-                <span>
-                    Attention : la personne a moins de 18 ans !<br>Elle doit être réorientée vers un service spécialisé.
-                </span>
-              </div>
-            }
+              @if (birthDate.invalid) {
+                @if (birthDate.hasError('underEighteen')) {
+                  <div class="error-message" role="alert">
+                    <i class="pi pi-exclamation-triangle"></i>
+                    <span>
+                      Attention : la personne a moins de 18 ans !
+                      <br>
+                      Elle doit être réorientée vers un service spécialisé.
+                    </span>
+                  </div>
+                } @else if (birthDate.hasError('required')) {
+                  <small class="error-text">
+                    La date de naissance est obligatoire.
+                  </small>
+                }
+              }
+            </div>
           </div>
         </div>
       </section>
@@ -105,20 +158,22 @@
           <div class="field">
             <label for="ssin">NISS</label>
             <input
+              pInputText
               id="ssin"
               type="text"
               formControlName="ssin"
               placeholder="Numéro NISS"
+              fluid
             />
 
             @if (ssin.touched && ssin.invalid) {
               @if (ssin.hasError('minlength')) {
                 <small class="error-text">
-                  Minimum 11 caractères.
+                  Minimum 11 caractères
                 </small>
               } @else if (ssin.hasError('maxlength')) {
                 <small class="error-text">
-                  Maximum 15 caractères.
+                  Maximum 15 caractères
                 </small>
               }
             }
@@ -127,20 +182,22 @@
           <div class="field">
             <label for="idNumber">Numéro ID</label>
             <input
+              pInputText
               id="idNumber"
               type="text"
               formControlName="idNumber"
               placeholder="Numéro d'identification"
+              fluid 
             />
 
             @if (idNumber.touched && idNumber.invalid) {
               @if (idNumber.hasError('minlength')) {
                 <small class="error-text">
-                  Minimum 12 caractères.
+                  Minimum 12 caractères
                 </small>
               } @else if (idNumber.hasError('maxlength')) {
                 <small class="error-text">
-                  Maximum 14 caractères.
+                  Maximum 14 caractères
                 </small>
               }
             }
@@ -182,7 +239,7 @@
             <label for="phoneNumber">Numéro de téléphone</label>
             <input
               id="phoneNumber"
-              type="tel"
+              type="text"
               formControlName="phoneNumber"
               placeholder="Numéro de téléphone"
             />
@@ -294,16 +351,6 @@
           </div>
 
           <div class="field">
-            <label for="zipCode">Code postal</label>
-            <input
-              id="zipCode"
-              type="text"
-              formControlName="zipCode"
-              placeholder="Code postal"
-            />
-          </div>
-
-          <div class="field">
             <label for="town">Ville</label>
             <input
               id="town"
@@ -313,7 +360,7 @@
             />
           </div>
 
-          <div class="field full-width">
+          <div class="field">
             <label for="country">Pays</label>
             <input
               id="country"
@@ -356,8 +403,8 @@
             </label>
             <p-datepicker
                 formControlName="insuranceCardEndDate"
-                dateFormat="dd-mm-yy"
-                placeholder="jj-mm-aaaa"
+                dateFormat="dd/mm/yy"
+                placeholder="Sélectionner une date"
                 [showIcon]="true"
                 class="w-full"
             />

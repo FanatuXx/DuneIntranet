@@ -1,0 +1,388 @@
+
+<div class="consultation-details-page">
+
+  @if (loading()) {
+    <div class="state-card">
+      <span class="pi pi-spinner pi-spin state-icon" aria-hidden="true"></span>
+      <p>Chargement des détails de la consultation</p>
+    </div>
+  } @else if (error()) {
+    <div class="state-card error-state" role="alert">
+      <span class="pi pi-exclamation-circle state-icon" aria-hidden="true"></span>
+      <h2>Impossible de charger la consultation</h2>
+      <p>{{ error() }}</p>
+    </div>
+  } @else if (consultation(); as c) {
+
+    <!-- EN-TÊTE -->
+
+    <header class="page-header">
+      <div class="header-icon" aria-hidden="true">
+        <i class="pi pi-calendar" aria-hidden="true"></i>
+      </div>
+
+      <div class="header-content">
+        <p class="eyebrow">DOSSIER DE CONSULTATION</p>
+
+        <h1>Consultation n°{{ c.id }}</h1>
+
+        <p class="header-subtitle">
+          Fiche détaillée
+          <span class="consultation-id">N° {{ c.id }}</span>
+        </p>
+      </div>
+    </header>
+
+    <div class="details-layout">
+
+      <!-- IDENTIFICATION -->
+
+        <section class="details-card">
+            <div class="section-heading">
+                <span class="section-icon">
+                <i class="pi pi-info-circle" aria-hidden="true"></i>
+                </span>
+                <div>
+                <h2>Identification</h2>
+                <p>Patient, intervenants et informations générales</p>
+                </div>
+            </div>
+
+            <div class="details-grid">
+
+                <div class="detail-item">
+                <span class="detail-label">Date de consultation</span>
+                <span class="detail-value">
+                    {{ convertDate(c.date) || 'Non renseignée' }}
+                </span>
+                </div>
+
+                <div class="detail-item">
+                <span class="detail-label">Patient</span>
+                <span class="detail-value">
+                    {{ c.patient?.alias || (c.patient?.firstName + ' ' + c.patient?.lastName) || 'Non renseigné' }}
+                </span>
+                </div>
+
+                <div class="detail-item detail-item-wide">
+                <span class="detail-label">Travailleur(s) participant(s)</span>
+
+                @if (c.workers?.length) {
+                    <div class="tag-list">
+                    @for (worker of c.workers; track worker.id) {
+                        <span class="info-tag">
+                        <i class="pi pi-user" aria-hidden="true"></i>
+                        {{ worker.firstName }} {{ worker.lastName }}
+                        </span>
+                    }
+                    </div>
+                } @else {
+                    <span class="detail-value detail-value-empty">
+                    Aucun travailleur renseigné
+                    </span>
+                }
+                </div>
+
+                <div class="detail-item detail-item-wide">
+                <span class="detail-label">Pathologie(s) associée(s)</span>
+
+                @if (c.pathologies?.length) {
+                    <div class="tag-list">
+                    @for (pathology of c.pathologies; track pathology.id) {
+                        <span class="info-tag">
+                        <i class="pi pi-heart" aria-hidden="true"></i>
+                        {{ pathology.name }}
+                        </span>
+                    }
+                    </div>
+                } @else {
+                    <span class="detail-value detail-value-empty">
+                    Aucune pathologie renseignée
+                    </span>
+                }
+                </div>
+
+            </div>
+        </section>
+
+      <!-- ANAMNÈSE -->
+
+      <section class="details-card">
+        <div class="section-heading">
+          <span class="section-icon">
+            <i class="pi pi-file-edit" aria-hidden="true"></i>
+          </span>
+          <div>
+            <h2>Anamnèse (MSOAP)</h2>
+            <p>Motif de consultation, observations et conduite à tenir</p>
+          </div>
+        </div>
+
+        <div class="details-grid">
+
+          <div class="detail-item detail-item-wide">
+            <span class="detail-label">Motif de consultation</span>
+            <span class="detail-value"
+              [class.detail-value-empty]="!c.motive">
+              {{ c.motive || 'Non renseigné' }}
+            </span>
+          </div>
+
+          <div class="detail-item detail-item-wide">
+            <span class="detail-label">Subjectif</span>
+            <span class="detail-value"
+              [class.detail-value-empty]="!c.subjective">
+              {{ c.subjective || 'Aucune information renseignée' }}
+            </span>
+          </div>
+
+          <div class="detail-item detail-item-wide">
+            <span class="detail-label">Objectif</span>
+            <span class="detail-value"
+              [class.detail-value-empty]="!c.objective">
+              {{ c.objective || 'Aucune information renseignée' }}
+            </span>
+          </div>
+
+          <div class="detail-item detail-item-wide">
+            <span class="detail-label">Évaluation</span>
+            <span class="detail-value"
+              [class.detail-value-empty]="!c.assessment">
+              {{ c.assessment || 'Aucune information renseignée' }}
+            </span>
+          </div>
+
+          <div class="detail-item detail-item-wide">
+            <span class="detail-label">Plan d'action</span>
+            <span class="detail-value"
+              [class.detail-value-empty]="!c.plan">
+              {{ c.plan || 'Aucune information renseignée' }}
+            </span>
+          </div>
+
+          <div class="detail-item detail-item-wide">
+            <span class="detail-label">Description complémentaire</span>
+            <span class="detail-value"
+              [class.detail-value-empty]="!c.description">
+              {{ c.description || 'Aucune information renseignée' }}
+            </span>
+          </div>
+
+        </div>
+    </section>
+
+    <!-- PRESCRIPTIONS -->
+
+    <section class="details-card">
+    <div class="section-heading">
+        <span class="section-icon">
+        <i class="pi pi-file" aria-hidden="true"></i>
+        </span>
+        <div>
+        <h2>Prescription(s)</h2>
+        <p>Traitements et médicaments prescrits</p>
+        </div>
+    </div>
+
+    @if (c.prescriptions?.length) {
+        <div class="nested-list">
+        @for (prescription of c.prescriptions; track prescription.id; let i = $index) {
+            <article class="nested-detail-card">
+
+            <div class="nested-detail-header">
+                <span class="nested-card-number">
+                PRESCRIPTION N°{{ i + 1 }}
+                </span>
+            </div>
+
+            <div class="details-grid">
+
+                <div class="detail-item">
+                <span class="detail-label">Date de début</span>
+                <span class="detail-value">
+                    {{ convertDate(prescription.startDate) || 'Non renseignée' }}
+                </span>
+                </div>
+
+                <div class="detail-item">
+                <span class="detail-label">Date de fin</span>
+                <span class="detail-value">
+                    {{ convertDate(prescription.endDate) || 'Non renseignée' }}
+                </span>
+                </div>
+
+                <div class="detail-item">
+                <span class="detail-label">Fréquence de prise</span>
+                <span class="detail-value">
+                    {{ prescription.takeFrequency || 'Non renseignée' }}
+                </span>
+                </div>
+
+                <div class="detail-item">
+                <span class="detail-label">Prescripteur</span>
+                <span class="detail-value">
+                    {{ prescription.worker?.firstName }}
+                    {{ prescription.worker?.lastName }}
+                </span>
+                </div>
+
+                <div class="detail-item detail-item-wide">
+                <span class="detail-label">Médicament(s)</span>
+
+                @if (prescription.medicines?.length) {
+                    <div class="tag-list">
+                    @for (medicine of prescription.medicines; track medicine.id) {
+                        <span class="info-tag">
+                        <i class="pi pi-plus-circle" aria-hidden="true"></i>
+                        {{ medicine.name }}
+                        </span>
+                    }
+                    </div>
+                } @else {
+                    <span class="detail-value detail-value-empty">
+                    Aucun médicament renseigné
+                    </span>
+                }
+                </div>
+
+            </div>
+            </article>
+        }
+        </div>
+    } @else {
+        <p class="empty-state">
+        Aucune prescription renseignée.
+        </p>
+    }
+    </section>
+    <!-- PARAMÈTRES VITAUX -->
+
+    <section class="details-card">
+    <div class="section-heading">
+        <span class="section-icon">
+        <i class="pi pi-heart" aria-hidden="true"></i>
+        </span>
+        <div>
+        <h2>Paramètres vitaux</h2>
+        <p>Mesures et constantes physiologiques du patient</p>
+        </div>
+    </div>
+
+    @if (c.vitalsigns?.length) {
+        <div class="nested-list">
+        @for (vitalSign of c.vitalsigns; track vitalSign.id; let i = $index) {
+            <article class="nested-detail-card">
+
+            <div class="nested-detail-header">
+                <span class="nested-card-number">
+                MESURE N°{{ i + 1 }}
+                </span>
+
+                <span class="measurement-date">
+                <i class="pi pi-calendar" aria-hidden="true"></i>
+                {{ convertDate(vitalSign.date) || 'Date non renseignée' }}
+                </span>
+            </div>
+
+            <div class="vital-signs-grid">
+
+                <div class="vital-sign-item">
+                <span class="vital-sign-label">Fréquence cardiaque</span>
+                <span class="vital-sign-value">
+                    {{ vitalSign.heartRate }} <small>bpm</small>
+                </span>
+                </div>
+
+                <div class="vital-sign-item">
+                <span class="vital-sign-label">Saturation en oxygène</span>
+                <span class="vital-sign-value">
+                    {{ vitalSign.oxygenSaturation }} <small>%</small>
+                </span>
+                </div>
+
+                <div class="vital-sign-item">
+                <span class="vital-sign-label">Tension artérielle</span>
+                <span class="vital-sign-value">
+                    {{ vitalSign.bloodPressure || '—' }}
+                    <small>mmHg</small>
+                </span>
+                </div>
+
+                <div class="vital-sign-item">
+                <span class="vital-sign-label">Température</span>
+                <span class="vital-sign-value">
+                    {{ vitalSign.temperature ?? '—' }}
+                    <small>°C</small>
+                </span>
+                </div>
+
+                <div class="vital-sign-item">
+                <span class="vital-sign-label">Taille</span>
+                <span class="vital-sign-value">
+                    {{ vitalSign.height ?? '—' }}
+                    <small>cm</small>
+                </span>
+                </div>
+
+                <div class="vital-sign-item">
+                <span class="vital-sign-label">Poids</span>
+                <span class="vital-sign-value">
+                    {{ vitalSign.weight ?? '—' }}
+                    <small>kg</small>
+                </span>
+                </div>
+
+                <div class="vital-sign-item">
+                <span class="vital-sign-label">Glycémie</span>
+                <span class="vital-sign-value">
+                    {{ vitalSign.bloodSugar ?? '—' }}
+                    <small>g/L</small>
+                </span>
+                </div>
+
+                <div class="vital-sign-item">
+                <span class="vital-sign-label">IMC</span>
+                <span class="vital-sign-value">
+                    {{ vitalSign.bmi === -1 ? 'Non calculable' : vitalSign.bmi }}
+                </span>
+                </div>
+
+            </div>
+            </article>
+        }
+        </div>
+    } @else {
+        <p class="empty-state">
+        Aucun paramètre vital renseigné.
+        </p>
+    }
+    </section>
+
+    </div>
+
+    <!-- ACTIONS -->
+
+    <footer class="page-actions">
+
+      <a class="secondary-button" routerLink="/consultations">
+        <i class="pi pi-arrow-left" aria-hidden="true"></i>
+        Retour à la liste
+      </a>
+
+      <div class="action-group">
+        <a class="primary-button" [routerLink]="['/consultations', c.id, 'edit']">
+          <i class="pi pi-pencil" aria-hidden="true"></i>
+          Modifier la consultation
+        </a>
+
+        <a class="danger-button" [routerLink]="['/consultations', c.id, 'delete']">
+          <i class="pi pi-trash" aria-hidden="true"></i>
+          Supprimer
+        </a>
+      </div>
+
+    </footer>
+
+  }
+
+</div>

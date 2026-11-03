@@ -143,7 +143,7 @@
             </span>
           </div>
           <div class="detail-item">
-            <span class="detail-label">Revenu</span>
+            <span class="detail-label">Revenus</span>
             <span class="detail-value" [class.detail-value-empty]="!p.income">{{ p.income != null ? (p.income + ' €') : 'Non renseigné' }}</span>
           </div>
           <div class="detail-item">
@@ -191,11 +191,11 @@
           <span class="section-icon"><i class="pi pi-list" aria-hidden="true"></i></span>
           <div>
             <h2>Consommations</h2>
-            <p>Produits consommés et fréquence déclarée</p>
+            <p>Produits consommés et fréquences déclarées</p>
           </div>
         </div>
 
-        @if (p.consumptions?.length > 0) {
+        @if (p.consumptions !== null && p.consumptions.length > 0) {
           <div class="consumption-list">
             @for (consumption of p.consumptions; track consumption.id) {
               <article class="consumption-item">

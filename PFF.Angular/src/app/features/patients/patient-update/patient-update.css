@@ -17,8 +17,63 @@
 .page-header {
   display: flex;
   align-items: center;
-  gap: 18px;
-  margin-bottom: 28px;
+  gap: 1.25rem;
+  margin-bottom: 1.75rem;
+  padding: 1.75rem;
+  background: #fff;
+  border: 1px solid #e3ece9;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgb(25 65 55 / 4%);
+}
+
+.header-icon {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  color: #217361;
+  background: #e8f4f0;
+  border-radius: 16px;
+  font-size: 1.8rem;
+}
+
+.header-content {
+  min-width: 0;
+  flex: 1;
+}
+
+.eyebrow {
+  margin: 0 0 0.35rem;
+  color: #217361;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+
+.page-header h1 {
+  margin: 0;
+  color: #1e3932;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  overflow-wrap: anywhere;
+}
+
+.header-subtitle {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.65rem;
+  margin: 0.5rem 0 0;
+  color: #71817d;
+  font-size: 0.9rem;
+}
+
+.patient-id {
+  padding: 0.25rem 0.6rem;
+  color: #217361;
+  background: #edf6f3;
+  border-radius: 6px;
+  font-weight: 600;
 }
 
 .page-icon {
@@ -36,14 +91,6 @@
 .page-title {
   flex: 1;
   min-width: 0;
-}
-
-.page-header h1 {
-  margin: 0 0 6px;
-  color: #193b35;
-  font-size: clamp(1.5rem, 3vw, 2rem);
-  font-weight: 700;
-  letter-spacing: -0.035em;
 }
 
 .page-header p {
@@ -124,7 +171,14 @@
 .form-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 24px 22px;
+  gap: 22px;
+}
+
+.form-column {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  min-width: 0;
 }
 
 .field {
@@ -151,15 +205,15 @@
   box-sizing: border-box;
   width: 100%;
   min-width: 0;
-  min-height: 44px;
-  padding: 10px 12px;
+  height: 38px;
+  padding: 7px 10px;
   border: 1px solid #cbd8d3;
-  border-radius: 10px;
+  border-radius: 9px;
   outline: none;
   background: #fff;
   color: #243b39;
   font: inherit;
-  font-size: 0.9rem;
+  font-size: 0.875rem;
   transition:
     border-color 150ms ease,
     box-shadow 150ms ease;
@@ -232,6 +286,9 @@
   line-height: 1.4;
 }
 
+.required {
+  color: #c34b4b;
+}
 /* Consommations */
 
 .consumptions-list {

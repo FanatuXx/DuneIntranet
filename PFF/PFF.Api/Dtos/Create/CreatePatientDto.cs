@@ -21,7 +21,7 @@ namespace PFF.Api.Dtos.Create
         public bool? HasInsuranceCard { get; set; } 
         public DateTime? InsuranceCardEndDate { get; set; }
         public bool? IsAtFedasil { get; set; }
-        public int? Income { get; set; } 
+        public decimal? Income { get; set; } 
         public string? Status { get; set; } 
         public bool? IsWorking { get; set; } 
         public CreatePatientAddressDto PatientAddress { get; set; } = new();

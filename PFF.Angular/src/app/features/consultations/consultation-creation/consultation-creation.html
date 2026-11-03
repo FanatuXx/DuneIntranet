@@ -48,8 +48,8 @@
           <p-datepicker
             inputId="consultation-date"
             formControlName="date"
-            dateFormat="dd-mm-yy"
-            placeholder="jj-mm-aaaa"
+            dateFormat="dd/mm/yy"
+            placeholder="Sélectionner une date"
             [showIcon]="true"
             [showButtonBar]="true"
             class="w-full"
@@ -63,32 +63,40 @@
         <div class="field-group identification-repeat-group">
           <div class="field-label-row">
             <label>
-              Travailleur(s) participant(s) <span class="required">*</span>
+              Travailleur(s) participants <span class="required">*</span>
             </label>
           </div>
 
           <div formArrayName="workersIds" class="repeat-list">
-          @for (workerControl of workersIds.controls; track $index; let i = $index) {
-            <div class="worker-row">
-              <p-select
-                [options]="workerOptions"
-                optionLabel="displayName"
-                optionValue="id"
-                placeholder="Choisir un travailleur"
-                [formControl]="getWorkerControl(i)"
-                class="compact-select"
-              ></p-select>
-
-              <button
-                type="button"
-                class="remove-button"
-                (click)="removeWorker(i)"
-                aria-label="Supprimer ce travailleur"
-              >
-                <i class="pi pi-trash"></i>
-              </button>
-            </div>
-          }
+            @for (workerControl of workersIds.controls; track workerControl; let i = $index) {
+              <div class="repeat-row">
+                <div class="repeat-index">{{ i + 1 }}</div>
+                <div class="repeat-field">
+                  <p-select
+                    [formControlName]="i"
+                    [options]="workerOptions"
+                    optionLabel="displayName"
+                    optionValue="id"
+                    placeholder="Sélectionner un travailleur"
+                    [showClear]="true"
+                    [filter]="true"
+                    filterPlaceholder="Rechercher un travailleur"
+                    class="w-full"
+                  />
+                </div>
+                @if (workersIds.length > 1) {
+                  <button
+                    type="button"
+                    class="icon-remove-button"
+                    (click)="removeWorker(i)"
+                    aria-label="Supprimer ce travailleur"
+                    title="Supprimer"
+                  >
+                    <i class="pi pi-trash" aria-hidden="true"></i>
+                  </button>
+                }
+              </div>
+            }
           </div>
 
           <button type="button" class="add-button" (click)="addWorker()">
@@ -256,8 +264,7 @@
 
             <div class="nested-card-header">
               <div>
-                <span class="nested-card-number">PRESCRIPTION {{ i + 1 }}</span>
-                <h3>Traitement</h3>
+                <span class="nested-card-number">PRESCRIPTION N°{{ i + 1 }}</span>
               </div>
               @if (prescriptions.length > 1) {
                 <button
@@ -278,8 +285,8 @@
                 <p-datepicker
                   [inputId]="'prescription-start-' + i"
                   formControlName="startDate"
-                  dateFormat="dd-mm-yy"
-                  placeholder="jj-mm-aaaa"
+                  dateFormat="dd/mm/yy"
+                  placeholder="Sélectionner une date"
                   [showIcon]="true"
                   class="w-full"
                 />
@@ -290,8 +297,8 @@
                 <p-datepicker
                   [inputId]="'prescription-end-' + i"
                   formControlName="endDate"
-                  dateFormat="dd-mm-yy"
-                  placeholder="jj-mm-aaaa"
+                  dateFormat="dd/mm/yy"
+                  placeholder="Sélectionner une date"
                   [showIcon]="true"
                   class="w-full"
                 />
@@ -392,8 +399,7 @@
 
             <div class="nested-card-header">
               <div>
-                <span class="nested-card-number">MESURE {{ i + 1 }}</span>
-                <h3>Constantes physiologiques</h3>
+                <span class="nested-card-number">MESURE N°{{ i + 1 }}</span>
               </div>
 
               @if (vitalSigns.length > 1) {
@@ -415,15 +421,15 @@
                 <p-datepicker
                   [inputId]="'vital-date-' + i"
                   formControlName="date"
-                  dateFormat="dd-mm-yy"
-                  placeholder="jj-mm-aaaa"
+                  dateFormat="dd/mm/yy"
+                  placeholder="Sélectionner une date"
                   [showIcon]="true"
                   class="w-full"
                 />
               </div>
 
               <div class="field-group">
-                <label [for]="'heart-rate-' + i">Fréquence cardiaque</label>
+                <label [for]="'heart-rate-' + i">Fréquence cardiaque <span class="required">*</span></label>
                 <div class="input-with-unit">
                   <input
                     pInputText
@@ -433,6 +439,20 @@
                     placeholder="Ex. : 75"
                   />
                   <span>bpm</span>
+                </div>
+              </div>
+
+              <div class="field-group">
+                <label [for]="'oxygen-' + i">Saturation en oxygène <span class="required">*</span></label>
+                <div class="input-with-unit">
+                  <input
+                    pInputText
+                    [id]="'oxygen-' + i"
+                    type="number"
+                    formControlName="oxygenSaturation"
+                    placeholder="Ex. : 98"
+                  />
+                  <span>%</span>
                 </div>
               </div>
 
@@ -463,20 +483,6 @@
                     placeholder="Ex. : 37.2"
                   />
                   <span>°C</span>
-                </div>
-              </div>
-
-              <div class="field-group">
-                <label [for]="'oxygen-' + i">Saturation en oxygène</label>
-                <div class="input-with-unit">
-                  <input
-                    pInputText
-                    [id]="'oxygen-' + i"
-                    type="number"
-                    formControlName="oxygenSaturation"
-                    placeholder="Ex. : 98"
-                  />
-                  <span>%</span>
                 </div>
               </div>
 
@@ -529,7 +535,7 @@
                 <div class="info-note">
                   <i class="pi pi-info-circle" aria-hidden="true"></i>
                   <span>
-                    L'IMC sera calculé automatiquement à partir de la taille et du poids renseignés.\n
+                    L'IMC sera calculé automatiquement à partir de la taille et du poids renseignés.
                     Si ces données ne sont pas disponibles, une valeur de -1 sera attribuée.
                   </span>
                 </div>

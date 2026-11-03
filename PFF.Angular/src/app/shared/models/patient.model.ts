@@ -1,6 +1,6 @@
 import { Gender } from "../enums/gender.enum";
 import { ResidenceStatus } from "../enums/residence-status.enum";
-import { Consumption } from "./consumption.model";
+import { Consumption, CreateConsumptionRequest, UpdateConsumptionRequest } from "./consumption.model";
 import { PatientAddress } from "./patient-address.model";
 
 export interface Patient {
@@ -76,7 +76,9 @@ export interface UpdatePatientRequest {
 
     patientAddress: UpdatePatientRequest | null,
 
-    consumptions: Consumption[] | null
+    consumptionsToUpdate: UpdateConsumptionRequest[] | null;
+    consumptionsToCreate: CreateConsumptionRequest[] | null;
+    consumptionsToDeleteIds: number[] | null;
 }
 
 export interface PatientEntry {

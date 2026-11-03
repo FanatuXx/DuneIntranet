@@ -91,7 +91,7 @@ namespace PFF.Domain.Configurations
                 .HasColumnName("Fedasil");
 
             builder.Property(patient => patient.Income)
-                .HasColumnType("INT")
+                .HasColumnType("DECIMAL(7, 2)")
                 .HasColumnName("Revenus");
 
             builder.Property(patient => patient.Status)

@@ -69,13 +69,13 @@ export class PatientCreation implements OnInit {
     this.form = this.formBuilder.group({
       ssin: ['', [Validators.minLength(11), Validators.maxLength(15)]],
       idNumber: ['', [Validators.minLength(12), Validators.maxLength(14)]],
-      firstName: ['', [Validators.minLength(1), Validators.maxLength(50)]],
-      lastName: ['', [Validators.minLength(1), Validators.maxLength(50)]],
+      firstName: ['', [Validators.maxLength(50)]],
+      lastName: ['', [Validators.maxLength(50)]],
       alias: ['', [Validators.minLength(1), Validators.maxLength(50), Validators.required]],
       gender: [''],
       birthDate: ['', [legalAgeValidator(), Validators.required]],
       phoneNumber: ['', [Validators.minLength(9), Validators.maxLength(16)]],
-      allergies: ['', [Validators.minLength(1), Validators.maxLength(256)]],
+      allergies: ['', [Validators.maxLength(256)]],
       isInsured: [''],
       insurance: ['', [Validators.minLength(2), Validators.maxLength(50)]],
       hasInsuranceCard: [''],
@@ -84,15 +84,16 @@ export class PatientCreation implements OnInit {
       income: ['', [Validators.min(0)]],
       status: [''],
       isWorking: [''],
+      
       consumptions: this.formBuilder.array([
         this.createConsumption()
       ]),
       patientAddress: this.formBuilder.group({ //Permet de créer un form imbriqué dans mon form principal
-        street: ['', [Validators.minLength(1), Validators.maxLength(256)]],
-        number: ['', [Validators.minLength(1), Validators.maxLength(10)]],
-        zipCode: ['', [Validators.minLength(1), Validators.maxLength(5)]],
-        town: ['', [Validators.minLength(1), Validators.maxLength(128)]],
-        country: ['', [Validators.minLength(1), Validators.maxLength(128)]]
+        street: ['', [Validators.maxLength(256)]],
+        number: ['', [Validators.maxLength(10)]],
+        zipCode: ['', [Validators.minLength(4), Validators.maxLength(5), Validators.required]],
+        town: ['', [Validators.maxLength(128)]],
+        country: ['', [Validators.maxLength(128)]]
       })
     });
   }
@@ -167,23 +168,23 @@ export class PatientCreation implements OnInit {
   }
   
   get street() {
-    return this.form.controls['street'];
+    return this.form.get('patientAddress.street');
   }
 
   get number() {
-    return this.form.controls['number'];
+    return this.form.get('patientAddress.number');
   }
 
   get zipCode() {
-    return this.form.controls['zipCode'];
+    return this.form.get('patientAddress.zipCode');
   }
 
   get town() {
-    return this.form.controls['town'];
+    return this.form.get('patientAddress.town');
   }
 
   get country() {
-    return this.form.controls['country'];
+    return this.form.get('patientAddress.country');
   }
 
   get consumptions(): FormArray {

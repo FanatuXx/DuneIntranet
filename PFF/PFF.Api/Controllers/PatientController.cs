@@ -121,7 +121,7 @@ namespace PFF.Api.Controllers
 
                 (dto.ConsumptionsToUpdate ?? new List<UpdateConsumptionDto>())
                     .Select(c => new UpdateConsumptionData(
-                        id,
+                        c.Id,
                         c.DrugType,
                         c.Frequency))
                     .ToList(),

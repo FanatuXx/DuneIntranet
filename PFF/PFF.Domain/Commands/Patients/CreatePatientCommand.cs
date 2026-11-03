@@ -19,7 +19,7 @@ namespace PFF.Domain.Commands.Patient
         bool? HasInsuranceCard,
         DateTime? InsuranceCardEndDate,
         bool? IsAtFedasil,
-        int? Income,
+        decimal? Income,
         string? Status,
         bool? IsWorking,
         DateTime RegistrationDate,

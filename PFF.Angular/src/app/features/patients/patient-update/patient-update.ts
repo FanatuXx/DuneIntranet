@@ -7,7 +7,7 @@ import { ResidenceStatus } from '../../../shared/enums/residence-status.enum';
 import { DrugType } from '../../../shared/enums/drug-type.enum';
 import { ConsumptionFrequency } from '../../../shared/enums/consumption-frequency.enum';
 import { legalAgeValidator } from '../../../shared/validators/legal-age.validator';
-import { Patient } from '../../../shared/models/patient.model';
+import { Patient, UpdatePatientRequest } from '../../../shared/models/patient.model';
 import { DatePipe } from '@angular/common';
 
 import { DatePickerModule } from '@openng/optimus-ui/datepicker';
@@ -65,13 +65,13 @@ export class PatientUpdate implements OnInit {
     this.form = this.formBuilder.group({
       ssin: ['', [Validators.minLength(11), Validators.maxLength(15)]],
       idNumber: ['', [Validators.minLength(12), Validators.maxLength(14)]],
-      firstName: ['', [Validators.minLength(1), Validators.maxLength(50)]],
-      lastName: ['', [Validators.minLength(1), Validators.maxLength(50)]],
-      alias: ['', [Validators.minLength(1), Validators.maxLength(50)]],
+      firstName: ['', [Validators.maxLength(50)]],
+      lastName: ['', [Validators.maxLength(50)]],
+      alias: ['', [Validators.maxLength(50), Validators.required]],
       gender: [''],
-      birthDate: ['', legalAgeValidator()],
+      birthDate: ['', [legalAgeValidator(), Validators.required]],
       phoneNumber: ['', [Validators.minLength(9), Validators.maxLength(16)]],
-      allergies: ['', [Validators.minLength(1), Validators.maxLength(256)]],
+      allergies: ['', [Validators.maxLength(256)]],
       isInsured: [''],
       insurance: ['', [Validators.minLength(2), Validators.maxLength(50)]],
       hasInsuranceCard: [''],
@@ -84,11 +84,11 @@ export class PatientUpdate implements OnInit {
         this.updateConsumption()
       ]),
       patientAddress: this.formBuilder.group({ //Permet de créer un form imbriqué dans mon form principal
-        street: ['', [Validators.minLength(1), Validators.maxLength(256)]],
-        number: ['', [Validators.minLength(1), Validators.maxLength(10)]],
-        zipCode: ['', [Validators.minLength(1), Validators.maxLength(5)]],
-        town: ['', [Validators.minLength(1), Validators.maxLength(128)]],
-        country: ['', [Validators.minLength(1), Validators.maxLength(128)]]
+        street: ['', [Validators.maxLength(256)]],
+        number: ['', [Validators.maxLength(10)]],
+        zipCode: ['', [Validators.minLength(4), Validators.maxLength(5), Validators.required]],
+        town: ['', [Validators.maxLength(128)]],
+        country: ['', [Validators.maxLength(128)]]
       })
     });
 
@@ -205,7 +205,6 @@ export class PatientUpdate implements OnInit {
     return this.form.controls['insuranceCardEndDate'];
   }
   
-  
   get isAtFedasil() {
     return this.form.controls['isAtFedasil'];
   }
@@ -278,22 +277,41 @@ export class PatientUpdate implements OnInit {
       }
     });
 
-  const patientData = this.form.getRawValue();
+const patientData = this.form.getRawValue();
 
-  patientData.consumptions = patientData.consumptions.filter(
+const validConsumptions = patientData.consumptions.filter(
     (consumption: { drugType: string; frequency: string }) =>
-      consumption.drugType && consumption.frequency
-  );
+        consumption.drugType !== null &&
+        consumption.drugType !== '' &&
+        consumption.frequency !== null &&
+        consumption.frequency !== ''
+);
 
-  const payload = {
+const payload: UpdatePatientRequest = {
     ...patientData,
-    consumptionsToDeleteIds: this.deletedConsumptionIds
-  };
 
-  this.patientsService.update(this.id(), payload).subscribe({
-    next: () => this.router.navigate(['patients']),
+    consumptionsToUpdate: validConsumptions
+        .filter((consumption: { id: number | null }) => consumption.id !== null)
+        .map((consumption: any) => ({
+            id: consumption.id,
+            drugType: consumption.drugType,
+            frequency: consumption.frequency
+        })),
+
+    consumptionsToCreate: validConsumptions
+        .filter((consumption: { id: number | null }) => consumption.id === null)
+        .map((consumption: any) => ({
+            drugType: consumption.drugType,
+            frequency: consumption.frequency
+        })),
+
+    consumptionsToDeleteIds: this.deletedConsumptionIds
+};
+
+this.patientsService.update(this.id(), payload).subscribe({
+    next: () => this.router.navigate(['patients', this.id()]),
     error: (err) => console.error('Erreur de mise à jour :', err),
-  });
+});
   }
 
   addConsumption(): void 

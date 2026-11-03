@@ -6,6 +6,7 @@
     [formControl]="searchPatientForm.controls.searchQuery"
     placeholder="Nom ou prénom du patient..."
     autocomplete="off"
+    (focus)="onSearchFocus()"
   />
 
   @if (isLoading) {
@@ -15,34 +16,35 @@
     </div>
   }
 
-  @if (filteredResults$ | async; as results) {
-    @if (results.length > 0) {
-      <ul class="suggestions-list">
-        @for (entry of results; track entry.id) {
-          <li>
-            <button
-              type="button"
-              class="suggestion-item"
-              (click)="selectEntry(entry)"
-            >
-              <i class="pi pi-user"></i>
+  @if (!searchPatientForm.controls.selectedId.value) {
+    @if (filteredResults$ | async; as results) {
+      @if (results.length > 0) {
+        <ul class="suggestions-list">
+          @for (entry of results; track entry.id) {
+            <li>
+              <button
+                type="button"
+                class="suggestion-item"
+                (click)="selectEntry(entry)"
+              >
+                <i class="pi pi-user"></i>
 
-              <span class="suggestion-content">
-                <strong>{{ entry.alias }}</strong>
-
-                <small>
-                  Né(e) le {{ entry.birthDate | date:'dd/MM/yyyy' }}
-                </small>
-              </span>
-            </button>
-          </li>
-        }
-      </ul>
-    } @else if (
-      !isLoading && 
-      searchPatientForm.controls.searchQuery.value.length >= 2 &&
-      !searchPatientForm.controls.selectedId.value ) {
-      <p class="search-message">Aucun patient trouvé.</p>
+                <span class="suggestion-content">
+                  <strong>{{ entry.alias }}</strong>
+                  <small>
+                    Né(e) le {{ entry.birthDate | date:'dd/MM/yyyy' }}
+                  </small>
+                </span>
+              </button>
+            </li>
+          }
+        </ul>
+      } @else if (
+        !isLoading &&
+        searchPatientForm.controls.searchQuery.value.length >= 2
+      ) {
+        <p class="search-message">Aucun patient trouvé.</p>
+      }
     }
   }
 </div>

@@ -215,6 +215,9 @@ namespace PFF.Domain.Services
             if (command.HasInsuranceCard is not null)
                 patient.HasInsuranceCard = command.HasInsuranceCard;
 
+            if (!string.IsNullOrWhiteSpace(command.PhoneNumber))
+                patient.PhoneNumber = command.PhoneNumber;
+
             if(command.PatientAddress is not null)
             {
                 patient.PatientAddress.Street = command.PatientAddress.Street ?? patient.PatientAddress.Street;

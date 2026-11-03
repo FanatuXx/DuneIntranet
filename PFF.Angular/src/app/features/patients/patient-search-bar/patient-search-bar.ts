@@ -59,9 +59,7 @@ export class PatientSearchBar implements OnInit {
       ? new Date(entry.birthDate).toLocaleDateString('fr-BE')
       : '';
 
-    const searchValue = `${entry.alias}${
-      birthDate ? ' — Né(e) le ' + birthDate : ''
-    }`;
+    const searchValue = `${entry.alias}`;
 
     this.searchPatientForm.patchValue({
       searchQuery: searchValue,
@@ -69,5 +67,9 @@ export class PatientSearchBar implements OnInit {
     });
 
     this.patientSelected.emit(entry.id);
+  }
+
+  onSearchFocus(): void {
+    this.searchPatientForm.controls.selectedId.setValue('');
   }
 }

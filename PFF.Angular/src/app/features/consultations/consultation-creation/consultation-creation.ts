@@ -186,7 +186,6 @@ export class ConsultationCreation implements OnInit {
 
   removePathology(index: number): void {
     this.pathologiesIds.removeAt(index);
-    // Optionnel : s'assurer qu'il reste toujours au moins un bloc vide
     if (this.pathologiesIds.length === 0) {
       this.pathologiesIds.push(this.formBuilder.control(null));
     }
@@ -318,6 +317,8 @@ export class ConsultationCreation implements OnInit {
 
   // #endregion
 
+  // #region Validation and Submission 
+
   onSubmit() {
     if (this.form.invalid || this.isSubmitting) {
       return;
@@ -336,10 +337,12 @@ export class ConsultationCreation implements OnInit {
     this.consultationsService.create(this.form.getRawValue())
       .pipe(finalize(() => this.isSubmitting = false))
       .subscribe({
-        next: () => this.router.navigate(['dashboard']),
+        next: () => this.router.navigate(['/consultations', this.form.get('id')?.value]),
         error: (err) => {
           console.error('Erreur de création de consultation :', err);
         }
     });
   }
+
+  // #endregion
 }

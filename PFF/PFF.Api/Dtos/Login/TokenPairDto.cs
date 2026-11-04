@@ -1,4 +1,4 @@
-﻿namespace PFF.Api.Dtos
+﻿namespace PFF.Api.Dtos.Login
 {
     public class TokenPairDto(string token, string refreshToken)
     {

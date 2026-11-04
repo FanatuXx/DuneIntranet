@@ -1,4 +1,4 @@
-﻿using PFF.Api.Dtos;
+﻿using PFF.Api.Dtos.Login;
 
 namespace PFF.Api.Workers
 {

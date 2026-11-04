@@ -1,4 +1,4 @@
-﻿namespace PFF.Api.Dtos
+﻿namespace PFF.Api.Dtos.Login
 {
     public class UserDto(int id, string username, string role, string token, string refreshToken)
     {

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using PFF.Api.Dtos;
+using PFF.Api.Dtos.Login;
 using PFF.Api.Infrastructure;
 using PFF.Domain.Model.Entities;
 
